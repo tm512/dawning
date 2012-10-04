@@ -43,6 +43,11 @@ function Thing:setXY (x, y)
 end
 
 function isBlocked (x, y)
+	if x < 0 or y < 0 or y >= #testMap * 8 or x >= #testMap [1] * 8
+	then
+		return true -- Don't blow up if we try going off the map
+	end
+
 	if testMap [math.floor (y / 8) + 1] [math.floor (x / 8) + 1] == 1
 	then
 		return true
