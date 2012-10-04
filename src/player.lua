@@ -20,6 +20,7 @@ panims =
 Player.thing = Thing.new (32, 12, 8, 12)
 Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -4, -4, panims)
 Player.sprite:setFrame ("standing")
+Player.state = "standing"
 
 jumpFrames = 10
 function Player:logic ()
@@ -28,7 +29,6 @@ function Player:logic ()
 	then
 		self.thing.momy = 1.2
 		jumpFrames = jumpFrames - 1
-		--self.thing.onground = false
 	elseif self.thing.onground == true
 	then
 		jumpFrames = 10
@@ -37,9 +37,10 @@ function Player:logic ()
 	end
 
 	if not (math.abs (self.thing.momy) < 0.1)
-	and not (self.sprite.curframe == "jump1" or self.sprite.curframe == "jump2" or self.sprite.curframe == "jump3")
+	and not (self.state == "jumping")
 	then
 		self.sprite:setFrame ("jump1")
+		self.state = "jumping"
 	end
 
 	local direction = 0
@@ -62,10 +63,10 @@ function Player:logic ()
 		if self.thing.onground == true
 		then
 			self.thing.momx = 0.6 * direction
-			if self.sprite.curframe == "standing" or self.sprite.curframe == "jump1"
-			or self.sprite.curframe == "jump2" or self.sprite.curframe == "jump3"
+			if self.state == "standing" or self.state == "jumping"
 			then
 				self.sprite:setFrame ("walk1")
+				self.state = "walking"
 			end
 		else
 			-- same direction
@@ -80,6 +81,7 @@ function Player:logic ()
 	then
 		self.thing.momx = 0
 		self.sprite:setFrame ("standing")
+		self.state = "standing"
 	end
 
 	self.thing:doPhysics ()
