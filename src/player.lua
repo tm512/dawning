@@ -15,6 +15,15 @@ panims =
 	jump1 = { 4, 0, 6, "jump2" },
 	jump2 = { 4, 1, 6, "jump3" },
 	jump3 = { 4, 2, -1, nil },
+	crouch1 = { 2, 0, 7, "crouch2" },
+	crouch2 = { 2, 1, 7, "crouch3" },
+	crouch3 = { 2, 2, 7, "crouch4" },
+	crouch4 = { 2, 3, -1, nil },
+	crawl0 = { 3, 0, -1, nil },
+	crawl1 = { 3, 0, 13, "crawl2" },
+	crawl2 = { 3, 1, 13, "crawl3" },
+	crawl3 = { 3, 0, 13, "crawl4" },
+	crawl4 = { 3, 2, 13, "crawl1" },
 }
 
 Player.thing = Thing.new (32, 12, 8, 12)
@@ -29,9 +38,9 @@ function Player:logic ()
 	then
 		self.thing.momy = 1.2
 		jumpFrames = jumpFrames - 1
-	elseif self.thing.onground == true
+	elseif self.thing.onground == true and not (self.state == "crawling")
 	then
-		jumpFrames = 10
+		jumpFrames = self.state == "crouching" and 2 or 10
 	else
 		jumpFrames = 0
 	end
@@ -41,6 +50,23 @@ function Player:logic ()
 	then
 		self.sprite:setFrame ("jump1")
 		self.state = "jumping"
+	end
+
+	if love.keyboard.isDown ("down") and not (self.state == "crouching") and self.thing.onground and self.thing.momx == 0
+	then
+		self.sprite:setFrame ("crouch1")
+		self.state = "crouching"
+		self.thing.h = 6
+		self.thing.y = self.thing.y + 6
+		self.sprite.offsy = -10
+	end
+
+	-- reset the above, if needed
+	if not (self.state == "crouching" or self.state == "crawling") and self.thing.h == 6
+	then
+		self.thing.h = 12
+		self.thing.y = self.thing.y - 6
+		self.sprite.offsy = -4
 	end
 
 	local direction = 0
@@ -62,12 +88,18 @@ function Player:logic ()
 		-- on ground? Accelerate immediately and don't worry about switching directions
 		if self.thing.onground == true
 		then
-			self.thing.momx = 0.6 * direction
-			if self.state == "standing" or self.state == "jumping"
+			if not (self.state == "walking") and not (self.state == "crouching") and not (self.state == "crawling")
 			then
 				self.sprite:setFrame ("walk1")
 				self.state = "walking"
+			elseif self.state == "crouching"
+			then
+				self.sprite:setFrame ("crawl2")
+				self.state = "crawling"
+				jumpFrames = 0 -- eeeeeeeeeeehhhhg
 			end
+
+			self.thing.momx = (self.state == "walking" and 0.6 or 0.3) * direction
 		else
 			-- same direction
 			if (self.thing.momx < 0 and direction < 0) or (self.thing.momx > 0 and direction > 0) or self.thing.momx == 0
@@ -80,8 +112,15 @@ function Player:logic ()
 	elseif self.thing.onground == true
 	then
 		self.thing.momx = 0
-		self.sprite:setFrame ("standing")
-		self.state = "standing"
+		if not (self.state == "crouching") and not (self.state == "crawling")
+		then
+			self.sprite:setFrame ("standing")
+			self.state = "standing"
+		elseif self.state == "crawling"
+		then
+			self.sprite:setFrame ("crawl0")
+			self.state = "crouching" -- wat
+		end
 	end
 
 	self.thing:doPhysics ()
