@@ -26,7 +26,7 @@ panims =
 	crawl4 = { 3, 2, 13, "crawl1" },
 }
 
-Player.thing = Thing.new (32, 12, 8, 12)
+Player.thing = Thing.new (32, 12, 7, 12)
 Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -4, -4, panims)
 Player.sprite:setFrame ("standing")
 Player.state = "standing"
@@ -34,7 +34,7 @@ Player.state = "standing"
 jumpFrames = 10
 function Player:logic ()
 	-- accelerate upwards for 10 frames at most
-	if love.keyboard.isDown ("up") and jumpFrames > 0
+	if love.keyboard.isDown ("up") and jumpFrames > 0 and not isBlocked (self.thing.x, self.thing.y - 6)
 	then
 		self.thing.momy = 1.2
 		jumpFrames = jumpFrames - 1
@@ -62,7 +62,7 @@ function Player:logic ()
 	end
 
 	-- reset the above, if needed
-	if not (self.state == "crouching" or self.state == "crawling") and self.thing.h == 6
+	if not (self.state == "crouching" or self.state == "crawling") and self.thing.h == 6 and self.thing.onground
 	then
 		self.thing.h = 12
 		self.thing.y = self.thing.y - 6
@@ -126,14 +126,21 @@ function Player:logic ()
 	self.thing:doPhysics ()
 	self.sprite:advFrame ()
 
-	-- TODO: level widths can be variable, magic numbers here = bad
 	if self.thing.x < 0 and not (type (curlevel.left) == "nil") -- exit left
 	then
 		curlevel = Level.new (curlevel.left)
-		self.thing.x = 192 - self.thing.w
-	elseif self.thing.x + self.thing.w > 192 and not (type (curlevel.right) == "nil") -- exit right
+		self.thing.x = curlevel.bg:getWidth () - self.thing.w
+	elseif self.thing.x + self.thing.w > curlevel.bg:getWidth () and not (type (curlevel.right) == "nil") -- exit right
 	then
 		curlevel = Level.new (curlevel.right)
 		self.thing.x = 0
+	elseif self.thing.y < 0 and not (type (curlevel.up) == "nil") -- exit up
+	then
+		curlevel = Level.new (curlevel.up)
+		self.thing.y = curlevel.bg:getHeight () - self.thing.h
+	elseif self.thing.y + self.thing.h > curlevel.bg:getHeight () and not (type (curlevel.down) == "nil") -- exit down
+	then
+		curlevel = Level.new (curlevel.down)
+		self.thing.y = 0
 	end
 end

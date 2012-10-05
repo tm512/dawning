@@ -3,10 +3,12 @@ Level.__index = Level
 
 levels =
 {
-	cliff_bridge = { "res/bgs/cliff_bridge.png", "res/levels/cliff_bridge_level.png", nil, "cliff_bed" },
+	cliff_bridge = { "res/bgs/cliff_bridge.png", "res/levels/cliff_bridge_level.png", nil, "cliff_bed", nil, "cliff_lower" },
+	cliff_lower = { "res/bgs/cliff_lower.png", "res/levels/cliff_lower_level.png", nil, nil, nil, nil },
 	cliff_bed = { "res/bgs/cliff_bed.png", "res/levels/cliff_bed_level.png", "cliff_bridge", "outfor_ladder" },
 	outfor_ladder = { "res/bgs/outfor_ladder.png", "res/levels/outfor_ladder_level.png", "cliff_bed", "outfor_plats1" },
-	outfor_plats1 = { "res/bgs/outfor_plats1.png", "res/levels/outfor_plats1_level.png", "outfor_ladder", nil },
+	outfor_plats1 = { "res/bgs/outfor_plats1.png", "res/levels/outfor_plats1_level.png", "outfor_ladder", "outfor_cabin" },
+	outfor_cabin = { "res/bgs/outfor_cabin.png", "res/levels/outfor_cabin_level.png", "outfor_plats1", nil },
 }
 
 startlevel = "outfor_plats1"
@@ -21,6 +23,8 @@ function Level.new (idx)
 	tmp.tiles = { }
 	tmp.left = info [3]
 	tmp.right = info [4]
+	tmp.up = info [5]
+	tmp.down = info [6]
 
 	for y = 0, tiles:getHeight () - 1
 	do
