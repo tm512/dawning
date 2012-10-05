@@ -3,22 +3,6 @@ require 'sprite'
 require 'player'
 require 'level'
 
-testMap = { }
---[[{
-	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 },
-	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1 },
-	{ 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1 },
-	{ 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1 },
-	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
-}]]--
-
 function genOverlay (w, h)
 	data = love.image.newImageData (w, h)
 
@@ -80,6 +64,19 @@ drawDebug = false
 function love.draw ()
 	screen:setFilter ("nearest", "nearest")
 	love.graphics.setCanvas (screen) -- draw to original resolution
+	love.graphics.push ()
+
+	-- camera
+	if curlevel.bg:getWidth () > 192
+	then
+		if Player.thing.x > 96 and Player.thing.x < curlevel.bg:getWidth () - 96
+		then
+			love.graphics.translate (-math.floor (Player.thing.x - 96), 0)
+		elseif Player.thing.x > curlevel.bg:getWidth () - 96
+		then
+			love.graphics.translate (-math.floor (curlevel.bg:getWidth () - 192), 0)
+		end
+	end
 
 	love.graphics.draw (curlevel.bg, 0, 0)
 	love.graphics.drawq (Player.sprite.tex, Player.sprite.quad,
@@ -105,6 +102,7 @@ function love.draw ()
 		love.graphics.setBlendMode ("alpha")
 	end
 
+	love.graphics.pop ()
 	love.graphics.setCanvas () -- reset to full resolution
 	love.graphics.draw (screen, 0, 0, 0, 4, 4)
 	love.graphics.draw (overlay, 0, 0)

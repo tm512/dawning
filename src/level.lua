@@ -4,10 +4,12 @@ Level.__index = Level
 levels =
 {
 	cliff_bridge = { "res/bgs/cliff_bridge.png", "res/levels/cliff_bridge_level.png", nil, "cliff_bed" },
-	cliff_bed = { "res/bgs/cliff_bed.png", "res/levels/cliff_bed_level.png", "cliff_bridge", nil },
+	cliff_bed = { "res/bgs/cliff_bed.png", "res/levels/cliff_bed_level.png", "cliff_bridge", "outfor_ladder" },
+	outfor_ladder = { "res/bgs/outfor_ladder.png", "res/levels/outfor_ladder_level.png", "cliff_bed", "outfor_plats1" },
+	outfor_plats1 = { "res/bgs/outfor_plats1.png", "res/levels/outfor_plats1_level.png", "outfor_ladder", nil },
 }
 
-startlevel = "cliff_bed"
+startlevel = "outfor_plats1"
 
 function Level.new (idx)
 	local info = levels [idx]
