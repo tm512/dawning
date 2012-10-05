@@ -1,13 +1,24 @@
 Level = { }
 Level.__index = Level
 
-function Level.new (bg, tiles)
+levels =
+{
+	cliff_bridge = { "res/bgs/cliff_bridge.png", "res/levels/cliff_bridge_level.png", nil, "cliff_bed" },
+	cliff_bed = { "res/bgs/cliff_bed.png", "res/levels/cliff_bed_level.png", "cliff_bridge", nil },
+}
+
+startlevel = "cliff_bed"
+
+function Level.new (idx)
+	local info = levels [idx]
 	local tmp = { }
-	local tiles = love.image.newImageData (tiles)
+	local tiles = love.image.newImageData (info [2])
 
 	setmetatable (tmp, Level)
-	tmp.bg = love.graphics.newImage (bg)
+	tmp.bg = love.graphics.newImage (info [1])
 	tmp.tiles = { }
+	tmp.left = info [3]
+	tmp.right = info [4]
 
 	for y = 0, tiles:getHeight () - 1
 	do

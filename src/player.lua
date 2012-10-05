@@ -6,12 +6,12 @@ Player = { }
 panims =
 {
 	standing = { 0, 0, -1, nil },
-	walk1 = { 1, 0, 8, "walk2" },
-	walk2 = { 1, 1, 8, "walk3" },
-	walk3 = { 1, 2, 8, "walk4" },
-	walk4 = { 1, 3, 8, "walk5" },
-	walk5 = { 1, 4, 8, "walk6" },
-	walk6 = { 1, 5, 8, "walk1" },
+	walk1 = { 1, 0, 7, "walk2" },
+	walk2 = { 1, 1, 7, "walk3" },
+	walk3 = { 1, 2, 7, "walk4" },
+	walk4 = { 1, 3, 7, "walk5" },
+	walk5 = { 1, 4, 7, "walk6" },
+	walk6 = { 1, 5, 7, "walk1" },
 	jump1 = { 4, 0, 6, "jump2" },
 	jump2 = { 4, 1, 6, "jump3" },
 	jump3 = { 4, 2, -1, nil },
@@ -86,4 +86,15 @@ function Player:logic ()
 
 	self.thing:doPhysics ()
 	self.sprite:advFrame ()
+
+	-- TODO: level widths can be variable, magic numbers here = bad
+	if self.thing.x < 0 and not (type (curlevel.left) == "nil") -- exit left
+	then
+		curlevel = Level.new (curlevel.left)
+		self.thing.x = 192 - self.thing.w
+	elseif self.thing.x + self.thing.w > 192 and not (type (curlevel.right) == "nil") -- exit right
+	then
+		curlevel = Level.new (curlevel.right)
+		self.thing.x = 0
+	end
 end

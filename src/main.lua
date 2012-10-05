@@ -19,19 +19,40 @@ testMap = { }
 	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
 }]]--
 
+function genOverlay (w, h)
+	data = love.image.newImageData (w, h)
+
+	for x = 0, w - 1
+	do
+		for y = 0, h - 1
+		do
+			if x % 4 == 0 or y % 4 == 0
+			then
+				data:setPixel (x, y, 0, 0, 0, 64)
+			else
+				data:setPixel (x, y, 0, 0, 0, 0)
+			end
+		end
+	end
+
+	return love.graphics.newImage (data)
+end
+
 function love.load ()
-	ret = love.graphics.setMode (576, 288, false, false, 0)
+	ret = love.graphics.setMode (768, 386, false, false, 0)
 	love.graphics.setCaption ("october")
 	love.graphics.setColorMode ("replace")
-	screen = love.graphics.newCanvas (192, 96)
-	screen:setFilter ("nearest", "nearest")
 	if ret == 0
 	then
 		error ("couldn't set screen mode")
 	end
 
-	level = Level.new ("res/bgs/cliff_bed.png", "res/levels/cliff_bed_level.png")
-	testMap = level.tiles
+	screen = love.graphics.newCanvas (192, 96)
+	screen:setFilter ("nearest", "nearest")
+
+	overlay = genOverlay (768, 386)
+
+	curlevel = Level.new (startlevel)
 end
 
 local frametime = 1.0 / 60
@@ -55,31 +76,36 @@ function love.update (dt)
 	Player:logic ()
 end
 
-drawTiles = false
+drawDebug = false
 function love.draw ()
 	screen:setFilter ("nearest", "nearest")
 	love.graphics.setCanvas (screen) -- draw to original resolution
 
-	love.graphics.draw (level.bg, 0, 0)
+	love.graphics.draw (curlevel.bg, 0, 0)
 	love.graphics.drawq (Player.sprite.tex, Player.sprite.quad,
 	                     math.floor (Player.thing.x + Player.sprite.offsx), math.floor (Player.thing.y + Player.sprite.offsy), 0,
 	                     Player.sprite:getFlip (), 1, (Player.sprite:getFlip () == -1) and Player.sprite.w or 0)
---	love.graphics.setBlendMode ("additive")
---	love.graphics.setColor (0xff, 0x00, 0x00, 0xff)
---	love.graphics.rectangle ("fill", Player.thing.x, Player.thing.y, Player.thing.w, Player.thing.h)
---	love.graphics.setBlendMode ("alpha")
-	love.graphics.setColor (0xff, 0xa5, 0x00, 0xff)
-	for i = 1, #testMap [1]
-	do
-		for j = 1, #testMap
+	if drawDebug
+	then
+		love.graphics.setBlendMode ("additive")
+		love.graphics.setColor (0xff, 0x95, 0x00, 0xff)
+		love.graphics.rectangle ("fill", Player.thing.x, Player.thing.y, Player.thing.w, Player.thing.h)
+		love.graphics.setColor (0xff, 0xa5, 0x00, 0xff)
+
+		for i = 1, #curlevel.tiles [1]
 		do
-			if testMap [j] [i] == 1 and drawTiles
-			then
-				love.graphics.rectangle ("fill", (i - 1) * 8, (j - 1) * 8, 8, 8)
+			for j = 1, #curlevel.tiles
+			do
+				if curlevel.tiles [j] [i] == 1 and drawDebug
+				then
+					love.graphics.rectangle ("fill", (i - 1) * 8, (j - 1) * 8, 8, 8)
+				end
 			end
 		end
+		love.graphics.setBlendMode ("alpha")
 	end
 
 	love.graphics.setCanvas () -- reset to full resolution
-	love.graphics.draw (screen, 0, 0, 0, 3, 3)
+	love.graphics.draw (screen, 0, 0, 0, 4, 4)
+	love.graphics.draw (overlay, 0, 0)
 end
