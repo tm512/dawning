@@ -43,12 +43,7 @@ function Thing:setXY (x, y)
 end
 
 function isBlocked (x, y)
-	if y < 0 or y >= #curlevel.tiles * 8
-	then
-		return true -- Don't blow up if we try going off the map
-	end
-
-	if x < 0 or x >= #curlevel.tiles [1] * 8
+	if x < 0 or x >= #curlevel.tiles [1] * 8 or y < 0 or y >= #curlevel.tiles * 8
 	then
 		return false -- for screen transitions
 	end
