@@ -4,7 +4,7 @@ require 'player'
 require 'level'
 
 function genOverlay (w, h)
-	data = love.image.newImageData (w, h)
+	local data = love.image.newImageData (w, h)
 
 	for x = 0, w - 1
 	do
@@ -16,6 +16,21 @@ function genOverlay (w, h)
 			else
 				data:setPixel (x, y, 0, 0, 0, 0)
 			end
+		end
+	end
+
+	return love.graphics.newImage (data)
+end
+
+function genStatic (w, h)
+	local data = love.image.newImageData (w, h)
+
+	for x = 0, w - 1
+	do
+		for y = 0, h - 1
+		do
+			local val = math.random (0, 255)
+			data:setPixel (x, y, val, val, val, 160)
 		end
 	end
 
