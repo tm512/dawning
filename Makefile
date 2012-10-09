@@ -2,7 +2,7 @@ SRC = src
 
 default: october.love
 
-october.love: src/*.lua
+october.love: src/*.lua res/*
 	rm -f october.love
 	zip -j ./october.love $(SRC)/*
 	zip -r ./october.love res
