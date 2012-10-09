@@ -108,7 +108,7 @@ function love.draw ()
 		do
 			for j = 1, #curlevel.tiles
 			do
-				if curlevel.tiles [j] [i] == 1 and drawDebug
+				if not (curlevel.tiles [j] [i] == 0) and drawDebug
 				then
 					love.graphics.rectangle ("fill", (i - 1) * 8, (j - 1) * 8, 8, 8)
 				end
@@ -121,4 +121,5 @@ function love.draw ()
 	love.graphics.setCanvas () -- reset to full resolution
 	love.graphics.draw (screen, 0, 0, 0, 4, 4)
 	love.graphics.draw (overlay, 0, 0)
+	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
 end

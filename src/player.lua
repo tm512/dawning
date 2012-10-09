@@ -30,21 +30,23 @@ panims =
 	crawl4 = { 3, 2, 13, "crawl1" },
 }
 
-Player.thing = Thing.new (32, 12, 7, 12)
+--Player.thing = Thing.new (32, 12, 7, 12)
+Player.thing = Thing.new (64, 32, 7, 12)
 Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -4, -4, panims)
 Player.sprite:setFrame ("standing")
 Player.state = "standing"
 
 jumpFrames = 10
+doorFrames = 0
 function Player:logic ()
 	-- accelerate upwards for 10 frames at most
-	if love.keyboard.isDown ("up") and jumpFrames > 0 --and not isBlocked (self.thing.x, self.thing.y - 6)
+	if love.keyboard.isDown ("up") and jumpFrames > 0
 	then
 		if not (self.state == "crouching") and not (self.state == "uncrouching")
 		then
 			self.thing.momy = 1.2
 			jumpFrames = jumpFrames - 1
-		elseif not isBlocked (self.thing.x, self.thing.y - 6) and not (self.state == "uncrouching")
+		elseif not isBlocked (self.thing.x, self.thing.y - 6, 1) and not (self.state == "uncrouching")
 		then
 			self.sprite:setFrame (self.state == "crouch4" and "uncrouch2" or "uncrouch1")
 			self.state = "uncrouching"
@@ -63,13 +65,39 @@ function Player:logic ()
 		self.state = "jumping"
 	end
 
-	if love.keyboard.isDown ("down") and not (self.state == "crouching") and self.thing.onground and self.thing.momx == 0
+	if doorFrames > 0
 	then
-		self.sprite:setFrame ("crouch1")
-		self.state = "crouching"
-		self.thing.h = 6
-		self.thing.y = self.thing.y + 6
-		self.sprite.offsy = -10
+		doorFrames = doorFrames - 1
+	end
+
+	if love.keyboard.isDown ("down") and not (self.state == "crouching")
+	and self.thing.onground and self.thing.momx == 0 and doorFrames == 0
+	then
+		if isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 2) -- door1
+		then
+			self.thing.x = curlevel.door1 [2]
+			self.thing.y = curlevel.door1 [3]
+			curlevel = Level.new (curlevel.door1 [1])
+			doorFrames = 40
+		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 3) -- door2
+		then
+			self.thing.x = curlevel.door2 [2]
+			self.thing.y = curlevel.door2 [3]
+			curlevel = Level.new (curlevel.door2 [1])
+			doorFrames = 40
+		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 4) -- door3
+		then
+			self.thing.x = curlevel.door3 [2]
+			self.thing.y = curlevel.door3 [3]
+			curlevel = Level.new (curlevel.door3 [1])
+			doorFrames = 40
+		else
+			self.sprite:setFrame ("crouch1")
+			self.state = "crouching"
+			self.thing.h = 6
+			self.thing.y = self.thing.y + 6
+			self.sprite.offsy = -10
+		end
 	end
 
 	-- reset the above, if needed

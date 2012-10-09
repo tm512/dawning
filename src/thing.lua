@@ -42,13 +42,13 @@ function Thing:setXY (x, y)
 	self.y = y
 end
 
-function isBlocked (x, y)
+function isBlocked (x, y, targ)
 	if x < 0 or x >= #curlevel.tiles [1] * 8 or y < 0 or y >= #curlevel.tiles * 8
 	then
 		return false -- for screen transitions
 	end
 
-	if curlevel.tiles [math.floor (y / 8) + 1] [math.floor (x / 8) + 1] == 1
+	if curlevel.tiles [math.floor (y / 8) + 1] [math.floor (x / 8) + 1] == targ
 	then
 		return true
 	else
@@ -70,7 +70,7 @@ function Thing:doPhysics ()
 		then
 			y = self:top () - self.momy
 
-			if isBlocked (x, y)
+			if isBlocked (x, y, 1)
 			then
 				local blockx = math.floor (x / 8) * 8
 				local blocky = math.floor (y / 8) * 8
@@ -87,7 +87,7 @@ function Thing:doPhysics ()
 		then
 			y = self:bottom () - self.momy
 
-			if isBlocked (x, y)
+			if isBlocked (x, y, 1)
 			then
 				local blockx = math.floor (x / 8) * 8
 				local blocky = math.floor (y / 8) * 8
@@ -117,7 +117,7 @@ function Thing:doPhysics ()
 		then
 			x = self:right () + self.momx
 
-			if isBlocked (x, y)
+			if isBlocked (x, y, 1)
 			then
 				local blockx = math.floor (x / 8) * 8
 				local blocky = math.floor (y / 8) * 8
@@ -134,7 +134,7 @@ function Thing:doPhysics ()
 		then
 			x = self:left () + self.momx
 
-			if isBlocked (x, y)
+			if isBlocked (x, y, 1)
 			then
 				local blockx = math.floor (x / 8) * 8
 				local blocky = math.floor (y / 8) * 8
@@ -154,12 +154,6 @@ function Thing:doPhysics ()
 		end
 		y = y + (self:bottom () - y >= 8 and 8 or self:bottom () - y)
 	end
-
-	-- don't let us get stuck
-	--if self.momy == 0
-	--then
-	--	self.momy = -0.01
-	--end
 
 	--print (self.momy)
 	self.momy = (self.momy + termvel) * gravity - termvel
