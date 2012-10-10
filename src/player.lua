@@ -1,5 +1,6 @@
 require 'thing'
 require 'sprite'
+require 'monster'
 
 Player = { }
 
@@ -30,7 +31,6 @@ panims =
 	crawl4 = { 3, 2, 13, "crawl1" },
 }
 
---Player.thing = Thing.new (32, 12, 7, 12)
 Player.thing = Thing.new (64, 32, 7, 12)
 Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -4, -4, panims)
 Player.sprite:setFrame ("standing")
@@ -73,30 +73,34 @@ function Player:logic ()
 	if love.keyboard.isDown ("down") and not (self.state == "crouching")
 	and self.thing.onground and self.thing.momx == 0 and doorFrames == 0
 	then
+		local oldlevel = curlevel
 		if isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 2) -- door1
 		then
 			self.thing.x = curlevel.door1 [2]
 			self.thing.y = curlevel.door1 [3]
 			curlevel = Level.new (curlevel.door1 [1])
-			doorFrames = 40
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 3) -- door2
 		then
 			self.thing.x = curlevel.door2 [2]
 			self.thing.y = curlevel.door2 [3]
 			curlevel = Level.new (curlevel.door2 [1])
-			doorFrames = 40
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 4) -- door3
 		then
 			self.thing.x = curlevel.door3 [2]
 			self.thing.y = curlevel.door3 [3]
 			curlevel = Level.new (curlevel.door3 [1])
-			doorFrames = 40
 		else
 			self.sprite:setFrame ("crouch1")
 			self.state = "crouching"
 			self.thing.h = 6
 			self.thing.y = self.thing.y + 6
 			self.sprite.offsy = -10
+		end
+
+		if not (oldlevel == curlevel)
+		then
+			doorFrames = 40
+			Monster:trySpawn ()
 		end
 	end
 
@@ -169,6 +173,7 @@ function Player:logic ()
 	self.thing:doPhysics ()
 	self.sprite:advFrame ()
 
+	local oldlevel = curlevel
 	if self.thing:left () < 0 and not (type (curlevel.left) == "nil") -- exit left
 	then
 		curlevel = Level.new (curlevel.left)
@@ -185,5 +190,10 @@ function Player:logic ()
 	then
 		curlevel = Level.new (curlevel.down)
 		self.thing.y = 0
+	end
+
+	if not (oldlevel == curlevel)
+	then
+		Monster:trySpawn ()
 	end
 end

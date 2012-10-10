@@ -28,7 +28,7 @@ levels =
 	infor_plats1 = { "res/bgs/infor_plats1.png", "res/levels/infor_plats1_level.png", nil, nil },
 }
 
-startlevel = "outfor_plats2"
+startlevel = "cliff_bed"
 
 function Level.new (idx)
 	local info = levels [idx]
