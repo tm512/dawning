@@ -15,8 +15,10 @@ levels =
 	outfor_shed = { "res/bgs/outfor_shed.png", "res/levels/outfor_shed_level.png", "outfor_plats1", "outfor_plats2", nil, nil,
 	               { "cabin_shed", 84, 68 } },
 	outfor_plats2 = { "res/bgs/outfor_plats2.png", "res/levels/outfor_plats2_level.png", "outfor_shed", "outfor_cabin" },
-	outfor_cabin = { "res/bgs/outfor_cabin.png", "res/levels/outfor_cabin_level.png", "outfor_plats2", nil, nil, nil,
+	outfor_cabin = { "res/bgs/outfor_cabin.png", "res/levels/outfor_cabin_level.png", "outfor_plats2", "outfor_gate", nil, nil,
 	                { "cabin_main", 68, 68 } },
+	outfor_gate = { "res/bgs/outfor_gate.png", "res/levels/outfor_gate_level.png", "outfor_cabin", "infor_plats1", nil, nil,
+	               { "outfor_gate", 114, 68 }, { "outfor_gate", 70, 68 } },
 	cabin_shed = { "res/bgs/cabin_shed.png", "res/levels/cabin_shed_level.png", nil, nil, nil, nil,
 	              { "outfor_shed", 100, 68 }, { "cave_ladder", 136, 12 } },
 	cabin_main = { "res/bgs/cabin_main.png", "res/levels/cabin_main_level.png", nil, nil, nil, nil,
@@ -24,7 +26,7 @@ levels =
 	cabin_upper = { "res/bgs/cabin_upper.png", "res/levels/cabin_upper_level.png", nil, nil, nil, nil,
 	               { "cabin_main", 20, 68 } },
 	cabin_cellar = { "res/bgs/cabin_cellar.png", "res/levels/cabin_cellar_level.png", nil, nil, nil, nil,
-	                { "cabin_main", 144, 68 } },
+	                { "cabin_main", 144, 68 }, { "room_heads", 20, 52 } },
 	cave_ladder = { "res/bgs/cave_ladder.png", "res/levels/cave_ladder_level.png", "cave_plats1", nil, nil, nil,
 	               { "cabin_shed", 48, 68 } },
 	cave_plats1 = { "res/bgs/cave_plats1.png", "res/levels/cave_plats1_level.png", nil, "cave_ladder", nil, nil,
@@ -33,10 +35,12 @@ levels =
 	               { "cave_plats1", 24, 36 }, { "cave_end", 160, 60 } },
 	cave_end = { "res/bgs/cave_end.png", "res/levels/cave_end_level.png", nil, nil, nil, nil,
 	            { "cave_plats2", 352, 52 } },
-	infor_plats1 = { "res/bgs/infor_plats1.png", "res/levels/infor_plats1_level.png", nil, nil },
+	infor_plats1 = { "res/bgs/infor_plats1.png", "res/levels/infor_plats1_level.png", "outfor_gate", nil },
+	room_heads = { "res/bgs/room_heads.png", "res/levels/room_heads_level.png", nil, nil, nil, nil,
+	              { "cabin_cellar", 164, 52 } },
 }
 
-startlevel = "cave_end"
+startlevel = "infor_plats1"
 
 function Level.new (idx)
 	local info = levels [idx]
