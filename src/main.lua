@@ -86,6 +86,7 @@ end
 
 drawDebug = false
 staticIndx = 0
+distance = 0
 function love.draw ()
 	screen:setFilter ("nearest", "nearest")
 	love.graphics.setCanvas (screen) -- draw to original resolution
@@ -140,8 +141,9 @@ function love.draw ()
 	-- do static
 	love.graphics.setColorMode ("modulate")
 	love.graphics.setBlendMode ("subtractive")
-	local distance = Monster.visible and 192 - (math.abs (Player.thing.x - Monster.thing.x) * 1.5) or 0
-	love.graphics.setColor (255, 255, 255, distance > 192 and 192 or (distance > 0 and distance or 0))
+	local tdist = 160 - (math.abs (Player.thing.x - Monster.thing.x) * 1.5)
+	distance = (Monster.visible and tdist > distance) and tdist or distance - 0.75
+	love.graphics.setColor (255, 255, 255, math.floor (distance > 160 and 160 or (distance > 0 and distance or 0)))
 	love.graphics.draw (static [math.floor (staticIndx / 4) + 1], 0, 0)
 	staticIndx = (staticIndx + 1) % (#static * 4)
 	love.graphics.setColorMode ("replace")
@@ -150,5 +152,5 @@ function love.draw ()
 	love.graphics.setCanvas () -- reset to full resolution
 	love.graphics.draw (screen, 0, 0, 0, 4, 4)
 	love.graphics.draw (overlay, 0, 0)
-	--love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
+	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
 end
