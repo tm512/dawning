@@ -25,8 +25,7 @@ function Monster:logic ()
 			spot = spot + math.random (24, 64)
 		end
 
-		print ("trying to spawn: " .. spot)
-		Monster:trySpawn (spot)
+		self:trySpawn (spot)
 	end
 
 	if not self.visible
@@ -81,7 +80,7 @@ function Monster:trySpawn (x)
 		and math.abs ((Player.thing.x + Player.thing.w / 2) - (self.thing.x + self.thing.w / 2)) > 16
 		then
 			self.visible = true
-			self.lifetime = (type (x) == "nil") and math.random (600, 1800) or math.random (60, 300)
+			self.lifetime = (type (x) == "nil") and math.random (420, 1020) or math.random (60, 300)
 		end
 	end
 end

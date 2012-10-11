@@ -31,8 +31,8 @@ panims =
 	crawl4 = { 3, 2, 13, "crawl1" },
 }
 
-Player.thing = Thing.new (64, 32, 7, 12)
-Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -4, -4, panims)
+Player.thing = Thing.new (64, 32, 6, 12)
+Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -5, -4, panims)
 Player.sprite:setFrame ("standing")
 Player.state = "standing"
 
@@ -73,22 +73,21 @@ function Player:logic ()
 	if love.keyboard.isDown ("down") and not (self.state == "crouching")
 	and self.thing.onground and self.thing.momx == 0 and doorFrames == 0
 	then
-		local oldlevel = curlevel
 		if isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 2) -- door1
 		then
-			self.thing.x = curlevel.door1 [2]
-			self.thing.y = curlevel.door1 [3]
-			curlevel = Level.new (curlevel.door1 [1])
+			newx = curlevel.door1 [2]
+			newy = curlevel.door1 [3]
+			newlevel = Level.new (curlevel.door1 [1])
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 3) -- door2
 		then
-			self.thing.x = curlevel.door2 [2]
-			self.thing.y = curlevel.door2 [3]
-			curlevel = Level.new (curlevel.door2 [1])
+			newx = curlevel.door2 [2]
+			newy = curlevel.door2 [3]
+			newlevel = Level.new (curlevel.door2 [1])
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 4) -- door3
 		then
-			self.thing.x = curlevel.door3 [2]
-			self.thing.y = curlevel.door3 [3]
-			curlevel = Level.new (curlevel.door3 [1])
+			newx = curlevel.door3 [2]
+			newy = curlevel.door3 [3]
+			newlevel = Level.new (curlevel.door3 [1])
 		else
 			self.sprite:setFrame ("crouch1")
 			self.state = "crouching"
@@ -97,10 +96,10 @@ function Player:logic ()
 			self.sprite.offsy = -10
 		end
 
-		if not (oldlevel == curlevel)
+		if newlevel and not (newlevel == curlevel)
 		then
-			doorFrames = 40
-			Monster:trySpawn ()
+			fadeEnable = true
+			return
 		end
 	end
 
@@ -173,27 +172,30 @@ function Player:logic ()
 	self.thing:doPhysics ()
 	self.sprite:advFrame ()
 
-	local oldlevel = curlevel
 	if self.thing:left () < 0 and not (type (curlevel.left) == "nil") -- exit left
 	then
-		curlevel = Level.new (curlevel.left)
-		self.thing.x = curlevel.bg:getWidth () - self.thing.w
+		newlevel = Level.new (curlevel.left)
+		newx = newlevel.bg:getWidth () - self.thing.w
+		newy = self.thing.y
 	elseif self.thing:right () > curlevel.bg:getWidth () and not (type (curlevel.right) == "nil") -- exit right
 	then
-		curlevel = Level.new (curlevel.right)
-		self.thing.x = 0
+		newlevel = Level.new (curlevel.right)
+		newx = 0
+		newy = self.thing.y
 	elseif self.thing:top () < 0 and not (type (curlevel.up) == "nil") -- exit up
 	then
-		curlevel = Level.new (curlevel.up)
-		self.thing.y = curlevel.bg:getHeight () - self.thing.h
+		newlevel = Level.new (curlevel.up)
+		newx = self.thing.x
+		newy = newlevel.bg:getHeight () - self.thing.h
 	elseif self.thing:bottom () > curlevel.bg:getHeight () and not (type (curlevel.down) == "nil") -- exit down
 	then
-		curlevel = Level.new (curlevel.down)
-		self.thing.y = 0
+		newlevel = Level.new (curlevel.down)
+		newx = self.thing.x
+		newy = 0
 	end
 
-	if not (oldlevel == curlevel)
+	if newlevel and not (newlevel == curlevel)
 	then
-		Monster:trySpawn ()
+		fadeEnable = true
 	end
 end

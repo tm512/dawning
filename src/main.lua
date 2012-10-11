@@ -59,13 +59,14 @@ function love.load ()
 	end
 
 	curlevel = Level.new (startlevel)
-	monster = love.graphics.newImage ("res/objects/npc/monster.png")
 end
 
 local frametime = 1.0 / 60
 local nextframe = 0
 local curtime = 0
 
+fadeAmount = 0
+fadeEnable = false
 function love.update (dt)
 	-- skip if we're running ahead
 	if nextframe == 0
@@ -80,8 +81,11 @@ function love.update (dt)
 	end
 	nextframe = nextframe + frametime
 
-	Player:logic ()
-	Monster:logic ()
+	if not fadeEnable
+	then
+		Player:logic ()
+		Monster:logic ()
+	end
 end
 
 drawDebug = false
@@ -138,14 +142,42 @@ function love.draw ()
 
 	love.graphics.pop ()
 
-	-- do static
+	-- do static and/or fade
+	local tdist = 160 - (math.abs (Player.thing.x - Monster.thing.x) * 1.5)
+
 	love.graphics.setColorMode ("modulate")
 	love.graphics.setBlendMode ("subtractive")
-	local tdist = 160 - (math.abs (Player.thing.x - Monster.thing.x) * 1.5)
 	distance = (Monster.visible and tdist > distance) and tdist or distance - 0.75
 	love.graphics.setColor (255, 255, 255, math.floor (distance > 160 and 160 or (distance > 0 and distance or 0)))
 	love.graphics.draw (static [math.floor (staticIndx / 4) + 1], 0, 0)
 	staticIndx = (staticIndx + 1) % (#static * 4)
+
+	love.graphics.setColor (0, 0, 0, math.abs (fadeAmount))
+	love.graphics.rectangle ("fill", 0, 0, 192, 96)
+
+	if fadeEnable
+	then
+		fadeAmount = fadeAmount + (255 / 32)
+
+		if math.floor (fadeAmount) == 255
+		then
+			fadeAmount = -255
+			if newlevel and newx and newy
+			then
+				curlevel = newlevel
+				newlevel = nil
+				Player.thing.x = newx
+				Player.thing.y = newy
+				doorFrames = 40
+				Monster:trySpawn ()
+			end
+		elseif math.floor (fadeAmount) == 0
+		then
+			fadeAmount = 0
+			fadeEnable = false
+		end
+	end
+	
 	love.graphics.setColorMode ("replace")
 	love.graphics.setBlendMode ("alpha")
 
