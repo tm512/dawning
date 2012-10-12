@@ -46,7 +46,8 @@ function Player:logic ()
 		then
 			self.thing.momy = 1.2
 			jumpFrames = jumpFrames - 1
-		elseif not isBlocked (self.thing.x, self.thing.y - 6, 1) and not (self.state == "uncrouching")
+		elseif not (self.state == "uncrouching") and not isBlocked (self.thing.x, self.thing.y - 6, 1)
+		and not isBlocked (self.thing:right (), self.thing.y - 6, 1)
 		then
 			self.sprite:setFrame (self.state == "crouch4" and "uncrouch2" or "uncrouch1")
 			self.state = "uncrouching"
