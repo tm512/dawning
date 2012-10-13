@@ -1,3 +1,6 @@
+require 'sprite'
+require 'player'
+
 Level = { }
 Level.__index = Level
 
@@ -13,12 +16,12 @@ levels =
 	                 { "cliff_tunnel", 280, 20 } },
 	outfor_plats1 = { "res/bgs/outfor_plats1.png", "res/levels/outfor_plats1_level.png", "outfor_ladder", "outfor_shed" },
 	outfor_shed = { "res/bgs/outfor_shed.png", "res/levels/outfor_shed_level.png", "outfor_plats1", "outfor_plats2", nil, nil,
-	               { "cabin_shed", 84, 68 } },
+	               { "cabin_shed", 84, 68, "key_shed" } },
 	outfor_plats2 = { "res/bgs/outfor_plats2.png", "res/levels/outfor_plats2_level.png", "outfor_shed", "outfor_cabin" },
 	outfor_cabin = { "res/bgs/outfor_cabin.png", "res/levels/outfor_cabin_level.png", "outfor_plats2", "outfor_gate", nil, nil,
-	                { "cabin_main", 68, 68 } },
+	                { "cabin_main", 68, 68, "key_cabin" } },
 	outfor_gate = { "res/bgs/outfor_gate.png", "res/levels/outfor_gate_level.png", "outfor_cabin", "infor_plats1", nil, nil,
-	               { "outfor_gate", 114, 68 }, { "outfor_gate", 70, 68 } },
+	               { "outfor_gate", 114, 68, "key_gate" }, { "outfor_gate", 70, 68 } },
 	cabin_shed = { "res/bgs/cabin_shed.png", "res/levels/cabin_shed_level.png", nil, nil, nil, nil,
 	              { "outfor_shed", 100, 68 }, { "cave_ladder", 136, 12 } },
 	cabin_main = { "res/bgs/cabin_main.png", "res/levels/cabin_main_level.png", nil, nil, nil, nil,
@@ -35,12 +38,20 @@ levels =
 	               { "cave_plats1", 24, 36 }, { "cave_end", 160, 60 } },
 	cave_end = { "res/bgs/cave_end.png", "res/levels/cave_end_level.png", nil, nil, nil, nil,
 	            { "cave_plats2", 352, 52 } },
-	infor_plats1 = { "res/bgs/infor_plats1.png", "res/levels/infor_plats1_level.png", "outfor_gate", nil },
+	infor_plats1 = { "res/bgs/infor_plats1.png", "res/levels/infor_plats1_level.png", "outfor_gate", "infor_plats2" },
+	infor_plats2 = { "res/bgs/infor_plats2.png", "res/levels/infor_plats2_level.png", "infor_plats1", "infor_wall" },
+	infor_wall = { "res/bgs/infor_wall.png", "res/levels/infor_wall_level.png", "infor_plats2", nil },
 	room_heads = { "res/bgs/room_heads.png", "res/levels/room_heads_level.png", nil, nil, nil, nil,
 	              { "cabin_cellar", 164, 52 } },
 }
 
-startlevel = "infor_plats1"
+startlevel = "cliff_bed"
+
+lanims =
+{
+	closed = { 0, 0, -1, nil },
+	opened = { 1, 0, -1, nil }
+}
 
 function Level.new (idx)
 	local info = levels [idx]
@@ -50,6 +61,7 @@ function Level.new (idx)
 	setmetatable (tmp, Level)
 	tmp.bg = love.graphics.newImage (info [1])
 	tmp.tiles = { }
+	tmp.items = { }
 	tmp.left = info [3]
 	tmp.right = info [4]
 	tmp.up = info [5]
@@ -76,6 +88,65 @@ function Level.new (idx)
 			elseif r == 0 and g == 255 and b == 255 -- door 3
 			then
 				tmp.tiles [y + 1] [x + 1] = 4
+			elseif r == 0 and g == 255 and b == 0 -- cabin key
+			then
+				tmp.tiles [y + 1] [x + 1] = 5
+				if not Player.inv ["key_cabin"]
+				then
+					tmp.items ["key_cabin"] = Sprite.new ("res/objects/items/item.png", 8, 8, x * 8, y * 8)
+				end
+			elseif r == 0 and g == 200 and b == 0 -- shed key
+			then
+				tmp.tiles [y + 1] [x + 1] = 6
+				if not Player.inv ["key_shed"]
+				then
+					tmp.items ["key_shed"] = Sprite.new ("res/objects/items/item.png", 8, 8, x * 8, y * 8)
+				end
+			elseif r == 0 and g == 150 and b == 0 -- gate key (locked)
+			then
+				tmp.tiles [y + 1] [x + 1] = 7
+				tmp.lockbox = { }
+				tmp.lockbox.sprite = Sprite.new ("res/objects/items/lockbox.png", 16, 16, x * 8, (y - 1) * 8, lanims)
+				tmp.lockbox.item = "key_gate"
+				if not Player.inv ["key_gate"]
+				then
+					tmp.lockbox.sprite:setFrame ("closed")
+				else
+					tmp.lockbox.sprite:setFrame ("opened")
+				end
+			elseif r == 255 and g == 0 and b == 0 -- planks
+			then
+				tmp.tiles [y + 1] [x + 1] = 8
+				if not Player.inv ["planks"]
+				then
+					tmp.items ["planks"] = Sprite.new ("res/objects/items/item.png", 8, 8, x * 8, y * 8)
+				end
+			elseif r == 200 and g == 0 and b == 0 -- nails (locked)
+			then
+				tmp.tiles [y + 1] [x + 1] = 9
+				tmp.lockbox = { }
+				tmp.lockbox.sprite = Sprite.new ("res/objects/items/lockbox.png", 16, 16, x * 8, (y - 1) * 8, lanims)
+				tmp.lockbox.item = "nails"
+				if not Player.inv ["nails"]
+				then
+					tmp.lockbox.sprite:setFrame ("closed")
+				else
+					tmp.lockbox.sprite:setFrame ("opened")
+				end
+			elseif r == 150 and g == 0 and b == 0 -- crowbar
+			then
+				tmp.tiles [y + 1] [x + 1] = 10
+				if not Player.inv ["crowbar"]
+				then
+					tmp.items ["crowbar"] = Sprite.new ("res/objects/items/item.png", 8, 8, x * 8, y * 8)
+				end
+			elseif r == 100 and g == 0 and b == 0 -- hammer
+			then
+				tmp.tiles [y + 1] [x + 1] = 11
+				if not Player.inv ["hammer"]
+				then
+					tmp.items ["hammer"] = Sprite.new ("res/objects/items/item.png", 8, 8, x * 8, y * 8)
+				end
 			else
 				tmp.tiles [y + 1] [x + 1] = 0
 			end

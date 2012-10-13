@@ -109,6 +109,22 @@ function love.draw ()
 	end
 
 	love.graphics.draw (curlevel.bg, 0, 0)
+
+	-- draw items on level
+	for i in pairs (curlevel.items)
+	do
+		if curlevel.items [i]
+		then
+			love.graphics.drawq (curlevel.items [i].tex, curlevel.items [i].quad, curlevel.items [i].offsx, curlevel.items [i].offsy)
+		end
+	end
+
+	if curlevel.lockbox
+	then
+		love.graphics.drawq (curlevel.lockbox.sprite.tex, curlevel.lockbox.sprite.quad,
+		                     curlevel.lockbox.sprite.offsx, curlevel.lockbox.sprite.offsy)
+	end
+
 	love.graphics.drawq (Player.sprite.tex, Player.sprite.quad,
 	                     math.floor (Player.thing.x + Player.sprite.offsx), math.floor (Player.thing.y + Player.sprite.offsy), 0,
 	                     Player.sprite:getFlip (), 1, (Player.sprite:getFlip () == -1) and Player.sprite.w or 0)
@@ -141,6 +157,17 @@ function love.draw ()
 	end
 
 	love.graphics.pop ()
+
+	-- draw items in HUD
+	local j = 0
+	for i in pairs (Player.inv)
+	do
+		if Player.inv [i]
+		then
+			love.graphics.drawq (Player.inv [i].tex, Player.inv [i].quad, 180 - j, 84)
+		end
+		j = j + 10
+	end
 
 	-- do static and/or fade
 	local tdist = 160 - (math.abs (Player.thing.x - Monster.thing.x) * 1.5)
