@@ -7,7 +7,9 @@ Level.__index = Level
 -- { bg, tiles, srate, left, right, up, down, { door1, spawnx, spawny }, { door2, spawnx, spawny }, { door2, spawnx, spawny } }
 levels =
 {
-	cliff_bridge = { "res/bgs/cliff_bridge.png", "res/levels/cliff_bridge_level.png", nil, nil, "cliff_bed", nil, "cliff_lower" },
+	cliff_bridge = { "res/bgs/cliff_bridge.png", "res/levels/cliff_bridge_level.png", nil, nil, "cliff_bed", nil, "cliff_lower",
+	                { "cliff_bridgefix", 96, 68, { "hammer", "nails", "planks" } } },
+	cliff_bridgefix = { "res/bgs/cliff_bridge.png", "res/levels/cliff_bridgefix_level.png", nil, nil, "cliff_bed", nil, "cliff_lower" },
 	cliff_lower = { "res/bgs/cliff_lower.png", "res/levels/cliff_lower_level.png", nil, nil, "cliff_tunnel", nil, nil },
 	cliff_tunnel = { "res/bgs/cliff_tunnel.png", "res/levels/cliff_tunnel_level.png", 2400, "cliff_lower", nil, nil, nil,
 	                { "outfor_ladder", 80, 36 } },
@@ -16,12 +18,12 @@ levels =
 	                 { "cliff_tunnel", 280, 20 } },
 	outfor_plats1 = { "res/bgs/outfor_plats1.png", "res/levels/outfor_plats1_level.png", 1200, "outfor_ladder", "outfor_shed" },
 	outfor_shed = { "res/bgs/outfor_shed.png", "res/levels/outfor_shed_level.png", 1200, "outfor_plats1", "outfor_plats2", nil, nil,
-	               { "cabin_shed", 84, 68, "key_shed" } },
+	               { "cabin_shed", 84, 68, { "key_shed" } } },
 	outfor_plats2 = { "res/bgs/outfor_plats2.png", "res/levels/outfor_plats2_level.png", 1200, "outfor_shed", "outfor_cabin" },
 	outfor_cabin = { "res/bgs/outfor_cabin.png", "res/levels/outfor_cabin_level.png", 1200, "outfor_plats2", "outfor_gate", nil, nil,
-	                { "cabin_main", 68, 68, "key_cabin" } },
+	                { "cabin_main", 68, 68, { "key_cabin" } } },
 	outfor_gate = { "res/bgs/outfor_gate.png", "res/levels/outfor_gate_level.png", 1200, "outfor_cabin", "infor_plats1", nil, nil,
-	               { "outfor_gate", 114, 68, "key_gate" }, { "outfor_gate", 70, 68 } },
+	               { "outfor_gate", 114, 68, { "key_gate" } }, { "outfor_gate", 70, 68 } },
 	cabin_shed = { "res/bgs/cabin_shed.png", "res/levels/cabin_shed_level.png", 600, nil, nil, nil, nil,
 	              { "outfor_shed", 100, 68 }, { "cave_ladder", 136, 12 } },
 	cabin_main = { "res/bgs/cabin_main.png", "res/levels/cabin_main_level.png", 600, nil, nil, nil, nil,
@@ -49,12 +51,18 @@ levels =
 	             { "infor_plats1", 298, 60 } },
 }
 
-startlevel = "infor_plats1"
+startlevel = "cliff_bed"
 
 lanims =
 {
 	closed = { 0, 0, -1, nil },
 	opened = { 1, 0, -1, nil }
+}
+
+banims =
+{
+	broken = { 0, 1, -1, nil },
+	fixed = { 0, 0, -1, nil }
 }
 
 function Level.new (idx)
@@ -155,6 +163,20 @@ function Level.new (idx)
 			else
 				tmp.tiles [y + 1] [x + 1] = 0
 			end
+		end
+	end
+
+	-- spawn the bridge if we need to
+	-- swap out bridge levels
+	if levels [idx] [2] == "res/levels/cliff_bridge_level.png" or levels [idx] [2] == "res/levels/cliff_bridgefix_level.png"
+	then
+		tmp.bridge = Sprite.new ("res/objects/items/bridge_short.png", 102, 16, 0, 66, banims)
+		if levels [idx] [2] == "res/levels/cliff_bridge_level.png"
+		then
+			tmp.bridge:setFrame ("broken")
+		else
+			tmp.bridge:setFrame ("fixed")
+			levels ["cliff_bridge"] = levels ["cliff_bridgefix"]
 		end
 	end
 

@@ -48,6 +48,18 @@ Player.sprite:setFrame ("wake1")
 Player.state = "waking"
 Player.inv = { }
 
+function Player:hasInv (lock)
+	for i in pairs (lock)
+	do
+		if not self.inv [lock [i]]
+		then
+			return false
+		end
+	end
+
+	return true
+end
+
 jumpFrames = 10
 doorFrames = 0
 function Player:logic ()
@@ -98,19 +110,19 @@ function Player:logic ()
 	and self.thing.onground and self.thing.momx == 0 and doorFrames == 0
 	then
 		if isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 2)
-		and (not curlevel.door1 [4] or self.inv [curlevel.door1 [4]]) -- door1
+		and (not curlevel.door1 [4] or self:hasInv (curlevel.door1 [4])) -- door1
 		then
 			newx = curlevel.door1 [2]
 			newy = curlevel.door1 [3]
 			newlevel = Level.new (curlevel.door1 [1])
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 3)
-		and (not curlevel.door2 [4] or self.inv [curlevel.door2 [4]]) -- door2
+		and (not curlevel.door2 [4] or self:hasInv (curlevel.door2 [4])) -- door2
 		then
 			newx = curlevel.door2 [2]
 			newy = curlevel.door2 [3]
 			newlevel = Level.new (curlevel.door2 [1])
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 4)
-		and (not curlevel.door3 [4] or self.inv [curlevel.door3 [4]]) -- door3
+		and (not curlevel.door3 [4] or self:hasInv (curlevel.door3 [4])) -- door3
 		then
 			newx = curlevel.door3 [2]
 			newy = curlevel.door3 [3]

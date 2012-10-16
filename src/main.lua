@@ -135,6 +135,12 @@ function love.draw ()
 	        	             Monster.sprite:getFlip (), 1, (Monster.sprite:getFlip () == -1) and Monster.sprite.w or 0)
 	end
 
+	if curlevel.bridge
+	then
+		love.graphics.drawq (curlevel.bridge.tex, curlevel.bridge.quad,
+		                     curlevel.bridge.offsx, curlevel.bridge.offsy)
+	end
+
 	if drawDebug
 	then
 		love.graphics.setBlendMode ("additive")
