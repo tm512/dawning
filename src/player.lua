@@ -6,6 +6,15 @@ Player = { }
 
 panims =
 {
+	wake1 = { 5, 0, 180, "wake2" },
+	wake2 = { 5, 1, 7, "wake3" },
+	wake3 = { 5, 2, 7, "wake4" },
+	wake4 = { 5, 3, 7, "wake5" },
+	wake5 = { 5, 4, 7, "wake6" },
+	wake6 = { 5, 5, 120, "wake7" },
+	wake7 = { 6, 0, 7, "wake8" },
+	wake8 = { 6, 1, 7, "wake9" },
+	wake9 = { 6, 2, 7, "standing" },
 	standing = { 0, 0, -1, nil },
 	walk1 = { 1, 0, 7, "walk2" },
 	walk2 = { 1, 1, 7, "walk3" },
@@ -31,15 +40,28 @@ panims =
 	crawl4 = { 3, 2, 13, "crawl1" },
 }
 
-Player.thing = Thing.new (64, 32, 6, 12)
+Player.thing = Thing.new (100, 72, 6, 12)
 Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -5, -4, panims)
-Player.sprite:setFrame ("standing")
-Player.state = "standing"
+--Player.sprite:setFrame ("standing")
+--Player.state = "standing"
+Player.sprite:setFrame ("wake1")
+Player.state = "waking"
 Player.inv = { }
 
 jumpFrames = 10
 doorFrames = 0
 function Player:logic ()
+	if self.state == "waking" and not (self.sprite.curframe == "standing")
+	then
+		self.sprite:advFrame ()
+		if self.sprite.curframe == "wake7" or self.sprite.curframe == "wake8" or self.sprite.curframe == "wake9"
+		then
+			self.thing.y = self.thing.y - 1.7 / 7
+		end
+
+		return
+	end
+
 	-- accelerate upwards for 10 frames at most
 	if love.keyboard.isDown ("up") and jumpFrames > 0
 	then

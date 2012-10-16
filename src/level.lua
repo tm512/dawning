@@ -34,7 +34,7 @@ levels =
 	               { "cabin_shed", 48, 68 } },
 	cave_plats1 = { "res/bgs/cave_plats1.png", "res/levels/cave_plats1_level.png", nil, "cave_ladder", nil, nil,
 	               { "cave_plats2", 24, 44 } },
-	cave_plats2 = { "res/bgs/cave_plats2.png", "res/levels/cave_plats2_level.png", nil, nil, nil, nil,
+	cave_plats2 = { "res/bgs/cave_plats2.png", "res/levels/cave_plats2_level.png", "room_beds", nil, nil, nil,
 	               { "cave_plats1", 24, 36 }, { "cave_end", 160, 60 } },
 	cave_end = { "res/bgs/cave_end.png", "res/levels/cave_end_level.png", nil, nil, nil, nil,
 	            { "cave_plats2", 352, 52 } },
@@ -43,6 +43,7 @@ levels =
 	infor_wall = { "res/bgs/infor_wall.png", "res/levels/infor_wall_level.png", "infor_plats2", nil },
 	room_heads = { "res/bgs/room_heads.png", "res/levels/room_heads_level.png", nil, nil, nil, nil,
 	              { "cabin_cellar", 164, 52 } },
+	room_beds = { "res/bgs/room_beds.png", "res/levels/room_beds_level.png", nil, "cave_plats2" },
 }
 
 startlevel = "cliff_bed"
@@ -106,7 +107,7 @@ function Level.new (idx)
 			then
 				tmp.tiles [y + 1] [x + 1] = 7
 				tmp.lockbox = { }
-				tmp.lockbox.sprite = Sprite.new ("res/objects/items/lockbox.png", 16, 16, x * 8, (y - 1) * 8, lanims)
+				tmp.lockbox.sprite = Sprite.new ("res/objects/items/lockbox.png", 8, 8, x * 8, y * 8, lanims)
 				tmp.lockbox.item = "key_gate"
 				if not Player.inv ["key_gate"]
 				then
@@ -125,7 +126,7 @@ function Level.new (idx)
 			then
 				tmp.tiles [y + 1] [x + 1] = 9
 				tmp.lockbox = { }
-				tmp.lockbox.sprite = Sprite.new ("res/objects/items/lockbox.png", 16, 16, x * 8, (y - 1) * 8, lanims)
+				tmp.lockbox.sprite = Sprite.new ("res/objects/items/lockbox.png", 8, 8, x * 8, y * 8, lanims)
 				tmp.lockbox.item = "nails"
 				if not Player.inv ["nails"]
 				then

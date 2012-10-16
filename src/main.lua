@@ -211,5 +211,5 @@ function love.draw ()
 	love.graphics.setCanvas () -- reset to full resolution
 	love.graphics.draw (screen, 0, 0, 0, 4, 4)
 	love.graphics.draw (overlay, 0, 0)
-	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
+--	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
 end
