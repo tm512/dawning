@@ -5,17 +5,25 @@ Monster = { }
 
 manims =
 {
-	standing = { 0, 0, -1, nil }
+	stand1 = { 0, 0, 8, "glitch1" },
+	glitch1 = { 0, 1, 4, "stand2" },
+	stand2 = { 1, 0, 8, "glitch2" },
+	glitch2 = { 1, 1, 5, "stand1" }
 }
 
 Monster.thing = Thing.new (128, 16, 8, 24)
 Monster.sprite = Sprite.new ("res/objects/npc/monster.png", 32, 32, -12, -8, manims)
-Monster.sprite:setFrame ("standing")
+Monster.sprite:setFrame ("stand1")
 Monster.visible = false
 Monster.lifetime = 0
 
 function Monster:logic ()
-	if not (Player.thing.momx == 0) and math.random (1, 1200) == 1200 and not self.visible -- try to spawn randomly
+	if not curlevel.srate
+	then
+		return
+	end
+
+	if not (Player.thing.momx == 0) and math.random (1, curlevel.srate) == curlevel.srate and not self.visible -- try to spawn randomly
 	then
 		local spot = (Player.thing.x + Player.thing.w / 2)
 		if Player.thing.momx < 0
@@ -48,12 +56,13 @@ function Monster:logic ()
 	end
 
 	self.thing:doPhysics ()
+	self.sprite:advFrame ()
 end
 
 function Monster:trySpawn (x)
 	self.visible = false
 	
-	if math.random (1, 6) == 6 or x
+	if (math.random (1, 6) == 6 or x) and curlevel.srate
 	then
 		self.thing.y = 0
 		self.thing.momy = 0
