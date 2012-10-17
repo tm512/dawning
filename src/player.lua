@@ -93,6 +93,11 @@ function Player:logic ()
 		end
 	elseif self.thing.onground == true and not (self.state == "crawling")
 	then
+		if jumpFrames < 10
+		then
+			landsound:play ()
+		end
+
 		jumpFrames = 10
 	else
 		jumpFrames = 0

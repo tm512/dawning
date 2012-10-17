@@ -48,12 +48,15 @@ function love.load ()
 		error ("couldn't set screen mode")
 	end
 
-	screen = love.graphics.newCanvas (192, 96)
+	screen = love.graphics.newCanvas (256, 128)
 	screen:setFilter ("nearest", "nearest")
 
 	overlay = genOverlay (768, 386)
 	stepsound = love.audio.newSource ("res/sound/footstep.ogg", "static")
 	stepsound:setVolume (0.4)
+
+	landsound = love.audio.newSource ("res/sound/landing.ogg", "static")
+	landsound:setVolume (0.4)
 
 	monstersound = love.audio.newSource ("res/sound/monster.ogg", "static")
 	monstersound:setLooping (true)
