@@ -18,10 +18,10 @@ panims =
 	standing = { 0, 0, -1, nil },
 	walk1 = { 1, 0, 7, "walk2" },
 	walk2 = { 1, 1, 7, "walk3" },
-	walk3 = { 1, 2, 7, "walk4" },
+	walk3 = { 1, 2, 7, "walk4", function () stepsound:play () end },
 	walk4 = { 1, 3, 7, "walk5" },
 	walk5 = { 1, 4, 7, "walk6" },
-	walk6 = { 1, 5, 7, "walk1" },
+	walk6 = { 1, 5, 7, "walk1", function () stepsound:play () end },
 	jump1 = { 4, 0, 6, "jump2" },
 	jump2 = { 4, 1, 6, "jump3" },
 	jump3 = { 4, 2, -1, nil },
@@ -42,13 +42,17 @@ panims =
 
 Player.thing = Thing.new (100, 72, 6, 12)
 Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -5, -4, panims)
---Player.sprite:setFrame ("standing")
---Player.state = "standing"
 Player.sprite:setFrame ("wake1")
 Player.state = "waking"
 Player.inv = { }
+Player.cheaty = false
 
 function Player:hasInv (lock)
+	if self.cheaty
+	then
+		return true
+	end
+
 	for i in pairs (lock)
 	do
 		if not self.inv [lock [i]]

@@ -52,6 +52,13 @@ function love.load ()
 	screen:setFilter ("nearest", "nearest")
 
 	overlay = genOverlay (768, 386)
+	stepsound = love.audio.newSource ("res/sound/footstep.ogg", "static")
+	stepsound:setVolume (0.4)
+
+	monstersound = love.audio.newSource ("res/sound/monster.ogg", "static")
+	monstersound:setLooping (true)
+	monstersound:setVolume (0.0)
+	monstersound:play ()
 
 	for i = 1, 64
 	do
@@ -180,10 +187,11 @@ function love.draw ()
 
 	love.graphics.setColorMode ("modulate")
 	love.graphics.setBlendMode ("subtractive")
-	distance = (Monster.visible and tdist > distance) and tdist or distance - 0.75
+	distance = (Monster.visible and tdist > distance) and tdist or distance - 0.5
 	love.graphics.setColor (255, 255, 255, math.floor (distance > 160 and 160 or (distance > 0 and distance or 0)))
 	love.graphics.draw (static [math.floor (staticIndx / 4) + 1], 0, 0)
 	staticIndx = (staticIndx + 1) % (#static * 4)
+	monstersound:setVolume ((distance > 160 and 160 or (distance > 0 and distance or 0)) / 120)
 
 	love.graphics.setColor (0, 0, 0, math.abs (fadeAmount))
 	love.graphics.rectangle ("fill", 0, 0, 192, 96)
@@ -217,5 +225,5 @@ function love.draw ()
 	love.graphics.setCanvas () -- reset to full resolution
 	love.graphics.draw (screen, 0, 0, 0, 4, 4)
 	love.graphics.draw (overlay, 0, 0)
-	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
+--	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
 end

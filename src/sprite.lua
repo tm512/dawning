@@ -33,6 +33,10 @@ function Sprite:advFrame ()
 	elseif self.frames == 0
 	then
 		self:setFrame (self.anims [self.curframe] [4])
+		if self.anims [self.curframe] [5]
+		then
+			self.anims [self.curframe] [5] ()
+		end
 	end
 end
 

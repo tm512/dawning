@@ -7,9 +7,10 @@ Level.__index = Level
 -- { bg, tiles, srate, left, right, up, down, { door1, spawnx, spawny }, { door2, spawnx, spawny }, { door2, spawnx, spawny } }
 levels =
 {
+	bridge = { "res/bgs/bridge.png", "res/levels/bridge_level.png", nil, nil, "cliff_bridge", nil, nil },
 	cliff_bridge = { "res/bgs/cliff_bridge.png", "res/levels/cliff_bridge_level.png", nil, nil, "cliff_bed", nil, "cliff_lower",
 	                { "cliff_bridgefix", 96, 68, { "hammer", "nails", "planks" } } },
-	cliff_bridgefix = { "res/bgs/cliff_bridge.png", "res/levels/cliff_bridgefix_level.png", nil, nil, "cliff_bed", nil, "cliff_lower" },
+	cliff_bridgefix = { "res/bgs/cliff_bridge.png", "res/levels/cliff_bridgefix_level.png", nil, "bridge", "cliff_bed", nil, "cliff_lower" },
 	cliff_lower = { "res/bgs/cliff_lower.png", "res/levels/cliff_lower_level.png", nil, nil, "cliff_tunnel", nil, nil },
 	cliff_tunnel = { "res/bgs/cliff_tunnel.png", "res/levels/cliff_tunnel_level.png", 2400, "cliff_lower", nil, nil, nil,
 	                { "outfor_ladder", 80, 36 } },
@@ -178,6 +179,11 @@ function Level.new (idx)
 			tmp.bridge:setFrame ("fixed")
 			levels ["cliff_bridge"] = levels ["cliff_bridgefix"]
 		end
+	end
+
+	if levels [idx] [2] == "res/levels/bridge_level.png"
+	then
+		tmp.bridge = Sprite.new ("res/objects/items/bridge_long.png", 192, 16, 0, 66)
 	end
 
 	return tmp
