@@ -5,10 +5,16 @@ Monster = { }
 
 manims =
 {
-	stand1 = { 0, 0, 8, "glitch1" },
-	glitch1 = { 0, 1, 4, "stand2" },
-	stand2 = { 1, 0, 8, "glitch2" },
-	glitch2 = { 1, 1, 5, "stand1" }
+	stand1 = { 0, 0, 60, "glitch1" },
+	glitch1 = { 2, 0, 9, "glitch2" },
+	glitch2 = { 0, 1, 7, "glitch3" },
+	glitch3 = { 1, 1, 6, "stand2" },
+	stand2 = { 1, 0, 20, "stand3" },
+	stand3 = { 0, 0, 80, "glitch4" },
+	glitch4 = { 2, 2, 40, "glitch5" },
+	glitch5 = { 1, 2, 6, "glitch6" },
+	glitch6 = { 0, 2, 15, "glitch7" },
+	glitch7 = { 2, 1, 6, "stand1" }
 }
 
 Monster.thing = Thing.new (128, 16, 8, 24)
