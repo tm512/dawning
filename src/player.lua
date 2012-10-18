@@ -34,9 +34,9 @@ panims =
 	uncrouch3 = { 2, 1, 7, "uncrouch4" },
 	uncrouch4 = { 2, 0, 7,  "standing" },
 	crawl0 = { 3, 0, -1, nil },
-	crawl1 = { 3, 0, 13, "crawl2" },
+	crawl1 = { 3, 0, 13, "crawl2", function () crawlsound:play () end },
 	crawl2 = { 3, 1, 13, "crawl3" },
-	crawl3 = { 3, 0, 13, "crawl4" },
+	crawl3 = { 3, 0, 13, "crawl4", function () crawlsound:play () end },
 	crawl4 = { 3, 2, 13, "crawl1" },
 }
 
@@ -45,7 +45,7 @@ Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -5, -4, pan
 Player.sprite:setFrame ("wake1")
 Player.state = "waking"
 Player.inv = { }
-Player.cheaty = false
+Player.cheaty = true
 
 function Player:hasInv (lock)
 	if self.cheaty
@@ -93,7 +93,7 @@ function Player:logic ()
 		end
 	elseif self.thing.onground == true and not (self.state == "crawling")
 	then
-		if jumpFrames < 10
+		if jumpFrames < 10 and not (self.state == "crouching")
 		then
 			landsound:play ()
 		end
@@ -184,6 +184,13 @@ function Player:logic ()
 			then
 				self.inv ["hammer"] = Sprite.new ("res/objects/items/hammer.png", 8, 8, 0, 0, nil)
 				curlevel.items ["hammer"] = nil
+			end
+		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y - 3, 12)
+		then
+			if not self.inv ["head"]
+			then
+				self.inv ["head"] = Sprite.new ("res/objects/items/head.png", 8, 8, 0, 0, nil)
+				curlevel.items ["head"] = nil
 			end
 		else
 			self.sprite:setFrame ("crouch1")

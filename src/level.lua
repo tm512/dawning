@@ -52,7 +52,7 @@ levels =
 	             { "infor_plats1", 298, 60 } },
 }
 
-startlevel = "cliff_bed"
+startlevel = "room_cell"
 
 lanims =
 {
@@ -160,6 +160,13 @@ function Level.new (idx)
 				if not Player.inv ["hammer"]
 				then
 					tmp.items ["hammer"] = Sprite.new ("res/objects/items/item.png", 8, 8, x * 8, y * 8)
+				end
+			elseif r == 50 and g == 0 and b == 0 -- head (secret)
+			then
+				tmp.tiles [y + 1] [x + 1] = 12
+				if not Player.inv ["head"]
+				then
+					tmp.items ["head"] = Sprite.new ("res/objects/items/item_head.png", 8, 8, x * 8, y * 8)
 				end
 			else
 				tmp.tiles [y + 1] [x + 1] = 0

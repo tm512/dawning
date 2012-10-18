@@ -58,6 +58,9 @@ function love.load ()
 	landsound = love.audio.newSource ("res/sound/landing.ogg", "static")
 	landsound:setVolume (0.4)
 
+	crawlsound = love.audio.newSource ("res/sound/crawl.ogg", "static")
+	crawlsound:setVolume (0.4)
+
 	monstersound = love.audio.newSource ("res/sound/monster.ogg", "static")
 	monstersound:setLooping (true)
 	monstersound:setVolume (0.0)
