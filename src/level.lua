@@ -52,7 +52,7 @@ levels =
 	             { "infor_plats1", 298, 60 } },
 }
 
-startlevel = "room_cell"
+startlevel = "cliff_bed"
 
 lanims =
 {

@@ -45,14 +45,8 @@ Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -5, -4, pan
 Player.sprite:setFrame ("wake1")
 Player.state = "waking"
 Player.inv = { }
-Player.cheaty = true
 
 function Player:hasInv (lock)
-	if self.cheaty
-	then
-		return true
-	end
-
 	for i in pairs (lock)
 	do
 		if not self.inv [lock [i]]
@@ -301,5 +295,6 @@ function Player:logic ()
 	if newlevel and not (newlevel == curlevel)
 	then
 		fadeEnable = true
+		title.enabled = false
 	end
 end

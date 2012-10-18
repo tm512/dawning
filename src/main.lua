@@ -66,6 +66,11 @@ function love.load ()
 	monstersound:setVolume (0.0)
 	monstersound:play ()
 
+	title = { title = love.graphics.newImage ("res/objects/title/title.png"),
+	          copyr = love.graphics.newImage ("res/objects//title/text.png"),
+	          alpha = 0,
+	          enabled = true }
+
 	for i = 1, 64
 	do
 		table.insert (static, genStatic (192, 96))
@@ -225,8 +230,18 @@ function love.draw ()
 		end
 	end
 	
-	love.graphics.setColorMode ("replace")
 	love.graphics.setBlendMode ("alpha")
+	if title.enabled
+	then
+		love.graphics.setColor (255, 255, 255, title.alpha)
+		love.graphics.draw (title.title, 67, 0)
+		love.graphics.draw (title.copyr, 99, 87)
+		if title.alpha < 255
+		then
+			title.alpha = title.alpha + 1
+		end
+	end
+	love.graphics.setColorMode ("replace")
 
 	love.graphics.setCanvas () -- reset to full resolution
 	love.graphics.draw (screen, 0, 0, 0, 4, 4)
