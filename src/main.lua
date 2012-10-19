@@ -61,6 +61,15 @@ function love.load ()
 	crawlsound = love.audio.newSource ("res/sound/crawl.ogg", "static")
 	crawlsound:setVolume (0.4)
 
+	itemsound = love.audio.newSource ("res/sound/item.ogg", "static")
+	itemsound:setVolume (0.4)
+
+	doorsound = love.audio.newSource ("res/sound/door.ogg", "static")
+	doorsound:setVolume (0.4)
+
+	laddersound = love.audio.newSource ("res/sound/ladder.ogg", "static")
+	laddersound:setVolume (0.4)
+
 	monstersound = love.audio.newSource ("res/sound/monster.ogg", "static")
 	monstersound:setLooping (true)
 	monstersound:setVolume (0.0)
@@ -70,6 +79,8 @@ function love.load ()
 	          copyr = love.graphics.newImage ("res/objects//title/text.png"),
 	          alpha = 0,
 	          enabled = true }
+
+	ambience = { name = ":D", source = nil }
 
 	for i = 1, 64
 	do

@@ -46,16 +46,30 @@ Player.sprite:setFrame ("wake1")
 Player.state = "waking"
 Player.inv = { }
 
-function Player:hasInv (lock)
-	for i in pairs (lock)
+function Player:hasInv (item)
+	if type (item) == "string"
+	then
+		item = { item }
+	end
+
+	for i in pairs (item)
 	do
-		if not self.inv [lock [i]]
+		if not self.inv [item [i]]
 		then
 			return false
 		end
 	end
 
 	return true
+end
+
+function Player:giveInv (item)
+	if not self:hasInv (item)
+	then
+		self.inv [item] = Sprite.new ("res/objects/items/" .. item .. ".png", 8, 8, 0, 0, nil)
+		curlevel.items [item] = nil
+		itemsound:play ()
+	end
 end
 
 jumpFrames = 10
@@ -112,80 +126,60 @@ function Player:logic ()
 	if love.keyboard.isDown ("down") and not (self.state == "crouching")
 	and self.thing.onground and self.thing.momx == 0 and doorFrames == 0
 	then
+		local switchsound = nil
 		if isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 2)
 		and (not curlevel.door1 [4] or self:hasInv (curlevel.door1 [4])) -- door1
 		then
+			switchsound = curlevel.door1 [5]
 			newx = curlevel.door1 [2]
 			newy = curlevel.door1 [3]
 			newlevel = Level.new (curlevel.door1 [1])
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 3)
 		and (not curlevel.door2 [4] or self:hasInv (curlevel.door2 [4])) -- door2
 		then
+			switchsound = curlevel.door2 [5]
 			newx = curlevel.door2 [2]
 			newy = curlevel.door2 [3]
 			newlevel = Level.new (curlevel.door2 [1])
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 4)
 		and (not curlevel.door3 [4] or self:hasInv (curlevel.door3 [4])) -- door3
 		then
+			switchsound = curlevel.door3 [5]
 			newx = curlevel.door3 [2]
 			newy = curlevel.door3 [3]
 			newlevel = Level.new (curlevel.door3 [1])
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 5)
 		then
-			if not self.inv ["key_cabin"]
-			then
-				self.inv ["key_cabin"] = Sprite.new ("res/objects/items/key_cabin.png", 8, 8, 0, 0, nil)
-				curlevel.items ["key_cabin"] = nil
-			end
+			self:giveInv ("key_cabin")
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y, 6)
 		then
-			if not self.inv ["key_shed"]
-			then
-				self.inv ["key_shed"] = Sprite.new ("res/objects/items/key_shed.png", 8, 8, 0, 0, nil)
-				curlevel.items ["key_shed"] = nil
-			end
+			self:giveInv ("key_shed")
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y, 7)
 		then
-			if not self.inv ["key_gate"] and self.inv ["crowbar"]
+			if self:hasInv ("crowbar")
 			then
-				self.inv ["key_gate"] = Sprite.new ("res/objects/items/key_gate.png", 8, 8, 0, 0, nil)
+				self:giveInv ("key_gate")
 				curlevel.lockbox.sprite:setFrame ("opened")
 			end
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 8)
 		then
-			if not self.inv ["planks"]
-			then
-				self.inv ["planks"] = Sprite.new ("res/objects/items/planks.png", 8, 8, 0, 0, nil)
-				curlevel.items ["planks"] = nil
-			end
+			self:giveInv ("planks")
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y, 9)
 		then
-			if not self.inv ["nails"] and self.inv ["crowbar"]
+			if self:hasInv ("crowbar")
 			then
-				self.inv ["nails"] = Sprite.new ("res/objects/items/nails.png", 8, 8, 0, 0, nil)
+				self:giveInv ("nails")
 				curlevel.lockbox.sprite:setFrame ("opened")
 			end
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 10)
 		then
-			if not self.inv ["crowbar"]
-			then
-				self.inv ["crowbar"] = Sprite.new ("res/objects/items/crowbar.png", 8, 8, 0, 0, nil)
-				curlevel.items ["crowbar"] = nil
-			end
+			self:giveInv ("crowbar")
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y - 3, 11)
 		then
-			if not self.inv ["hammer"]
-			then
-				self.inv ["hammer"] = Sprite.new ("res/objects/items/hammer.png", 8, 8, 0, 0, nil)
-				curlevel.items ["hammer"] = nil
-			end
+			self:giveInv ("hammer")
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y - 3, 12)
 		then
-			if not self.inv ["head"]
-			then
-				self.inv ["head"] = Sprite.new ("res/objects/items/head.png", 8, 8, 0, 0, nil)
-				curlevel.items ["head"] = nil
-			end
+			self:giveInv ("head")
 		else
 			self.sprite:setFrame ("crouch1")
 			self.state = "crouching"
@@ -197,6 +191,14 @@ function Player:logic ()
 		if newlevel and not (newlevel == curlevel)
 		then
 			fadeEnable = true
+			if switchsound == "door"
+			then
+				doorsound:play ()
+			elseif switchsound == "ladder"
+			then
+				laddersound:play ()
+			end
+
 			return
 		end
 	end
