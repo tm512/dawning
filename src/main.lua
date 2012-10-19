@@ -70,6 +70,9 @@ function love.load ()
 	laddersound = love.audio.newSource ("res/sound/ladder.ogg", "static")
 	laddersound:setVolume (0.4)
 
+	glitchsound = love.audio.newSource ("res/sound/glitch.ogg", "static")
+	glitchsound:setVolume (0.4)
+
 	monstersound = love.audio.newSource ("res/sound/monster.ogg", "static")
 	monstersound:setLooping (true)
 	monstersound:setVolume (0.0)
@@ -231,6 +234,15 @@ function love.draw ()
 				newlevel = nil
 				Player.thing.x = newx
 				Player.thing.y = newy
+
+				if Player.headless == "set"
+				then
+					Player.sprite = Sprite.new ("res/objects/player/player_head.png", 16, 16, -5, -4, panims)
+					Player.sprite:setFrame ("wake1")
+					Player.state = "waking"
+					Player.headless = "yes"
+				end
+
 				doorFrames = 40
 				Monster:trySpawn ()
 			end

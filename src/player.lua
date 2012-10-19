@@ -44,6 +44,7 @@ Player.thing = Thing.new (100, 72, 6, 12)
 Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -5, -4, panims)
 Player.sprite:setFrame ("wake1")
 Player.state = "waking"
+Player.headless = "no"
 Player.inv = { }
 
 function Player:hasInv (item)
@@ -271,6 +272,30 @@ function Player:logic ()
 
 	self.thing:doPhysics ()
 	self.sprite:advFrame ()
+
+	-- check for monster collision
+	if Monster.visible
+	then
+		local xinter = (self.thing:left () < Monster.thing:right () and self.thing:right () > Monster.thing:left ())
+		local yinter = (self.thing:top () < Monster.thing:bottom () and self.thing:bottom () > Monster.thing:top ())
+
+		if xinter and yinter
+		then
+			for i in pairs (self.inv)
+			do
+				if math.random (1, 2) == 2
+				then
+					self.inv [i] = nil
+				end
+			end
+
+			glitchsound:play ()
+			self.headless = "set"
+			newlevel = Level.new ("cliff_bed")
+			newx = 100
+			newy = 72
+		end
+	end
 
 	if self.thing:left () < 0 and not (type (curlevel.left) == "nil") -- exit left
 	then
