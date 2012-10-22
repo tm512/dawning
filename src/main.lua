@@ -38,10 +38,22 @@ function genStatic (w, h)
 	return love.graphics.newImage (data)
 end
 
+function resetGame ()
+	newPlayer = true
+	newlevel = Level.new (startlevel)
+	newx = 100
+	newy = 72
+	fadeEnable = true
+	title.alpha = 0
+	title.enabled = true
+
+	levels ["cliff_bridge"] = bridgebak
+end
+
 static = { }
 function love.load ()
 	ret = love.graphics.setMode (768, 386, false, false, 0)
-	love.graphics.setCaption ("october")
+	love.graphics.setCaption ("dawning")
 	love.graphics.setColorMode ("replace")
 	if ret == 0
 	then
@@ -200,7 +212,7 @@ function love.draw ()
 	local j = 0
 	for i in pairs (Player.inv)
 	do
-		if Player.inv [i]
+		if Player.inv [i] and not (Player.state == "ending")
 		then
 			love.graphics.drawq (Player.inv [i].tex, Player.inv [i].quad, 180 - j, 84)
 		end
@@ -209,21 +221,52 @@ function love.draw ()
 
 	-- do static and/or fade
 	local tdist = 160 - (math.abs (Player.thing.x - Monster.thing.x) * 1.5)
+	local maxstatic = endFade and 255 or 160
 
 	love.graphics.setColorMode ("modulate")
 	love.graphics.setBlendMode ("subtractive")
-	distance = (Monster.visible and tdist > distance) and tdist or distance - 0.5
-	love.graphics.setColor (255, 255, 255, math.floor (distance > 160 and 160 or (distance > 0 and distance or 0)))
+
+	if endFade
+	then
+		distance = distance + 0.0425
+	else
+		distance = (Monster.visible and tdist > distance) and tdist or (distance < 0 and 0 or distance - 0.5)
+	end
+
+	love.graphics.setColor (255, 255, 255, math.floor (distance > maxstatic and maxstatic or (distance > 0 and distance or 0)))
 	love.graphics.draw (static [math.floor (staticIndx / 4) + 1], 0, 0)
 	staticIndx = (staticIndx + 1) % (#static * 4)
-	monstersound:setVolume ((distance > 160 and 160 or (distance > 0 and distance or 0)) / 120)
+	monstersound:setVolume ((distance > maxstatic and maxstatic or (distance > 0 and distance or 0)) / 120)
+
+	-- start the actual ending of the game if we need to
+	if distance > 255
+	then
+		Player.sprite:setFlip ("left")
+		if Player.headless == "no" -- good ending
+		then
+			Player.sprite:setFrame ("endwake1")
+			Player.state = "ending"
+			newlevel = Level.new ("bedroom")
+			newx = 43
+			newy = 64
+		else -- bad ending
+			Player.sprite = Sprite.new ("res/objects/player/player_box.png", 16, 16, -5, -4, panims)
+			Player.sprite:setFrame ("endwake1")
+			Player.state = "ending"
+			newlevel = Level.new ("room_cellclosed")
+			newx = 159
+			newy = 72
+		end
+		fadeEnable = true
+	end
+		
 
 	love.graphics.setColor (0, 0, 0, math.abs (fadeAmount))
 	love.graphics.rectangle ("fill", 0, 0, 192, 96)
 
 	if fadeEnable
 	then
-		fadeAmount = fadeAmount + (255 / 32)
+		fadeAmount = fadeAmount + (newPlayer and 1 or (255 / 32))
 
 		if math.floor (fadeAmount) == 255
 		then
@@ -232,8 +275,6 @@ function love.draw ()
 			then
 				curlevel = newlevel
 				newlevel = nil
-				Player.thing.x = newx
-				Player.thing.y = newy
 
 				if Player.headless == "set"
 				then
@@ -241,8 +282,30 @@ function love.draw ()
 					Player.sprite:setFrame ("wake1")
 					Player.state = "waking"
 					Player.headless = "yes"
+					Player.thing.momx = 0
+					Player.thing.momy = 0
 				end
 
+				if endFade and Player.state == "ending"
+				then
+					distance = 0
+					endFade = false
+				end
+
+				if newPlayer
+				then
+					Player.inv = { }
+					Player.headless = "no"
+					Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -5, -4, panims)
+					Player.sprite:setFrame ("wake1")
+					Player.state = "waking"
+					Player.thing.momx = 0
+					Player.thing.momy = 0
+					newPlayer = false
+				end
+
+				Player.thing.x = newx
+				Player.thing.y = newy
 				doorFrames = 40
 				Monster:trySpawn ()
 			end
@@ -254,7 +317,7 @@ function love.draw ()
 	end
 	
 	love.graphics.setBlendMode ("alpha")
-	if title.enabled
+	if title.enabled and not fadeEnable
 	then
 		love.graphics.setColor (255, 255, 255, title.alpha)
 		love.graphics.draw (title.title, 67, 0)

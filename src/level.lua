@@ -4,10 +4,13 @@ require 'player'
 Level = { }
 Level.__index = Level
 
+bridgebak = { } -- use to back up broken bridge
+
 -- { bg, tiles, ambience, srate, left, right, up, down, { door1, spawnx, spawny }, { door2, spawnx, spawny }, { door2, spawnx, spawny } }
 levels =
 {
-	bridge = { "res/bgs/bridge.png", "res/levels/bridge_level.png", "res/sound/ambient_cliffs.ogg", nil, nil, "cliff_bridge", nil, nil },
+	bridge = { "res/bgs/bridge.png", "res/levels/bridge_level.png", "res/sound/ambient_cliffs.ogg", nil, "bridge", "bridge" },
+	bedroom = { "res/bgs/bedroom.png", "res/levels/bedroom_level.png" },
 	cliff_bridge = { "res/bgs/cliff_bridge.png", "res/levels/cliff_bridge_level.png", "res/sound/ambient_cliffs.ogg", nil,
 	                nil, "cliff_bed", nil, "cliff_lower", { "cliff_bridgefix", 96, 68, { "hammer", "nails", "planks" } } },
 	cliff_bridgefix = { "res/bgs/cliff_bridge.png", "res/levels/cliff_bridgefix_level.png", "res/sound/ambient_cliffs.ogg", nil,
@@ -59,6 +62,7 @@ levels =
 	room_beds = { "res/bgs/room_beds.png", "res/levels/room_beds_level.png", nil, nil, nil, "cave_plats2" },
 	room_cell = { "res/bgs/room_cell.png", "res/levels/room_cell_level.png", nil, nil, nil, nil, nil, nil,
 	             { "infor_plats1", 298, 60, nil, "ladder" } },
+	room_cellclosed = { "res/bgs/room_cellclosed.png", "res/levels/room_cellclosed_level.png" }
 }
 
 startlevel = "cliff_bed"
@@ -193,6 +197,7 @@ function Level.new (idx)
 			tmp.bridge:setFrame ("broken")
 		else
 			tmp.bridge:setFrame ("fixed")
+			bridgebak = levels ["cliff_bridge"]
 			levels ["cliff_bridge"] = levels ["cliff_bridgefix"]
 		end
 	end
@@ -219,6 +224,12 @@ function Level.new (idx)
 		end
 
 		ambience.name = info [3]
+	end
+
+	-- toggle the start of the ending
+	if idx == "bridge"
+	then
+		endFade = true
 	end
 
 	return tmp

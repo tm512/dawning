@@ -15,6 +15,13 @@ panims =
 	wake7 = { 6, 0, 7, "wake8" },
 	wake8 = { 6, 1, 7, "wake9" },
 	wake9 = { 6, 2, 7, "standing" },
+	endwake1 = { 5, 0, 240, "endwake2" },
+	endwake2 = { 5, 1, 7, "endwake3" },
+	endwake3 = { 5, 2, 7, "endwake4" },
+	endwake4 = { 5, 3, 7, "endwake5" },
+	endwake5 = { 5, 4, 7, "endwake6" },
+	endwake6 = { 5, 5, 270, "endwake7" },
+	endwake7 = { 5, 5, -1, nil, function () resetGame () end },
 	standing = { 0, 0, -1, nil },
 	walk1 = { 1, 0, 7, "walk2" },
 	walk2 = { 1, 1, 7, "walk3" },
@@ -76,7 +83,7 @@ end
 jumpFrames = 10
 doorFrames = 0
 function Player:logic ()
-	if self.state == "waking" and not (self.sprite.curframe == "standing")
+	if (self.state == "waking" or self.state == "ending") and not (self.sprite.curframe == "standing")
 	then
 		self.sprite:advFrame ()
 		if self.sprite.curframe == "wake7" or self.sprite.curframe == "wake8" or self.sprite.curframe == "wake9"
