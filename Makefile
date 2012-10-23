@@ -1,11 +1,11 @@
 SRC = src
 
-default: october.love
+default: dawning.love
 
-october.love: src/*.lua res/*
-	rm -f october.love
-	zip -j ./october.love $(SRC)/*
-	zip -r ./october.love res
+dawning.love: src/*.lua res/*
+	rm -f dawning.love
+	zip -j ./dawning.love $(SRC)/*
+	zip -r ./dawning.love res
 
 clean:
-	rm -f october.love
+	rm -f dawning.love
