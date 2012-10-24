@@ -128,8 +128,8 @@ function Player:logic ()
 		then
 			self.thing.momy = 1.2
 			jumpFrames = jumpFrames - 1
-		elseif not (self.state == "uncrouching") and not isBlocked (self.thing.x, self.thing.y - 6, 1)
-		and not isBlocked (self.thing:right (), self.thing.y - 6, 1)
+		elseif not (self.state == "uncrouching") and not isBlocked (self.thing.x + 1, self.thing.y - 6, 1)
+		and not isBlocked (self.thing:right () - 1, self.thing.y - 6, 1)
 		then
 			self.sprite:setFrame (self.state == "crouch4" and "uncrouch2" or "uncrouch1")
 			self.state = "uncrouching"
@@ -159,7 +159,8 @@ function Player:logic ()
 	end
 
 	if love.keyboard.isDown ("down") and not (self.state == "crouching")
-	and self.thing.onground and self.thing.momx == 0 and doorFrames == 0
+	and not love.keyboard.isDown ("left") and not love.keyboard.isDown ("right")
+	and self.thing.onground and doorFrames == 0
 	then
 		local switchsound = nil
 		if isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 2)
