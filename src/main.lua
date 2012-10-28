@@ -103,6 +103,9 @@ function love.load ()
 	itemsound = love.audio.newSource ("res/sound/item.ogg", "static")
 	itemsound:setVolume (0.4)
 
+	nopesound = love.audio.newSource ("res/sound/nope.ogg", "static")
+	nopesound:setVolume (0.4)
+
 	doorsound = love.audio.newSource ("res/sound/door.ogg", "static")
 	doorsound:setVolume (0.4)
 

@@ -81,7 +81,8 @@ Player.state = "waking"
 Player.headless = "no"
 Player.inv = { }
 
-function Player:hasInv (item)
+nopeframes = 0 -- lol
+function Player:hasInv (item, playsnd)
 	if type (item) == "string"
 	then
 		item = { item }
@@ -91,6 +92,12 @@ function Player:hasInv (item)
 	do
 		if not self.inv [item [i]]
 		then
+			if playsnd and nopeframes == 0
+			then
+				nopesound:play ()
+				nopeframes = 60
+			end
+
 			return false
 		end
 	end
@@ -99,7 +106,7 @@ function Player:hasInv (item)
 end
 
 function Player:giveInv (item)
-	if not self:hasInv (item)
+	if not self:hasInv (item, false)
 	then
 		self.inv [item] = Sprite.new ("res/objects/items/" .. item .. ".png", 8, 8, 0, 0, nil)
 		curlevel.items [item] = nil
@@ -158,27 +165,29 @@ function Player:logic ()
 		doorFrames = doorFrames - 1
 	end
 
+	nopeframes = nopeframes > 0 and nopeframes - 1 or 0
+
 	if love.keyboard.isDown ("down") and not (self.state == "crouching")
 	and not love.keyboard.isDown ("left") and not love.keyboard.isDown ("right")
 	and self.thing.onground and doorFrames == 0
 	then
 		local switchsound = nil
 		if isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 2)
-		and (not curlevel.door1 [4] or self:hasInv (curlevel.door1 [4])) -- door1
+		and (not curlevel.door1 [4] or self:hasInv (curlevel.door1 [4], true)) -- door1
 		then
 			switchsound = curlevel.door1 [5]
 			newx = curlevel.door1 [2]
 			newy = curlevel.door1 [3]
 			newlevel = Level.new (curlevel.door1 [1])
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 3)
-		and (not curlevel.door2 [4] or self:hasInv (curlevel.door2 [4])) -- door2
+		and (not curlevel.door2 [4] or self:hasInv (curlevel.door2 [4], true)) -- door2
 		then
 			switchsound = curlevel.door2 [5]
 			newx = curlevel.door2 [2]
 			newy = curlevel.door2 [3]
 			newlevel = Level.new (curlevel.door2 [1])
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 4)
-		and (not curlevel.door3 [4] or self:hasInv (curlevel.door3 [4])) -- door3
+		and (not curlevel.door3 [4] or self:hasInv (curlevel.door3 [4], true)) -- door3
 		then
 			switchsound = curlevel.door3 [5]
 			newx = curlevel.door3 [2]
@@ -192,7 +201,7 @@ function Player:logic ()
 			self:giveInv ("key_shed")
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y, 7)
 		then
-			if self:hasInv ("crowbar")
+			if self:hasInv ("crowbar", true)
 			then
 				self:giveInv ("key_gate")
 				curlevel.lockbox.sprite:setFrame ("opened")
@@ -202,7 +211,7 @@ function Player:logic ()
 			self:giveInv ("planks")
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y, 9)
 		then
-			if self:hasInv ("crowbar")
+			if self:hasInv ("crowbar", true)
 			then
 				self:giveInv ("nails")
 				curlevel.lockbox.sprite:setFrame ("opened")
