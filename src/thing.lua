@@ -75,7 +75,7 @@ function isBlocked (x, y, targ)
 		return false -- for screen transitions
 	end
 
-	if curlevel.tiles [math.floor (y / 8) + 1] [math.floor (x / 8) + 1] == targ
+	if curlevel.tiles [math.floor (y / 8) + 1] [math.floor (x / 8) + 1].type == targ
 	then
 		return true
 	else

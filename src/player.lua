@@ -195,36 +195,17 @@ function Player:logic ()
 			newlevel = Level.new (curlevel.door3 [1])
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 5)
 		then
-			self:giveInv ("key_cabin")
+			self:giveInv (curlevel.tiles [math.floor ((self.thing:bottom () - 3) / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1].item)
+		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y, 5)
+		then
+			self:giveInv (curlevel.tiles [math.floor (self.thing.y / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1].item)
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y, 6)
 		then
-			self:giveInv ("key_shed")
-		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y, 7)
-		then
 			if self:hasInv ("crowbar", true)
 			then
-				self:giveInv ("key_gate")
+				self:giveInv (curlevel.lockbox.item)
 				curlevel.lockbox.sprite:setFrame ("opened")
 			end
-		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 8)
-		then
-			self:giveInv ("planks")
-		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y, 9)
-		then
-			if self:hasInv ("crowbar", true)
-			then
-				self:giveInv ("nails")
-				curlevel.lockbox.sprite:setFrame ("opened")
-			end
-		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 10)
-		then
-			self:giveInv ("crowbar")
-		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y - 3, 11)
-		then
-			self:giveInv ("hammer")
-		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y - 3, 12)
-		then
-			self:giveInv ("head")
 		else
 			self.sprite:setFrame ("crouch1")
 			self.state = "crouching"

@@ -106,6 +106,25 @@ banims =
 	fixed = { 0, 0, -1, nil }
 }
 
+function newItem (level, item, x, y)
+	if not Player.inv [item]
+	then
+		level.items [item] = Sprite.new ("res/objects/items/item.png", 8, 8, x * 8, y * 8)
+		level.tiles [y + 1] [x + 1].item = item
+	end
+end
+
+function newLockbox (lockbox, item, x, y)
+	lockbox.sprite = Sprite.new ("res/objects/items/lockbox.png", 8, 8, x * 8, y * 8, lanims)
+	lockbox.item = item
+	if not Player.inv [item]
+	then
+		lockbox.sprite:setFrame ("closed")
+	else
+		lockbox.sprite:setFrame ("opened")
+	end
+end
+
 function Level.new (idx)
 	local info = levels [idx]
 	local tmp = { }
@@ -129,87 +148,56 @@ function Level.new (idx)
 		tmp.tiles [y + 1] = { }
 		for x = 0, tiles:getWidth () - 1
 		do
+			tmp.tiles [y + 1] [x + 1] = { }
 			r, g, b, a = tiles:getPixel (x, y)
 			if r == 0 and g == 0 and b == 0 -- solid
 			then
-				tmp.tiles [y + 1] [x + 1] = 1
+				tmp.tiles [y + 1] [x + 1].type = 1
 			elseif r == 255 and g == 255 and b == 0 -- door 1
 			then
-				tmp.tiles [y + 1] [x + 1] = 2
+				tmp.tiles [y + 1] [x + 1].type = 2
 			elseif r == 255 and g == 0 and b == 255 -- door 2
 			then
-				tmp.tiles [y + 1] [x + 1] = 3
+				tmp.tiles [y + 1] [x + 1].type = 3
 			elseif r == 0 and g == 255 and b == 255 -- door 3
 			then
-				tmp.tiles [y + 1] [x + 1] = 4
+				tmp.tiles [y + 1] [x + 1].type = 4
 			elseif r == 0 and g == 255 and b == 0 -- cabin key
 			then
-				tmp.tiles [y + 1] [x + 1] = 5
-				if not Player.inv ["key_cabin"]
-				then
-					tmp.items ["key_cabin"] = Sprite.new ("res/objects/items/item.png", 8, 8, x * 8, y * 8)
-				end
+				tmp.tiles [y + 1] [x + 1].type = 5
+				newItem (tmp, "key_cabin", x, y)
 			elseif r == 0 and g == 200 and b == 0 -- shed key
 			then
-				tmp.tiles [y + 1] [x + 1] = 6
-				if not Player.inv ["key_shed"]
-				then
-					tmp.items ["key_shed"] = Sprite.new ("res/objects/items/item.png", 8, 8, x * 8, y * 8)
-				end
+				tmp.tiles [y + 1] [x + 1].type = 5
+				newItem (tmp, "key_shed", x, y)
 			elseif r == 0 and g == 150 and b == 0 -- gate key (locked)
 			then
-				tmp.tiles [y + 1] [x + 1] = 7
+				tmp.tiles [y + 1] [x + 1].type = 6
 				tmp.lockbox = { }
-				tmp.lockbox.sprite = Sprite.new ("res/objects/items/lockbox.png", 8, 8, x * 8, y * 8, lanims)
-				tmp.lockbox.item = "key_gate"
-				if not Player.inv ["key_gate"]
-				then
-					tmp.lockbox.sprite:setFrame ("closed")
-				else
-					tmp.lockbox.sprite:setFrame ("opened")
-				end
+				newLockbox (tmp.lockbox, "key_gate", x, y)
 			elseif r == 255 and g == 0 and b == 0 -- planks
 			then
-				tmp.tiles [y + 1] [x + 1] = 8
-				if not Player.inv ["planks"]
-				then
-					tmp.items ["planks"] = Sprite.new ("res/objects/items/item.png", 8, 8, x * 8, y * 8)
-				end
+				tmp.tiles [y + 1] [x + 1].type = 5
+				newItem (tmp, "planks", x, y)
 			elseif r == 200 and g == 0 and b == 0 -- nails (locked)
 			then
-				tmp.tiles [y + 1] [x + 1] = 9
+				tmp.tiles [y + 1] [x + 1].type = 6
 				tmp.lockbox = { }
-				tmp.lockbox.sprite = Sprite.new ("res/objects/items/lockbox.png", 8, 8, x * 8, y * 8, lanims)
-				tmp.lockbox.item = "nails"
-				if not Player.inv ["nails"]
-				then
-					tmp.lockbox.sprite:setFrame ("closed")
-				else
-					tmp.lockbox.sprite:setFrame ("opened")
-				end
+				newLockbox (tmp.lockbox, "nails", x, y)
 			elseif r == 150 and g == 0 and b == 0 -- crowbar
 			then
-				tmp.tiles [y + 1] [x + 1] = 10
-				if not Player.inv ["crowbar"]
-				then
-					tmp.items ["crowbar"] = Sprite.new ("res/objects/items/item.png", 8, 8, x * 8, y * 8)
-				end
+				tmp.tiles [y + 1] [x + 1].type = 5
+				newItem (tmp, "crowbar", x, y)
 			elseif r == 100 and g == 0 and b == 0 -- hammer
 			then
-				tmp.tiles [y + 1] [x + 1] = 11
-				if not Player.inv ["hammer"]
-				then
-					tmp.items ["hammer"] = Sprite.new ("res/objects/items/item.png", 8, 8, x * 8, y * 8)
-				end
+				tmp.tiles [y + 1] [x + 1].type = 5
+				newItem (tmp, "hammer", x, y)
 			elseif r == 50 and g == 0 and b == 0 -- head (secret)
 			then
-				tmp.tiles [y + 1] [x + 1] = 12
-				if not Player.inv ["head"]
-				then
-					tmp.items ["head"] = Sprite.new ("res/objects/items/item_head.png", 8, 8, x * 8, y * 8)
-				end
+				tmp.tiles [y + 1] [x + 1].type = 5
+				newItem (tmp, "head", x, y)
 			else
-				tmp.tiles [y + 1] [x + 1] = 0
+				tmp.tiles [y + 1] [x + 1].type = 0
 			end
 		end
 	end
