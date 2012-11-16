@@ -173,26 +173,32 @@ function Player:logic ()
 	then
 		local switchsound = nil
 		if isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 2)
-		and (not curlevel.door1 [4] or self:hasInv (curlevel.door1 [4], true)) -- door1
 		then
-			switchsound = curlevel.door1 [5]
-			newx = curlevel.door1 [2]
-			newy = curlevel.door1 [3]
-			newlevel = Level.new (curlevel.door1 [1])
+			if not curlevel.door1 [4] or self:hasInv (curlevel.door1 [4], true)
+			then
+				switchsound = curlevel.door1 [5]
+				newx = curlevel.door1 [2]
+				newy = curlevel.door1 [3]
+				newlevel = Level.new (curlevel.door1 [1])
+			end
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 3)
-		and (not curlevel.door2 [4] or self:hasInv (curlevel.door2 [4], true)) -- door2
 		then
-			switchsound = curlevel.door2 [5]
-			newx = curlevel.door2 [2]
-			newy = curlevel.door2 [3]
-			newlevel = Level.new (curlevel.door2 [1])
+			if not curlevel.door2 [4] or self:hasInv (curlevel.door2 [4], true)
+			then
+				switchsound = curlevel.door2 [5]
+				newx = curlevel.door2 [2]
+				newy = curlevel.door2 [3]
+				newlevel = Level.new (curlevel.door2 [1])
+			end
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 4)
-		and (not curlevel.door3 [4] or self:hasInv (curlevel.door3 [4], true)) -- door3
 		then
-			switchsound = curlevel.door3 [5]
-			newx = curlevel.door3 [2]
-			newy = curlevel.door3 [3]
-			newlevel = Level.new (curlevel.door3 [1])
+			if not curlevel.door3 [4] or self:hasInv (curlevel.door3 [4], true)
+			then
+				switchsound = curlevel.door3 [5]
+				newx = curlevel.door3 [2]
+				newy = curlevel.door3 [3]
+				newlevel = Level.new (curlevel.door3 [1])
+			end
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 5)
 		then
 			self:giveInv (curlevel.tiles [math.floor ((self.thing:bottom () - 3) / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1].item)
