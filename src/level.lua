@@ -92,7 +92,7 @@ levels =
 	room_cellclosed = { "res/bgs/room_cellclosed.png", "res/levels/room_cellclosed_level.png" }
 }
 
-startlevel = "cliff_bed"
+startlevel = "infor_plats1"
 
 lanims =
 {
@@ -106,10 +106,10 @@ banims =
 	fixed = { 0, 0, -1, nil }
 }
 
-function newItem (level, item, x, y)
+function newItem (level, item, x, y, head)
 	if not Player.inv [item]
 	then
-		level.items [item] = Sprite.new ("res/objects/items/item.png", 8, 8, x * 8, y * 8)
+		level.items [item] = Sprite.new ("res/objects/items/" .. (head and "item_head.png" or "item.png"), 8, 8, x * 8, y * 8)
 		level.tiles [y + 1] [x + 1].item = item
 	end
 end
@@ -195,7 +195,7 @@ function Level.new (idx)
 			elseif r == 50 and g == 0 and b == 0 -- head (secret)
 			then
 				tmp.tiles [y + 1] [x + 1].type = 5
-				newItem (tmp, "head", x, y)
+				newItem (tmp, "head", x, y, true)
 			else
 				tmp.tiles [y + 1] [x + 1].type = 0
 			end
