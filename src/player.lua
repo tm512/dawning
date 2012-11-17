@@ -80,6 +80,9 @@ Player.sprite:setFrame ("wake1")
 Player.state = "waking"
 Player.headless = "no"
 Player.inv = { }
+Player.sortedInv = { }
+
+keyhud = { door1 = false, door2 = false, door3 = false, lockbox = false }
 
 nopeframes = 0 -- lol
 function Player:hasInv (item, playsnd)
@@ -106,9 +109,10 @@ function Player:hasInv (item, playsnd)
 end
 
 function Player:giveInv (item)
-	if not self:hasInv (item, false)
+	if item and not self:hasInv (item, false)
 	then
 		self.inv [item] = Sprite.new ("res/objects/items/" .. item .. ".png", 8, 8, 0, 0, nil)
+		table.insert (self.sortedInv, self.inv [item])
 		curlevel.items [item] = nil
 		itemsound:play ()
 	end
@@ -243,6 +247,35 @@ function Player:logic ()
 		self.sprite.offsy = -4
 	end
 
+	-- set whether we're standing over certain doors. We need to display the items necessary to open them if so
+	if isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 2)
+	then
+		keyhud ["door1"] = true
+	else
+		keyhud ["door1"] = false
+	end
+
+	if isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 3)
+	then
+		keyhud ["door2"] = true
+	else
+		keyhud ["door2"] = false
+	end
+
+	if isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 4)
+	then
+		keyhud ["door3"] = true
+	else
+		keyhud ["door3"] = false
+	end
+
+	if isBlocked (self.thing.x + self.thing.w / 2, self.thing.y, 6)
+	then
+		keyhud ["lockbox"] = true
+	else
+		keyhud ["lockbox"] = false
+	end
+
 	local direction = 0
 	if love.keyboard.isDown ("left")
 	then
@@ -312,11 +345,14 @@ function Player:logic ()
 
 		if xinter and yinter
 		then
+			self.sortedInv = { }
 			for i in pairs (self.inv)
 			do
 				if math.random (1, 2) == 2
 				then
 					self.inv [i] = nil
+				else
+					table.insert (self.sortedInv, self.inv [i])
 				end
 			end
 

@@ -92,7 +92,7 @@ levels =
 	room_cellclosed = { "res/bgs/room_cellclosed.png", "res/levels/room_cellclosed_level.png" }
 }
 
-startlevel = "infor_plats1"
+startlevel = "cliff_bed"
 
 lanims =
 {
@@ -142,6 +142,7 @@ function Level.new (idx)
 	tmp.door1 = info [9]
 	tmp.door2 = info [10]
 	tmp.door3 = info [11]
+	tmp.itemspr = { }
 
 	for y = 0, tiles:getHeight () - 1
 	do
@@ -200,6 +201,34 @@ function Level.new (idx)
 				tmp.tiles [y + 1] [x + 1].type = 0
 			end
 		end
+	end
+
+	-- give item overlays above locked items/doors
+	local function keyspr (door, name)
+		tmpitems = nil
+		if door and door [4]
+		then
+			tmpitems = { }
+			if type (door [4]) == "string"
+			then
+				tmpitems = { { name = door [4], sprite = Sprite.new ("res/objects/items/" .. door [4] .. ".png", 8, 8, 0, 0, nil) } }
+			else
+				for i in ipairs (door [4])
+				do
+					table.insert (tmpitems, { name = door [4] [i], sprite = Sprite.new ("res/objects/items/" .. door [4] [i] .. ".png", 8, 8, 0, 0, nil) })
+				end
+			end
+		end
+		tmp.itemspr [name] = tmpitems
+	end
+
+	keyspr (tmp.door1, "door1")
+	keyspr (tmp.door2, "door2")
+	keyspr (tmp.door3, "door3")
+
+	if tmp.lockbox
+	then
+		tmp.itemspr ["lockbox"] = { { name = "crowbar", sprite = Sprite.new ("res/objects/items/crowbar.png", 8, 8, 0, 0, nil) } }
 	end
 
 	-- spawn the bridge if we need to

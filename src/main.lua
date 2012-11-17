@@ -240,20 +240,37 @@ function love.draw ()
 
 	-- draw items in HUD
 	local j = 0
-	for i in pairs (Player.inv)
+	for i in ipairs (Player.sortedInv)
 	do
-		if Player.inv [i] and not (Player.state == "ending")
+		if Player.sortedInv [i] and not (Player.state == "ending")
 		then
-			love.graphics.drawq (Player.inv [i].tex, Player.inv [i].quad, 180 - j, 84)
+			love.graphics.drawq (Player.sortedInv [i].tex, Player.sortedInv [i].quad, 180 - j, 84)
 		end
 		j = j + 10
 	end
+
+	love.graphics.setColorMode ("modulate")
+	love.graphics.setColor (255, 255, 255, 128)
+	for k, v in pairs (keyhud)
+	do
+		if v and curlevel.itemspr [k]
+		then
+			for l, w in pairs (curlevel.itemspr [k])
+			do
+				if not Player.inv [w.name]
+				then
+					love.graphics.drawq (w.sprite.tex, w.sprite.quad, 180 - j, 84)
+					j = j + 10
+				end
+			end
+		end
+	end
+	love.graphics.setColor (255, 255, 255, 255)
 
 	-- do static and/or fade
 	local tdist = 160 - (math.abs (Player.thing.x - Monster.thing.x) * 1.5)
 	local maxstatic = endFade and 255 or 160
 
-	love.graphics.setColorMode ("modulate")
 	love.graphics.setBlendMode ("subtractive")
 
 	if endFade
