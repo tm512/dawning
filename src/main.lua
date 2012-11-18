@@ -342,6 +342,7 @@ function love.draw ()
 				if newPlayer
 				then
 					Player.inv = { }
+					Player.sortedInv = { }
 					Player.headless = "no"
 					Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -5, -4, panims)
 					Player.sprite:setFrame ("wake1")
