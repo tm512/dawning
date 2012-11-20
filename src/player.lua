@@ -367,9 +367,9 @@ function Player:logic ()
 	if self.thing:left () < 0 and not (type (curlevel.left) == "nil") -- exit left
 	then
 		newlevel = Level.new (curlevel.left)
-		newx = newlevel.bg:getWidth () - self.thing.w
+		newx = newlevel.bg [1]:getWidth () - self.thing.w
 		newy = self.thing.y
-	elseif self.thing:right () > curlevel.bg:getWidth () and not (type (curlevel.right) == "nil") -- exit right
+	elseif self.thing:right () > curlevel.bg [1]:getWidth () and not (type (curlevel.right) == "nil") -- exit right
 	then
 		newlevel = Level.new (curlevel.right)
 		newx = 0
@@ -378,8 +378,8 @@ function Player:logic ()
 	then
 		newlevel = Level.new (curlevel.up)
 		newx = self.thing.x
-		newy = newlevel.bg:getHeight () - self.thing.h
-	elseif self.thing:bottom () > curlevel.bg:getHeight () and not (type (curlevel.down) == "nil") -- exit down
+		newy = newlevel.bg [1]:getHeight () - self.thing.h
+	elseif self.thing:bottom () > curlevel.bg [1]:getHeight () and not (type (curlevel.down) == "nil") -- exit down
 	then
 		newlevel = Level.new (curlevel.down)
 		newx = self.thing.x

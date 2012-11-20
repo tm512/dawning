@@ -171,18 +171,22 @@ function love.draw ()
 	love.graphics.push ()
 
 	-- camera
-	if curlevel.bg:getWidth () > 192
+	local camshift = (Player.thing.x + Player.thing.w / 2) - 96
+	camshift = camshift > 192 and 192 or camshift
+	camshift = camshift < 0 and 0 or camshift
+
+	if curlevel.bg [2] and curlevel.bg [3] -- render parallax
 	then
-		if Player.thing.x > 96 and Player.thing.x < curlevel.bg:getWidth () - 96
-		then
-			love.graphics.translate (-math.floor (Player.thing.x - 96), 0)
-		elseif Player.thing.x > curlevel.bg:getWidth () - 96
-		then
-			love.graphics.translate (-math.floor (curlevel.bg:getWidth () - 192), 0)
-		end
+		love.graphics.draw (curlevel.bg [3], -math.floor (48 * (camshift / 192)), 0)
+		love.graphics.draw (curlevel.bg [2], -math.floor (96 * (camshift / 192)), 0)
 	end
 
-	love.graphics.draw (curlevel.bg, 0, 0)
+	if curlevel.bg [1]:getWidth () > 192
+	then
+			love.graphics.translate (-math.floor (camshift), 0)
+	end
+
+	love.graphics.draw (curlevel.bg [1], 0, 0)
 
 	-- draw items on level
 	for i in pairs (curlevel.items)

@@ -104,20 +104,20 @@ function Monster:trySpawn (x)
 			self.thing.x = x
 		elseif math.random (1, 3) == 3
 		then
-			self.thing.x = math.random (self.thing.w * 3, curlevel.bg:getWidth () - self.thing.w * 4)
+			self.thing.x = math.random (self.thing.w * 3, curlevel.bg [1]:getWidth () - self.thing.w * 4)
 		elseif Player.thing.x == 0
 		then
-			self.thing.x = curlevel.bg:getWidth () - self.thing.w * 2
+			self.thing.x = curlevel.bg [1]:getWidth () - self.thing.w * 2
 		else
 			self.thing.x = self.thing.w
 		end
 
-		while (not isBlocked (self.thing.x, self.thing:bottom (), 1)) and self.thing:bottom () < curlevel.bg:getHeight ()
+		while (not isBlocked (self.thing.x, self.thing:bottom (), 1)) and self.thing:bottom () < curlevel.bg [1]:getHeight ()
 		do
 			self.thing.y = self.thing.y + 8
 		end
 
-		if not (self.thing:bottom () == curlevel.bg:getHeight ())
+		if not (self.thing:bottom () == curlevel.bg [1]:getHeight ())
 		and not isBlocked (self.thing.x, self.thing.y, 1) and not isBlocked (self.thing:right (), self.thing.y, 1)
 		and math.abs ((Player.thing.x + Player.thing.w / 2) - (self.thing.x + self.thing.w / 2)) > 16
 		then
