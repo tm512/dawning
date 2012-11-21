@@ -44,7 +44,7 @@ levels =
 	                   "bridge", "cliff_bed", nil, "cliff_lower" },
 	cliff_lower = { "cliff_lower", false, "res/sound/ambient_cliffs.ogg", nil,
 	               nil, "cliff_tunnel", nil, nil },
-	cliff_tunnel = { "cliff_tunnel", false, "res/sound/ambient_cave.ogg", 2400,
+	cliff_tunnel = { "cliff_tunnel", true, "res/sound/ambient_cave.ogg", 2400,
 	                "cliff_lower", nil, nil, nil, { "outfor_ladder", 80, 36, nil, "ladder" } },
 	cliff_bed = { "cliff_bed", false, "res/sound/ambient_outfor.ogg", nil,
 	             "cliff_bridge", "outfor_ladder" },
@@ -72,15 +72,15 @@ levels =
 	                nil, nil, nil, nil, { "cabin_main", 144, 68, nil, "ladder" }, { "room_heads", 20, 52, nil, "door" } },
 	cave_ladder = { "cave_ladder", false, "res/sound/ambient_cave.ogg", 1080,
 	               "cave_plats1", nil, nil, nil, { "cabin_shed", 48, 68, nil, "ladder" } },
-	cave_plats1 = { "cave_plats1", false, "res/sound/ambient_cave.ogg", 1080,
+	cave_plats1 = { "cave_plats1", true, "res/sound/ambient_cave.ogg", 1080,
 	               nil, "cave_ladder", nil, nil, { "cave_plats2", 24, 44, nil, "ladder" } },
-	cave_plats2 = { "cave_plats2", false, "res/sound/ambient_cave.ogg", 1080,
+	cave_plats2 = { "cave_plats2", true, "res/sound/ambient_cave.ogg", 1080,
 	               "room_beds", nil, nil, nil, { "cave_plats1", 24, 36, nil, "ladder" }, { "cave_end", 160, 60, nil, "ladder" } },
 	cave_end = { "cave_end", false, "res/sound/ambient_cave.ogg", 1080,
 	            nil, nil, nil, nil, { "cave_plats2", 352, 52, nil, "ladder" } },
-	infor_plats1 = { "infor_plats1", false, "res/sound/ambient_infor.ogg", 900,
+	infor_plats1 = { "infor_plats1", true, "res/sound/ambient_infor.ogg", 900,
 	                "outfor_gate", "infor_plats2", nil, nil, { "room_cell", 153, 28, nil, "ladder" } },
-	infor_plats2 = { "infor_plats2", false, "res/sound/ambient_infor.ogg", 900,
+	infor_plats2 = { "infor_plats2", true, "res/sound/ambient_infor.ogg", 900,
 	                "infor_plats1", "infor_wall" },
 	infor_wall = { "infor_wall", false, "res/sound/ambient_infor.ogg", 900,
 	              "infor_plats2", nil },
@@ -284,6 +284,9 @@ function Level.new (idx)
 	then
 		endFade = true
 	end
+
+	-- remove all particle systems
+	psystems = { }
 
 	return tmp
 end

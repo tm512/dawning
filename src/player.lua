@@ -150,6 +150,7 @@ function Player:logic ()
 		if jumpFrames < 10 and not (self.state == "crouching")
 		then
 			landsound:play ()
+			spawnPuff ()
 		end
 
 		jumpFrames = 10

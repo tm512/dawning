@@ -65,6 +65,34 @@ function genStatic (w, h)
 	return love.graphics.newImage (data)
 end
 
+function genParticle ()
+	local data = love.image.newImageData (1, 1)
+
+	data:setPixel (0, 0, 0x14, 0x14, 0x14, 255)
+	return love.graphics.newImage (data)
+end
+
+psystems = { }
+function spawnPuff ()
+	system = love.graphics.newParticleSystem (particle, 64)
+	table.insert (psystems, system)
+
+	system:setDirection (math.pi * 1.5)
+	system:setEmissionRate (64)
+	system:setGravity (15, 20)
+	system:setLifetime (0.06)
+	system:setParticleLife (0.08, 0.12)
+	system:setPosition (Player.thing.x + Player.thing.w / 2, Player.thing:bottom ())
+	system:setRadialAcceleration (0)
+	system:setSizes (1)
+	system:setSpeed (75, 80)
+	system:setSpin (0)
+	system:setSpread (math.pi)
+	system:start ()
+
+	system = nil
+end
+
 function resetGame ()
 	newPlayer = true
 	newlevel = Level.new (startlevel)
@@ -127,6 +155,8 @@ function love.load ()
 
 	ambience = { name = ":D", source = nil }
 
+	particle = genParticle ()
+
 	for i = 1, 64
 	do
 		table.insert (static, genStatic (192, 96))
@@ -159,6 +189,16 @@ function love.update (dt)
 	then
 		Player:logic ()
 		Monster:logic ()
+
+		for i, s in ipairs (psystems)
+		do
+			if s:isEmpty () and not s:isActive ()
+			then
+				table.remove (psystems, i)
+			else
+				s:update (dt)
+			end
+		end
 	end
 end
 
@@ -211,6 +251,12 @@ function love.draw ()
 		love.graphics.drawq (Monster.sprite.tex, Monster.sprite.quad,
 	    	                 math.floor (Monster.thing.x + Monster.sprite.offsx), math.floor (Monster.thing.y + Monster.sprite.offsy), 0,
 	        	             Monster.sprite:getFlip (), 1, (Monster.sprite:getFlip () == -1) and Monster.sprite.w or 0)
+	end
+
+	-- draw particle systems
+	for _, s in pairs (psystems)
+	do
+		love.graphics.draw (s)
 	end
 
 	if curlevel.bridge
