@@ -65,10 +65,10 @@ function genStatic (w, h)
 	return love.graphics.newImage (data)
 end
 
-function genParticle ()
+function genParticle (r, g, b)
 	local data = love.image.newImageData (1, 1)
 
-	data:setPixel (0, 0, 0x14, 0x14, 0x14, 255)
+	data:setPixel (0, 0, r, g, b, 255)
 	return love.graphics.newImage (data)
 end
 
@@ -154,8 +154,6 @@ function love.load ()
 	          enabled = true }
 
 	ambience = { name = ":D", source = nil }
-
-	particle = genParticle ()
 
 	for i = 1, 64
 	do

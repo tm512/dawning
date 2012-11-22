@@ -33,62 +33,59 @@ Level.__index = Level
 
 bridgebak = { } -- use to back up broken bridge
 
+areas =
+{
+	cliff = { "res/sound/ambient_cliffs.ogg", 0x14, 0x0d, 0x00 },
+	cliff2 = { "res/sound/ambient_outfor.ogg", 0x14, 0x0d, 0x00 },
+	outfor = { "res/sound/ambient_outfor.ogg", 0x03, 0x0d, 0x03 },
+	indoor = { nil, 0x3b, 0x3b, 0x00 },
+	cabin = { "res/sound/ambient_cabin.ogg", 0x3b, 0x3b, 0x00 },
+	cave = { "res/sound/ambient_cave.ogg", 0x20, 0x16, 0x0a },
+	infor = { "res/sound/ambient_infor.ogg", 0x00, 0x00, 0x15 },
+	secret = { nil, 0x34, 0x09, 0x09 }
+}
+
 -- { name, parallax, ambience, srate, left, right, up, down, { door1, spawnx, spawny }, { door2, spawnx, spawny }, { door2, spawnx, spawny } }
 levels =
 {
-	bridge = { "bridge", false, "res/sound/ambient_cliffs.ogg", nil, "bridge", "bridge" },
+	bridge = { "bridge", false, "cliff", nil, "bridge", "bridge" },
 	bedroom = { "bedroom" },
-	cliff_bridge = { "cliff_bridge", false, "res/sound/ambient_cliffs.ogg", nil, nil, "cliff_bed", nil, "cliff_lower",
+	cliff_bridge = { "cliff_bridge", false, "cliff", nil, nil, "cliff_bed", nil, "cliff_lower",
 	                { "cliff_bridgefix", 96, 68, { "hammer", "nails", "planks" } } },
-	cliff_bridgefix = { "cliff_bridgefix", false, "res/sound/ambient_cliffs.ogg", nil,
-	                   "bridge", "cliff_bed", nil, "cliff_lower" },
-	cliff_lower = { "cliff_lower", false, "res/sound/ambient_cliffs.ogg", nil,
-	               nil, "cliff_tunnel", nil, nil },
-	cliff_tunnel = { "cliff_tunnel", true, "res/sound/ambient_cave.ogg", 2400,
-	                "cliff_lower", nil, nil, nil, { "outfor_ladder", 80, 36, nil, "ladder" } },
-	cliff_bed = { "cliff_bed", false, "res/sound/ambient_outfor.ogg", nil,
-	             "cliff_bridge", "outfor_ladder" },
-	outfor_ladder = { "outfor_ladder", false, "res/sound/ambient_outfor.ogg", 1200,
+	cliff_bridgefix = { "cliff_bridgefix", false, "cliff", nil, "bridge", "cliff_bed", nil, "cliff_lower" },
+	cliff_lower = { "cliff_lower", false, "cliff", nil, nil, "cliff_tunnel", nil, nil },
+	cliff_tunnel = { "cliff_tunnel", true, "cave", 2400, "cliff_lower", nil, nil, nil, { "outfor_ladder", 80, 36, nil, "ladder" } },
+	cliff_bed = { "cliff_bed", false, "cliff2", nil, "cliff_bridge", "outfor_ladder" },
+	outfor_ladder = { "outfor_ladder", false, "outfor", 1200,
 	                 "cliff_bed", "outfor_plats1", nil, nil, { "cliff_tunnel", 280, 20, nil, "ladder" } },
-	outfor_plats1 = { "outfor_plats1", true, "res/sound/ambient_outfor.ogg", 1200,
-	                 "outfor_ladder", "outfor_shed" },
-	outfor_shed = { "outfor_shed", false, "res/sound/ambient_outfor.ogg", 1200,
+	outfor_plats1 = { "outfor_plats1", true, "outfor", 1200, "outfor_ladder", "outfor_shed" },
+	outfor_shed = { "outfor_shed", false, "outfor", 1200,
 	               "outfor_plats1", "outfor_plats2", nil, nil, { "cabin_shed", 84, 68, "key_shed", "door" } },
-	outfor_plats2 = { "outfor_plats2", true, "res/sound/ambient_outfor.ogg", 1200,
-	                 "outfor_shed", "outfor_cabin" },
-	outfor_cabin = { "outfor_cabin", false, "res/sound/ambient_outfor.ogg", 1200,
+	outfor_plats2 = { "outfor_plats2", true, "outfor", 1200, "outfor_shed", "outfor_cabin" },
+	outfor_cabin = { "outfor_cabin", false, "outfor", 1200,
 	                "outfor_plats2", "outfor_gate", nil, nil, { "cabin_main", 68, 68, "key_cabin", "door" } },
-	outfor_gate = { "outfor_gate", false, "res/sound/ambient_outfor.ogg", 1200,
+	outfor_gate = { "outfor_gate", false, "outfor", 1200,
 	               "outfor_cabin", "infor_plats1", nil, nil, { "outfor_gate", 114, 68, "key_gate", "door" },
 	               { "outfor_gate", 70, 68, nil, "door" } },
-	cabin_shed = { "cabin_shed", false, nil, 600,
+	cabin_shed = { "cabin_shed", false, "indoor", 600,
 	              nil, nil, nil, nil, { "outfor_shed", 100, 68, nil, "door" }, { "cave_ladder", 136, 12, nil, "ladder" } },
-	cabin_main = { "cabin_main", false, "res/sound/ambient_cabin.ogg", 600,
+	cabin_main = { "cabin_main", false, "cabin", 600,
 	              nil, nil, nil, nil, { "outfor_cabin", 140, 68, nil, "door" }, { "cabin_cellar", 144, 52, nil, "ladder" },
 	              { "cabin_upper", 56, 68, nil, "ladder" } },
-	cabin_upper = { "cabin_upper", false, nil, 600,
-	               nil, nil, nil, nil, { "cabin_main", 20, 68, nil, "ladder" } },
-	cabin_cellar = { "cabin_cellar", false, nil, 600,
+	cabin_upper = { "cabin_upper", false, "indoor", 600, nil, nil, nil, nil, { "cabin_main", 20, 68, nil, "ladder" } },
+	cabin_cellar = { "cabin_cellar", false, "indoor", 600,
 	                nil, nil, nil, nil, { "cabin_main", 144, 68, nil, "ladder" }, { "room_heads", 20, 52, nil, "door" } },
-	cave_ladder = { "cave_ladder", false, "res/sound/ambient_cave.ogg", 1080,
-	               "cave_plats1", nil, nil, nil, { "cabin_shed", 48, 68, nil, "ladder" } },
-	cave_plats1 = { "cave_plats1", true, "res/sound/ambient_cave.ogg", 1080,
-	               nil, "cave_ladder", nil, nil, { "cave_plats2", 24, 44, nil, "ladder" } },
-	cave_plats2 = { "cave_plats2", true, "res/sound/ambient_cave.ogg", 1080,
+	cave_ladder = { "cave_ladder", false, "cave", 1080, "cave_plats1", nil, nil, nil, { "cabin_shed", 48, 68, nil, "ladder" } },
+	cave_plats1 = { "cave_plats1", true, "cave", 1080, nil, "cave_ladder", nil, nil, { "cave_plats2", 24, 44, nil, "ladder" } },
+	cave_plats2 = { "cave_plats2", true, "cave", 1080,
 	               "room_beds", nil, nil, nil, { "cave_plats1", 24, 36, nil, "ladder" }, { "cave_end", 160, 60, nil, "ladder" } },
-	cave_end = { "cave_end", false, "res/sound/ambient_cave.ogg", 1080,
-	            nil, nil, nil, nil, { "cave_plats2", 352, 52, nil, "ladder" } },
-	infor_plats1 = { "infor_plats1", true, "res/sound/ambient_infor.ogg", 900,
-	                "outfor_gate", "infor_plats2", nil, nil, { "room_cell", 153, 28, nil, "ladder" } },
-	infor_plats2 = { "infor_plats2", true, "res/sound/ambient_infor.ogg", 900,
-	                "infor_plats1", "infor_wall" },
-	infor_wall = { "infor_wall", false, "res/sound/ambient_infor.ogg", 900,
-	              "infor_plats2", nil },
-	room_heads = { "room_heads", false, nil, nil, nil, nil, nil, nil,
-	              { "cabin_cellar", 164, 52, nil, "door" } },
-	room_beds = { "room_beds", false, nil, nil, nil, "cave_plats2" },
-	room_cell = { "room_cell", false, nil, nil, nil, nil, nil, nil,
-	             { "infor_plats1", 298, 60, nil, "ladder" } },
+	cave_end = { "cave_end", false, "cave", 1080, nil, nil, nil, nil, { "cave_plats2", 352, 52, nil, "ladder" } },
+	infor_plats1 = { "infor_plats1", true, "infor", 900, "outfor_gate", "infor_plats2", nil, nil, { "room_cell", 153, 28, nil, "ladder" } },
+	infor_plats2 = { "infor_plats2", true, "infor", 900, "infor_plats1", "infor_wall" },
+	infor_wall = { "infor_wall", false, "infor", 900, "infor_plats2", nil },
+	room_heads = { "room_heads", false, "secret", nil, nil, nil, nil, nil, { "cabin_cellar", 164, 52, nil, "door" } },
+	room_beds = { "room_beds", false, "secret", nil, nil, "cave_plats2" },
+	room_cell = { "room_cell", false, "secret", nil, nil, nil, nil, nil, { "infor_plats1", 298, 60, nil, "ladder" } },
 	room_cellclosed = { "room_cellclosed", false }
 }
 
@@ -260,24 +257,28 @@ function Level.new (idx)
 		tmp.bridge = Sprite.new ("res/objects/items/bridge_long.png", 192, 16, 0, 66)
 	end
 
+	local areadef = areas [info [3]]
 	-- switch music if we need to
-	if not (ambience.name == info [3])
+	if not (ambience.name == areadef [1])
 	then
 		if ambience.source
 		then
 			ambience.source:stop ()
 		end
 
-		if info [3]
+		if areadef [1]
 		then
-			ambience.source = love.audio.newSource (info [3])
+			ambience.source = love.audio.newSource (areadef [1])
 			ambience.source:setLooping (true)
 			ambience.source:setVolume (0.6)
 			ambience.source:play ()
 		end
 
-		ambience.name = info [3]
+		ambience.name = areadef [1]
 	end
+
+	-- set particle color to match area
+	particle = genParticle (areadef [2], areadef [3], areadef [4])
 
 	-- toggle the start of the ending
 	if idx == "bridge"
