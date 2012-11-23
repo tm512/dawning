@@ -31,14 +31,21 @@ require 'player'
 require 'monster'
 require 'level'
 
+local scale = 4
+
 function genOverlay (w, h)
+	if scale < 3
+	then
+		return nil
+	end
+
 	local data = love.image.newImageData (w, h)
 
 	for x = 0, w - 1
 	do
 		for y = 0, h - 1
 		do
-			if x % 4 == 0 or y % 4 == 0
+			if x % scale == 0 or y % scale == 0
 			then
 				data:setPixel (x, y, 0, 0, 0, 64)
 			else
@@ -107,7 +114,7 @@ end
 
 static = { }
 function love.load ()
-	ret = love.graphics.setMode (768, 386, false, false, 0)
+	ret = love.graphics.setMode (192 * scale, 96 * scale, false, false, 0)
 	love.graphics.setCaption ("dawning")
 	love.graphics.setColorMode ("replace")
 	if ret == 0
@@ -118,7 +125,7 @@ function love.load ()
 	screen = love.graphics.newCanvas (256, 128)
 	screen:setFilter ("nearest", "nearest")
 
-	overlay = genOverlay (768, 386)
+	overlay = genOverlay (192 * scale, 96 * scale)
 	stepsound = love.audio.newSource ("res/sound/footstep.ogg", "static")
 	stepsound:setVolume (0.4)
 
@@ -426,7 +433,10 @@ function love.draw ()
 	love.graphics.setColorMode ("replace")
 
 	love.graphics.setCanvas () -- reset to full resolution
-	love.graphics.draw (screen, 0, 0, 0, 4, 4)
-	love.graphics.draw (overlay, 0, 0)
+	love.graphics.draw (screen, 0, 0, 0, scale, scale)
+	if overlay
+	then
+		love.graphics.draw (overlay, 0, 0)
+	end
 --	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
 end
