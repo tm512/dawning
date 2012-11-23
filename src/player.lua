@@ -118,7 +118,7 @@ function Player:giveInv (item)
 	end
 end
 
-jumpFrames = 10
+jumpFrames = 0
 doorFrames = 0
 function Player:logic ()
 	if (self.state == "waking" or self.state == "ending") and not (self.sprite.curframe == "standing")
@@ -172,7 +172,7 @@ function Player:logic ()
 
 	nopeframes = nopeframes > 0 and nopeframes - 1 or 0
 
-	if love.keyboard.isDown ("down") and not (self.state == "crouching")
+	if love.keyboard.isDown ("down") and not (self.state == "crouching") and not (self.state == "crawling")
 	and not love.keyboard.isDown ("left") and not love.keyboard.isDown ("right")
 	and self.thing.onground and doorFrames == 0
 	then
