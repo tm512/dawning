@@ -48,7 +48,9 @@ Monster.thing = Thing.new (128, 16, 8, 24)
 Monster.sprite = Sprite.new ("res/objects/npc/monster.png", 32, 32, -12, -8, manims)
 Monster.sprite:setFrame ("stand1")
 Monster.visible = false
+Monster.jumping = false
 Monster.lifetime = 0
+Monster.bounds = { lower = 24, upper = 64 }
 
 function Monster:logic ()
 	if not curlevel.srate
@@ -56,17 +58,28 @@ function Monster:logic ()
 		return
 	end
 
-	if not (Player.thing.momx == 0) and math.random (1, curlevel.srate) == curlevel.srate and not self.visible -- try to spawn randomly
+	if not self.visible
+	and (self.jumping or (not (Player.thing.momx == 0) and math.random (1, curlevel.srate) == curlevel.srate)) -- try to spawn randomly
 	then
 		local spot = (Player.thing.x + Player.thing.w / 2)
-		if Player.thing.momx < 0
+		local offset = math.random (math.floor (self.bounds.lower), math.floor (self.bounds.upper))
+		if (self.jumping and math.random (1, 2) == 1) or ((not self.jumping) and Player.thing.momx < 0)
 		then
-			spot = spot - math.random (24, 64)
+			spot = spot - offset
 		else
-			spot = spot + math.random (24, 64)
+			spot = spot + offset
 		end
 
-		self:trySpawn (spot)
+		if self.jumping and math.random (1, 3) < 3
+		then
+			self.jumping = false
+		end
+
+		if self:trySpawn (spot)
+		then
+			self.bounds.lower = self.bounds.lower > 14 and self.bounds.lower - 0.25 or self.bounds.lower
+			self.bounds.upper = self.bounds.upper > 24 and self.bounds.upper - 1 or self.bounds.upper
+		end
 	end
 
 	if not self.visible
@@ -75,10 +88,9 @@ function Monster:logic ()
 	end
 
 	self.lifetime = self.lifetime - 1
-	if self.lifetime == 0
+	if self.lifetime <= 0
 	then
 		self.visible = false
-		return
 	end
 
 	if Player.thing.x < self.thing.x
@@ -119,10 +131,18 @@ function Monster:trySpawn (x)
 
 		if not (self.thing:bottom () == curlevel.bg [1]:getHeight ())
 		and not isBlocked (self.thing.x, self.thing.y, 1) and not isBlocked (self.thing:right (), self.thing.y, 1)
-		and math.abs ((Player.thing.x + Player.thing.w / 2) - (self.thing.x + self.thing.w / 2)) > 16
+		and math.abs ((Player.thing.x + Player.thing.w / 2) - (self.thing.x + self.thing.w / 2)) >= 14
 		then
 			self.visible = true
 			self.lifetime = (type (x) == "nil") and math.random (420, 1020) or math.random (60, 300)
+			if math.random (1, 3) == 3
+			then
+				self.jumping = true
+				self.lifetime = self.lifetime / 2
+			end
+			return true
 		end
 	end
+
+	return false
 end
