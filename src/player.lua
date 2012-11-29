@@ -60,13 +60,13 @@ panims =
 	waterwalk2 = { 1, 1, 12, "waterwalk3" },
 	waterwalk3 = { 1, 2, 12, "waterwalk4", function ()
 		stepsound:play ()
-		spawnPuff (Player.thing.x + Player.thing.w / 2, math.floor (Player.thing:bottom () / 8 - 1) * 8 + 1, 64)
+		spawnPuff (Player.thing.x + Player.thing.w / 2, math.floor (Player.thing:bottom () / 8 - 1) * 8 + 1, 96)
 	end },
 	waterwalk4 = { 1, 3, 12, "waterwalk5" },
 	waterwalk5 = { 1, 4, 12, "waterwalk6" },
 	waterwalk6 = { 1, 5, 12, "waterwalk1", function ()
 		stepsound:play ()
-		spawnPuff (Player.thing.x + Player.thing.w / 2, math.floor (Player.thing:bottom () / 8 - 1) * 8 + 1, 64)
+		spawnPuff (Player.thing.x + Player.thing.w / 2, math.floor (Player.thing:bottom () / 8 - 1) * 8 + 1, 96)
 	end },
 	jump1 = { 4, 0, 6, "jump2" },
 	jump2 = { 4, 1, 6, "jump3" },
