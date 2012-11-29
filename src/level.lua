@@ -42,6 +42,7 @@ areas =
 	cabin = { "res/sound/ambient_cabin.ogg", 0x3b, 0x3b, 0x00 },
 	cave = { "res/sound/ambient_cave.ogg", 0x20, 0x16, 0x0a },
 	infor = { "res/sound/ambient_infor.ogg", 0x00, 0x00, 0x15 },
+	pond = { nil, 0x07, 0x21, 0x33 },
 	secret = { nil, 0x34, 0x09, 0x09 }
 }
 
@@ -83,13 +84,18 @@ levels =
 	infor_plats1 = { "infor_plats1", true, "infor", 900, "outfor_gate", "infor_plats2", nil, nil, { "room_cell", 153, 28, nil, "ladder" } },
 	infor_plats2 = { "infor_plats2", true, "infor", 900, "infor_plats1", "infor_wall" },
 	infor_wall = { "infor_wall", false, "infor", 900, "infor_plats2", nil },
+	pond_mine = { "pond_mine", false, "pond", nil, nil, "pond_plats1" },
+	pond_plats1 = { "pond_plats1", true, "pond", nil, "pond_mine", "pond_plats2" },
+	pond_plats2 = { "pond_plats2", true, "pond", nil, "pond_plats1", "pond_hut" },
+	pond_hut = { "pond_hut", false, "pond", nil, "pond_plats2", nil, nil, nil, { "pond_inside", 132, 68, nil, "door" } },
+	pond_inside = { "pond_inside", false, "indoor", nil, nil, nil, nil, nil, { "pond_hut", 68, 52, nil, "door" } },
 	room_heads = { "room_heads", false, "secret", nil, nil, nil, nil, nil, { "cabin_cellar", 164, 52, nil, "door" } },
 	room_beds = { "room_beds", false, "secret", nil, nil, "cave_plats2" },
 	room_cell = { "room_cell", false, "secret", nil, nil, nil, nil, nil, { "infor_plats1", 298, 60, nil, "ladder" } },
 	room_cellclosed = { "room_cellclosed", false }
 }
 
-startlevel = "cliff_bed"
+startlevel = "pond_mine"
 
 lanims =
 {
@@ -203,6 +209,9 @@ function Level.new (idx)
 			then
 				tmp.tiles [y + 1] [x + 1].type = 5
 				newItem (tmp, "head", x, y, true)
+			elseif r == 0 and g == 0 and b == 255 -- water
+			then
+				tmp.tiles [y + 1] [x + 1].type = 6
 			else
 				tmp.tiles [y + 1] [x + 1].type = 0
 			end

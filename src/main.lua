@@ -80,16 +80,16 @@ function genParticle (r, g, b)
 end
 
 psystems = { }
-function spawnPuff ()
-	system = love.graphics.newParticleSystem (particle, 64)
+function spawnPuff (x, y, amount)
+	system = love.graphics.newParticleSystem (particle, amount)
 	table.insert (psystems, system)
 
 	system:setDirection (math.pi * 1.5)
-	system:setEmissionRate (64)
+	system:setEmissionRate (amount)
 	system:setGravity (15, 20)
 	system:setLifetime (0.06)
 	system:setParticleLife (0.08, 0.12)
-	system:setPosition (Player.thing.x + Player.thing.w / 2, Player.thing:bottom ())
+	system:setPosition (x, y)
 	system:setRadialAcceleration (0)
 	system:setSizes (1)
 	system:setSpeed (75, 80)
@@ -248,6 +248,12 @@ function love.draw ()
 		                     curlevel.lockbox.sprite.offsx, curlevel.lockbox.sprite.offsy)
 	end
 
+	-- draw particle systems
+	for _, s in pairs (psystems)
+	do
+		love.graphics.draw (s)
+	end
+
 	love.graphics.drawq (Player.sprite.tex, Player.sprite.quad,
 	                     math.floor (Player.thing.x + Player.sprite.offsx), math.floor (Player.thing.y + Player.sprite.offsy), 0,
 	                     Player.sprite:getFlip (), 1, (Player.sprite:getFlip () == -1) and Player.sprite.w or 0)
@@ -256,12 +262,6 @@ function love.draw ()
 		love.graphics.drawq (Monster.sprite.tex, Monster.sprite.quad,
 	    	                 math.floor (Monster.thing.x + Monster.sprite.offsx), math.floor (Monster.thing.y + Monster.sprite.offsy), 0,
 	        	             Monster.sprite:getFlip (), 1, (Monster.sprite:getFlip () == -1) and Monster.sprite.w or 0)
-	end
-
-	-- draw particle systems
-	for _, s in pairs (psystems)
-	do
-		love.graphics.draw (s)
 	end
 
 	if curlevel.bridge
@@ -282,7 +282,7 @@ function love.draw ()
 		do
 			for j = 1, #curlevel.tiles
 			do
-				if not (curlevel.tiles [j] [i] == 0) and drawDebug
+				if not (curlevel.tiles [j] [i].type == 0) and drawDebug
 				then
 					love.graphics.rectangle ("fill", (i - 1) * 8, (j - 1) * 8, 8, 8)
 				end
@@ -438,5 +438,5 @@ function love.draw ()
 	then
 		love.graphics.draw (overlay, 0, 0)
 	end
---	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
+	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
 end

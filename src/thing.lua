@@ -182,8 +182,22 @@ function Thing:doPhysics ()
 		y = y + (self:bottom () - y >= 8 and 8 or self:bottom () - y)
 	end
 
-	--print (self.momy)
-	self.momy = (self.momy + termvel) * gravity - termvel
-	self.momx = self.momx * friction
+	-- water physics
+	local waterx = 1.0
+	local watery = 1.0
+	if isBlocked (self.x, self:bottom () - 1, 6)
+	then
+		waterx = 0.5
+		if self.momy > 0
+		then
+			watery = 0.775
+		elseif self.momy < 0
+		then
+			watery = 0.84
+		end
+	end
+
+	self.momx = (self.momx * waterx) * friction
+	self.momy = ((self.momy * watery) + termvel) * gravity - termvel
 	self:setXY (self.x + self.momx, self.y - self.momy)
 end

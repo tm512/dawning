@@ -56,6 +56,18 @@ panims =
 	walk4 = { 1, 3, 7, "walk5" },
 	walk5 = { 1, 4, 7, "walk6" },
 	walk6 = { 1, 5, 7, "walk1", function () stepsound:play () end },
+	waterwalk1 = { 1, 0, 12, "waterwalk2" },
+	waterwalk2 = { 1, 1, 12, "waterwalk3" },
+	waterwalk3 = { 1, 2, 12, "waterwalk4", function ()
+		stepsound:play ()
+		spawnPuff (Player.thing.x + Player.thing.w / 2, math.floor (Player.thing:bottom () / 8 - 1) * 8 + 1, 64)
+	end },
+	waterwalk4 = { 1, 3, 12, "waterwalk5" },
+	waterwalk5 = { 1, 4, 12, "waterwalk6" },
+	waterwalk6 = { 1, 5, 12, "waterwalk1", function ()
+		stepsound:play ()
+		spawnPuff (Player.thing.x + Player.thing.w / 2, math.floor (Player.thing:bottom () / 8 - 1) * 8 + 1, 64)
+	end },
 	jump1 = { 4, 0, 6, "jump2" },
 	jump2 = { 4, 1, 6, "jump3" },
 	jump3 = { 4, 2, -1, nil },
@@ -120,6 +132,7 @@ end
 
 jumpFrames = 0
 doorFrames = 0
+prevInWater = false
 function Player:logic ()
 	if (self.state == "waking" or self.state == "ending") and not (self.sprite.curframe == "standing")
 	then
@@ -131,6 +144,8 @@ function Player:logic ()
 
 		return
 	end
+
+	local inWater = isBlocked (self.thing.x, self.thing:bottom () - 1, 6)
 
 	-- accelerate upwards for 10 frames at most
 	if love.keyboard.isDown ("up") and jumpFrames > 0
@@ -147,16 +162,22 @@ function Player:logic ()
 		end
 	elseif self.thing.onground == true and not (self.state == "crawling")
 	then
-		if jumpFrames < 10 and not (self.state == "crouching")
+		if jumpFrames < 10 and not (self.state == "crouching") and not inWater
 		then
 			landsound:play ()
-			spawnPuff ()
+			spawnPuff (self.thing.x + self.thing.w / 2, self.thing:bottom (), 64)
 		end
 
 		jumpFrames = 10
 	else
 		jumpFrames = 0
 	end
+
+	if not (inWater == prevInWater) and jumpFrames < 10
+	then
+		spawnPuff (self.thing.x + self.thing.w / 2, math.floor (self.thing:bottom () / 8) * 8 + 1, 160)
+	end
+	prevInWater = inWater
 
 	if not (math.abs (self.thing.momy) < 0.1)
 	and not (self.state == "jumping")
@@ -174,7 +195,7 @@ function Player:logic ()
 
 	if love.keyboard.isDown ("down") and not (self.state == "crouching") and not (self.state == "crawling")
 	and not love.keyboard.isDown ("left") and not love.keyboard.isDown ("right")
-	and self.thing.onground and doorFrames == 0
+	and self.thing.onground and doorFrames == 0 and not inWater
 	then
 		local switchsound = nil
 		if isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 2)
@@ -298,7 +319,7 @@ function Player:logic ()
 		then
 			if not (self.state == "walking") and not (self.state == "crouching") and not (self.state == "crawling")
 			then
-				self.sprite:setFrame ("walk1")
+				self.sprite:setFrame (inWater and "waterwalk1" or "walk1")
 				self.state = "walking"
 			elseif self.state == "crouching" and (self.sprite.curframe == "crouch4" or self.sprite.curframe == "crawl0")
 			then
