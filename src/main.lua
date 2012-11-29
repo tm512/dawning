@@ -270,6 +270,11 @@ function love.draw ()
 		                     curlevel.bridge.offsx, curlevel.bridge.offsy)
 	end
 
+	if curlevel.fg
+	then
+		love.graphics.draw (curlevel.fg, 0, 0)
+	end
+
 	if drawDebug
 	then
 		love.graphics.setBlendMode ("additive")
@@ -438,5 +443,5 @@ function love.draw ()
 	then
 		love.graphics.draw (overlay, 0, 0)
 	end
-	--love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
+	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
 end

@@ -46,56 +46,58 @@ areas =
 	secret = { nil, 0x34, 0x09, 0x09 }
 }
 
--- { name, parallax, ambience, srate, left, right, up, down, { door1, spawnx, spawny }, { door2, spawnx, spawny }, { door2, spawnx, spawny } }
+-- { name, area, srate, left, right, up, down, { door1, spawnx, spawny }, { door2, spawnx, spawny }, { door2, spawnx, spawny } }
 levels =
 {
-	bridge = { "bridge", false, "cliff", nil, "bridge", "bridge" },
+	bridge = { "bridge", "cliff", nil, "bridge", "bridge" },
 	bedroom = { "bedroom" },
-	cliff_bridge = { "cliff_bridge", false, "cliff", nil, nil, "cliff_bed", nil, "cliff_lower",
+	cliff_bridge = { "cliff_bridge", "cliff", nil, nil, "cliff_bed", nil, "cliff_lower",
 	                { "cliff_bridgefix", 96, 68, { "hammer", "nails", "planks" } } },
-	cliff_bridgefix = { "cliff_bridgefix", false, "cliff", nil, "bridge", "cliff_bed", nil, "cliff_lower" },
-	cliff_lower = { "cliff_lower", false, "cliff", nil, nil, "cliff_tunnel", nil, nil },
-	cliff_tunnel = { "cliff_tunnel", true, "cave", 2400, "cliff_lower", nil, nil, nil, { "outfor_ladder", 80, 36, nil, "ladder" } },
-	cliff_bed = { "cliff_bed", false, "cliff2", nil, "cliff_bridge", "outfor_ladder" },
-	outfor_ladder = { "outfor_ladder", false, "outfor", 1200,
+	cliff_bridgefix = { "cliff_bridgefix", "cliff", nil, "bridge", "cliff_bed", nil, "cliff_lower" },
+	cliff_lower = { "cliff_lower", "cliff", nil, nil, "cliff_tunnel", nil, nil },
+	cliff_tunnel = { "cliff_tunnel", "cave", 2400, "cliff_lower", nil, nil, nil, { "outfor_ladder", 80, 36, nil, "ladder" } },
+	cliff_bed = { "cliff_bed", "cliff2", nil, "cliff_bridge", "outfor_ladder" },
+	outfor_ladder = { "outfor_ladder", "outfor", 1200,
 	                 "cliff_bed", "outfor_plats1", nil, nil, { "cliff_tunnel", 280, 20, nil, "ladder" } },
-	outfor_plats1 = { "outfor_plats1", true, "outfor", 1200, "outfor_ladder", "outfor_shed" },
-	outfor_shed = { "outfor_shed", false, "outfor", 1200,
+	outfor_plats1 = { "outfor_plats1", "outfor", 1200, "outfor_ladder", "outfor_shed" },
+	outfor_shed = { "outfor_shed", "outfor", 1200,
 	               "outfor_plats1", "outfor_plats2", nil, nil, { "cabin_shed", 84, 68, "key_shed", "door" } },
-	outfor_plats2 = { "outfor_plats2", true, "outfor", 1200, "outfor_shed", "outfor_cabin" },
-	outfor_cabin = { "outfor_cabin", false, "outfor", 1200,
-	                "outfor_plats2", "outfor_gate", nil, nil, { "cabin_main", 68, 68, "key_cabin", "door" } },
-	outfor_gate = { "outfor_gate", false, "outfor", 1200,
-	               "outfor_cabin", "infor_plats1", nil, nil, { "outfor_gate", 114, 68, "key_gate", "door" },
-	               { "outfor_gate", 70, 68, nil, "door" } },
-	cabin_shed = { "cabin_shed", false, "indoor", 600,
+	outfor_plats2 = { "outfor_plats2", "outfor", 1200, "outfor_shed", "outfor_cabin" },
+	outfor_cabin = { "outfor_cabin", "outfor", 1200,
+	                "outfor_plats2", "outfor_store", nil, nil, { "cabin_main", 68, 68, "key_cabin", "door" } },
+	outfor_store = { "outfor_store", "outfor", 1200, "outfor_cabin", nil, nil, nil, { "storeroom", 37, 68, nil, "door" } },
+	storeroom = { "storeroom", "indoor", nil, nil, nil, nil, nil,
+	             { "outfor_store", 141, 68, nil, "door" }, { "infor_store", 44, 68, nil, "door" },
+	             { "outfor_store", 141, 68, nil, "door" } },
+	cabin_shed = { "cabin_shed", "indoor", 600,
 	              nil, nil, nil, nil, { "outfor_shed", 100, 68, nil, "door" }, { "cave_ladder", 136, 12, nil, "ladder" } },
-	cabin_main = { "cabin_main", false, "cabin", 600,
+	cabin_main = { "cabin_main", "cabin", 600,
 	              nil, nil, nil, nil, { "outfor_cabin", 140, 68, nil, "door" }, { "cabin_cellar", 144, 52, nil, "ladder" },
 	              { "cabin_upper", 56, 68, nil, "ladder" } },
-	cabin_upper = { "cabin_upper", false, "indoor", 600, nil, nil, nil, nil, { "cabin_main", 20, 68, nil, "ladder" } },
-	cabin_cellar = { "cabin_cellar", false, "indoor", 600,
+	cabin_upper = { "cabin_upper", "indoor", 600, nil, nil, nil, nil, { "cabin_main", 20, 68, nil, "ladder" } },
+	cabin_cellar = { "cabin_cellar", "indoor", 600,
 	                nil, nil, nil, nil, { "cabin_main", 144, 68, nil, "ladder" }, { "room_heads", 20, 52, nil, "door" } },
-	cave_ladder = { "cave_ladder", false, "cave", 1080, "cave_plats1", nil, nil, nil, { "cabin_shed", 48, 68, nil, "ladder" } },
-	cave_plats1 = { "cave_plats1", true, "cave", 1080, nil, "cave_ladder", nil, nil, { "cave_plats2", 24, 44, nil, "ladder" } },
-	cave_plats2 = { "cave_plats2", true, "cave", 1080,
+	cave_ladder = { "cave_ladder", "cave", 1080, "cave_plats1", nil, nil, nil, { "cabin_shed", 48, 68, nil, "ladder" } },
+	cave_plats1 = { "cave_plats1", "cave", 1080, nil, "cave_ladder", nil, nil, { "cave_plats2", 24, 44, nil, "ladder" } },
+	cave_plats2 = { "cave_plats2", "cave", 1080,
 	               "room_beds", nil, nil, nil, { "cave_plats1", 24, 36, nil, "ladder" }, { "cave_end", 160, 60, nil, "ladder" } },
-	cave_end = { "cave_end", false, "cave", 1080, nil, nil, nil, nil, { "cave_plats2", 352, 52, nil, "ladder" } },
-	infor_plats1 = { "infor_plats1", true, "infor", 900, "outfor_gate", "infor_plats2", nil, nil, { "room_cell", 153, 28, nil, "ladder" } },
-	infor_plats2 = { "infor_plats2", true, "infor", 900, "infor_plats1", "infor_wall" },
-	infor_wall = { "infor_wall", false, "infor", 900, "infor_plats2", nil },
-	pond_mine = { "pond_mine", false, "pond", nil, nil, "pond_plats1" },
-	pond_plats1 = { "pond_plats1", true, "pond", nil, "pond_mine", "pond_plats2" },
-	pond_plats2 = { "pond_plats2", true, "pond", nil, "pond_plats1", "pond_hut" },
-	pond_hut = { "pond_hut", false, "pond", nil, "pond_plats2", nil, nil, nil, { "pond_inside", 132, 68, nil, "door" } },
-	pond_inside = { "pond_inside", false, "indoor", nil, nil, nil, nil, nil, { "pond_hut", 68, 52, nil, "door" } },
-	room_heads = { "room_heads", false, "secret", nil, nil, nil, nil, nil, { "cabin_cellar", 164, 52, nil, "door" } },
-	room_beds = { "room_beds", false, "secret", nil, nil, "cave_plats2" },
-	room_cell = { "room_cell", false, "secret", nil, nil, nil, nil, nil, { "infor_plats1", 298, 60, nil, "ladder" } },
-	room_cellclosed = { "room_cellclosed", false }
+	cave_end = { "cave_end", "cave", 1080, nil, nil, nil, nil, { "cave_plats2", 352, 52, nil, "ladder" } },
+	infor_store = { "infor_store", "infor", 900, nil, "infor_plats1", nil, nil, { "storeroom", 149, 68, nil, "door" } },
+	infor_plats1 = { "infor_plats1", "infor", 900, "infor_store", "infor_plats2", nil, nil, { "room_cell", 153, 28, nil, "ladder" } },
+	infor_plats2 = { "infor_plats2", "infor", 900, "infor_plats1", "infor_wall" },
+	infor_wall = { "infor_wall", "infor", 900, "infor_plats2", nil },
+	pond_mine = { "pond_mine", "pond", nil, nil, "pond_plats1" },
+	pond_plats1 = { "pond_plats1", "pond", nil, "pond_mine", "pond_plats2" },
+	pond_plats2 = { "pond_plats2", "pond", nil, "pond_plats1", "pond_hut" },
+	pond_hut = { "pond_hut", "pond", nil, "pond_plats2", nil, nil, nil, { "pond_inside", 132, 68, nil, "door" } },
+	pond_inside = { "pond_inside", "indoor", nil, nil, nil, nil, nil, { "pond_hut", 68, 52, nil, "door" } },
+	room_heads = { "room_heads", "secret", nil, nil, nil, nil, nil, { "cabin_cellar", 164, 52, nil, "door" } },
+	room_beds = { "room_beds", "secret", nil, nil, "cave_plats2" },
+	room_cell = { "room_cell", "secret", nil, nil, nil, nil, nil, { "infor_plats1", 298, 60, nil, "ladder" } },
+	room_cellclosed = { "room_cellclosed" }
 }
 
-startlevel = "pond_mine"
+startlevel = "cliff_bed"
 
 lanims =
 {
@@ -137,17 +139,22 @@ function Level.new (idx)
 	tmp.bg = { }
 	tmp.tiles = { }
 	tmp.items = { }
-	tmp.srate = info [4]
-	tmp.left = info [5]
-	tmp.right = info [6]
-	tmp.up = info [7]
-	tmp.down = info [8]
-	tmp.door1 = info [9]
-	tmp.door2 = info [10]
-	tmp.door3 = info [11]
+	tmp.srate = info [3]
+	tmp.left = info [4]
+	tmp.right = info [5]
+	tmp.up = info [6]
+	tmp.down = info [7]
+	tmp.door1 = info [8]
+	tmp.door2 = info [9]
+	tmp.door3 = info [10]
 	tmp.itemspr = { }
 
-	if info [2] -- parallax
+	if love.filesystem.exists ("res/bgs/" .. info [1] .. "_0.png") -- foreground layer
+	then
+		tmp.fg = love.graphics.newImage ("res/bgs/" .. info [1] .. "_0.png")
+	end
+
+	if love.filesystem.exists ("res/bgs/" .. info [1] .. "_1.png") -- parallax
 	then
 		table.insert (tmp.bg, love.graphics.newImage ("res/bgs/" .. info [1] .. "_1.png"))
 		table.insert (tmp.bg, love.graphics.newImage ("res/bgs/" .. info [1] .. "_2.png"))
@@ -266,7 +273,7 @@ function Level.new (idx)
 		tmp.bridge = Sprite.new ("res/objects/items/bridge_long.png", 192, 16, 0, 66)
 	end
 
-	local areadef = areas [info [3]]
+	local areadef = areas [info [2]]
 	-- switch music if we need to
 	if not (ambience.name == areadef [1])
 	then
