@@ -97,7 +97,7 @@ levels =
 	room_cellclosed = { "room_cellclosed" }
 }
 
-startlevel = "cliff_bed"
+startlevel = "pond_mine"
 
 lanims =
 {

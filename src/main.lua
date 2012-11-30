@@ -176,6 +176,70 @@ local curtime = 0
 
 fadeAmount = 0
 fadeEnable = false
+distance = 0
+function doFades ()
+	if fadeEnable
+	then
+		fadeAmount = fadeAmount + (newPlayer and 1 or (255 / 16))
+	
+		if math.floor (fadeAmount) == 255
+		then
+			fadeAmount = -255
+			if newlevel and newx and newy
+			then
+				curlevel = newlevel
+				newlevel = nil
+	
+				if Player.headless == "set"
+				then
+					Player.sprite = Sprite.new ("res/objects/player/player_head.png", 16, 16, -5, -4, panims)
+					Player.sprite:setFrame ("wake1")
+					Player.state = "waking"
+					Player.headless = "yes"
+					Player.thing.momx = 0
+					Player.thing.momy = 0
+				end
+	
+				if endFade and Player.state == "ending"
+				then
+					distance = 0
+					endFade = false
+				end
+	
+				if newPlayer
+				then
+					Player.inv = { }
+					Player.sortedInv = { }
+					Player.headless = "no"
+					Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -5, -4, panims)
+					Player.sprite:setFrame ("wake1")
+					Player.state = "waking"
+					Player.thing.momx = 0
+					Player.thing.momy = 0
+					newPlayer = false
+				end
+	
+				Player.thing.x = newx
+				Player.thing.y = newy
+				doorFrames = 40
+				Monster:trySpawn ()
+			end
+		elseif math.floor (fadeAmount) == 0
+		then
+			fadeAmount = 0
+			fadeEnable = false
+		end
+	end
+
+	if endFade
+	then
+		distance = distance + 0.0425
+	elseif not Monster.visible
+	then
+		distance = distance < 0 and 0 or distance - 0.5
+	end
+end
+
 function love.update (dt)
 	-- skip if we're running ahead
 	if nextframe == 0
@@ -204,12 +268,14 @@ function love.update (dt)
 				s:update (0.006)
 			end
 		end
+	else
 	end
+
+	doFades ()
 end
 
 drawDebug = false
 staticIndx = 0
-distance = 0
 function love.draw ()
 	screen:setFilter ("nearest", "nearest")
 	love.graphics.setCanvas (screen) -- draw to original resolution
@@ -333,11 +399,9 @@ function love.draw ()
 
 	love.graphics.setBlendMode ("subtractive")
 
-	if endFade
+	if Monster.visible
 	then
-		distance = distance + 0.0425
-	else
-		distance = (Monster.visible and tdist > distance) and tdist or (distance < 0 and 0 or distance - 0.5)
+		distance = tdist
 	end
 
 	love.graphics.setColor (255, 255, 255, math.floor (distance > maxstatic and maxstatic or (distance > 0 and distance or 0)))
@@ -367,63 +431,9 @@ function love.draw ()
 		fadeEnable = true
 	end
 		
-
 	love.graphics.setColor (0, 0, 0, math.abs (fadeAmount))
 	love.graphics.rectangle ("fill", 0, 0, 192, 96)
 
-	if fadeEnable
-	then
-		fadeAmount = fadeAmount + (newPlayer and 1 or (255 / 32))
-
-		if math.floor (fadeAmount) == 255
-		then
-			fadeAmount = -255
-			if newlevel and newx and newy
-			then
-				curlevel = newlevel
-				newlevel = nil
-
-				if Player.headless == "set"
-				then
-					Player.sprite = Sprite.new ("res/objects/player/player_head.png", 16, 16, -5, -4, panims)
-					Player.sprite:setFrame ("wake1")
-					Player.state = "waking"
-					Player.headless = "yes"
-					Player.thing.momx = 0
-					Player.thing.momy = 0
-				end
-
-				if endFade and Player.state == "ending"
-				then
-					distance = 0
-					endFade = false
-				end
-
-				if newPlayer
-				then
-					Player.inv = { }
-					Player.sortedInv = { }
-					Player.headless = "no"
-					Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -5, -4, panims)
-					Player.sprite:setFrame ("wake1")
-					Player.state = "waking"
-					Player.thing.momx = 0
-					Player.thing.momy = 0
-					newPlayer = false
-				end
-
-				Player.thing.x = newx
-				Player.thing.y = newy
-				doorFrames = 40
-				Monster:trySpawn ()
-			end
-		elseif math.floor (fadeAmount) == 0
-		then
-			fadeAmount = 0
-			fadeEnable = false
-		end
-	end
-	
 	love.graphics.setBlendMode ("alpha")
 	if title.enabled and not fadeEnable
 	then
@@ -443,5 +453,5 @@ function love.draw ()
 	then
 		love.graphics.draw (overlay, 0, 0)
 	end
-	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
+--	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
 end
