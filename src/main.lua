@@ -158,7 +158,7 @@ function love.load ()
 	title = { title = love.graphics.newImage ("res/objects/title/title.png"),
 	          copyr = love.graphics.newImage ("res/objects//title/text.png"),
 	          alpha = 0,
-	          enabled = true }
+	          enabled = false }
 
 	ambience = { name = ":D", source = nil }
 
@@ -314,12 +314,6 @@ function love.draw ()
 		                     curlevel.lockbox.sprite.offsx, curlevel.lockbox.sprite.offsy)
 	end
 
-	-- draw particle systems
-	for _, s in pairs (psystems)
-	do
-		love.graphics.draw (s)
-	end
-
 	love.graphics.drawq (Player.sprite.tex, Player.sprite.quad,
 	                     math.floor (Player.thing.x + Player.sprite.offsx), math.floor (Player.thing.y + Player.sprite.offsy), 0,
 	                     Player.sprite:getFlip (), 1, (Player.sprite:getFlip () == -1) and Player.sprite.w or 0)
@@ -328,6 +322,12 @@ function love.draw ()
 		love.graphics.drawq (Monster.sprite.tex, Monster.sprite.quad,
 	    	                 math.floor (Monster.thing.x + Monster.sprite.offsx), math.floor (Monster.thing.y + Monster.sprite.offsy), 0,
 	        	             Monster.sprite:getFlip (), 1, (Monster.sprite:getFlip () == -1) and Monster.sprite.w or 0)
+	end
+
+	-- draw particle systems
+	for _, s in pairs (psystems)
+	do
+		love.graphics.draw (s)
 	end
 
 	if curlevel.bridge

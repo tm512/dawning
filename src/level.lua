@@ -86,6 +86,8 @@ levels =
 	infor_plats1 = { "infor_plats1", "infor", 900, "infor_store", "infor_plats2", nil, nil, { "room_cell", 153, 28, nil, "ladder" } },
 	infor_plats2 = { "infor_plats2", "infor", 900, "infor_plats1", "infor_wall" },
 	infor_wall = { "infor_wall", "infor", 900, "infor_plats2", nil },
+	mines_carts = { "mines_carts", "cave", 900, nil, "mines_plats1" },
+	mines_plats1 = { "mines_plats1", "cave", 900, "mines_carts", "mines_plats2" },
 	pond_mine = { "pond_mine", "pond", nil, nil, "pond_plats1" },
 	pond_plats1 = { "pond_plats1", "pond", nil, "pond_mine", "pond_plats2" },
 	pond_plats2 = { "pond_plats2", "pond", nil, "pond_plats1", "pond_hut" },
@@ -97,7 +99,7 @@ levels =
 	room_cellclosed = { "room_cellclosed" }
 }
 
-startlevel = "pond_mine"
+startlevel = "cliff_bed"
 
 lanims =
 {
