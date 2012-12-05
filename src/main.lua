@@ -453,5 +453,5 @@ function love.draw ()
 	then
 		love.graphics.draw (overlay, 0, 0)
 	end
---	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
+	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
 end

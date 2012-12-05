@@ -367,17 +367,6 @@ function Player:logic ()
 
 		if xinter and yinter
 		then
-			self.sortedInv = { }
-			for i in pairs (self.inv)
-			do
-				if math.random (1, 2) == 2
-				then
-					self.inv [i] = nil
-				else
-					table.insert (self.sortedInv, self.inv [i])
-				end
-			end
-
 			glitchsound:play ()
 			self.headless = "set"
 			newlevel = Level.new ("cliff_bed")

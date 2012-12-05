@@ -65,10 +65,10 @@ levels =
 	outfor_plats2 = { "outfor_plats2", "outfor", 1200, "outfor_shed", "outfor_cabin" },
 	outfor_cabin = { "outfor_cabin", "outfor", 1200,
 	                "outfor_plats2", "outfor_store", nil, nil, { "cabin_main", 68, 68, "key_cabin", "door" } },
-	outfor_store = { "outfor_store", "outfor", 1200, "outfor_cabin", nil, nil, nil, { "storeroom", 37, 68, nil, "door" } },
+	outfor_store = { "outfor_store", "outfor", 1200, "outfor_cabin", nil, nil, nil, { "storeroom", 37, 68, "key_store", "door" } },
 	storeroom = { "storeroom", "indoor", nil, nil, nil, nil, nil,
-	             { "outfor_store", 141, 68, nil, "door" }, { "infor_store", 44, 68, nil, "door" },
-	             { "outfor_store", 141, 68, nil, "door" } },
+	             { "outfor_store", 141, 68, nil, "door" }, { "infor_store", 44, 68, "key_padlock", "door" },
+	             { "mines_store", 97, 68, nil, "ladder" } },
 	cabin_shed = { "cabin_shed", "indoor", 600,
 	              nil, nil, nil, nil, { "outfor_shed", 100, 68, nil, "door" }, { "cave_ladder", 136, 12, nil, "ladder" } },
 	cabin_main = { "cabin_main", "cabin", 600,
@@ -85,13 +85,16 @@ levels =
 	infor_store = { "infor_store", "infor", 900, nil, "infor_plats1", nil, nil, { "storeroom", 149, 68, nil, "door" } },
 	infor_plats1 = { "infor_plats1", "infor", 900, "infor_store", "infor_plats2", nil, nil, { "room_cell", 153, 28, nil, "ladder" } },
 	infor_plats2 = { "infor_plats2", "infor", 900, "infor_plats1", "infor_wall" },
-	infor_wall = { "infor_wall", "infor", 900, "infor_plats2", nil },
-	mines_carts = { "mines_carts", "cave", 900, nil, "mines_plats1" },
+	infor_wall = { "infor_wall", "infor", 900, "infor_plats2", nil, nil, "mines_end" },
+	mines_store = { "mines_store", "indoor", nil, nil, "mines_carts", nil, nil, { "storeroom", 97, 68, nil, "ladder" } },
+	mines_carts = { "mines_carts", "cave", 900, "mines_store", "mines_plats1" },
 	mines_plats1 = { "mines_plats1", "cave", 900, "mines_carts", "mines_plats2" },
-	pond_mine = { "pond_mine", "pond", nil, nil, "pond_plats1" },
-	pond_plats1 = { "pond_plats1", "pond", nil, "pond_mine", "pond_plats2" },
-	pond_plats2 = { "pond_plats2", "pond", nil, "pond_plats1", "pond_hut" },
-	pond_hut = { "pond_hut", "pond", nil, "pond_plats2", nil, nil, nil, { "pond_inside", 132, 68, nil, "door" } },
+	mines_plats2 = { "mines_plats2", "cave", 900, "mines_plats1", "mines_end" },
+	mines_end = { "mines_end", "cave", 900, "mines_plats2", "pond_mine" },
+	pond_mine = { "pond_mine", "pond", 1080, "mines_end", "pond_plats1" },
+	pond_plats1 = { "pond_plats1", "pond", 1080, "pond_mine", "pond_plats2" },
+	pond_plats2 = { "pond_plats2", "pond", 1080, "pond_plats1", "pond_hut" },
+	pond_hut = { "pond_hut", "pond", 1080, "pond_plats2", nil, nil, nil, { "pond_inside", 132, 68, nil, "door" } },
 	pond_inside = { "pond_inside", "indoor", nil, nil, nil, nil, nil, { "pond_hut", 68, 52, nil, "door" } },
 	room_heads = { "room_heads", "secret", nil, nil, nil, nil, nil, { "cabin_cellar", 164, 52, nil, "door" } },
 	room_beds = { "room_beds", "secret", nil, nil, "cave_plats2" },
@@ -192,11 +195,15 @@ function Level.new (idx)
 			then
 				tmp.tiles [y + 1] [x + 1].type = 5
 				newItem (tmp, "key_shed", x, y)
-			elseif r == 0 and g == 150 and b == 0 -- gate key (locked)
+			elseif r == 0 and g == 150 and b == 0 -- storeroom key
+			then
+				tmp.tiles [y + 1] [x + 1].type = 5
+				newItem (tmp, "key_store", x, y)
+			elseif r == 0 and g == 100 and b == 0 -- padlock key
 			then
 				tmp.tiles [y + 1] [x + 1].type = 6
 				tmp.lockbox = { }
-				newLockbox (tmp.lockbox, "key_gate", x, y)
+				newLockbox (tmp.lockbox, "key_padlock", x, y)
 			elseif r == 255 and g == 0 and b == 0 -- planks
 			then
 				tmp.tiles [y + 1] [x + 1].type = 5
