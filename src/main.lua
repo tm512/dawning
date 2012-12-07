@@ -156,9 +156,9 @@ function love.load ()
 	monstersound:play ()
 
 	title = { title = love.graphics.newImage ("res/objects/title/title.png"),
-	          copyr = love.graphics.newImage ("res/objects//title/text.png"),
+	          copyr = love.graphics.newImage ("res/objects/title/text.png"),
 	          alpha = 0,
-	          enabled = false }
+	          enabled = true }
 
 	ambience = { name = ":D", source = nil }
 
@@ -233,10 +233,10 @@ function doFades ()
 
 	if endFade
 	then
-		distance = distance + 0.0425
+		distance = distance + 0.085
 	elseif not Monster.visible
 	then
-		distance = distance < 0 and 0 or distance - 0.5
+		distance = distance < 0 and 0 or distance - 1
 	end
 end
 
@@ -453,5 +453,5 @@ function love.draw ()
 	then
 		love.graphics.draw (overlay, 0, 0)
 	end
-	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
+--	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
 end

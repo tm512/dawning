@@ -133,6 +133,7 @@ end
 jumpFrames = 0
 doorFrames = 0
 prevInWater = false
+standLock = false
 function Player:logic ()
 	if (self.state == "waking" or self.state == "ending") and not (self.sprite.curframe == "standing")
 	then
@@ -145,7 +146,7 @@ function Player:logic ()
 		return
 	end
 
-	local inWater = isBlocked (self.thing.x, self.thing:bottom () - 1, 6)
+	local inWater = isBlocked (self.thing.x, self.thing:bottom () - 1, 7)
 
 	-- accelerate upwards for 10 frames at most
 	if love.keyboard.isDown ("up") and jumpFrames > 0
@@ -227,18 +228,27 @@ function Player:logic ()
 			end
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 5)
 		then
-			self:giveInv (curlevel.tiles [math.floor ((self.thing:bottom () - 3) / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1].item)
+			local curtile = curlevel.tiles [math.floor ((self.thing:bottom () - 3) / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1]
+			self:giveInv (curtile.item)
+			curtile.type = 0
+			standLock = true
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y, 5)
 		then
-			self:giveInv (curlevel.tiles [math.floor (self.thing.y / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1].item)
+			local curtile = curlevel.tiles [math.floor (self.thing.y / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1]
+			self:giveInv (curtile.item)
+			curtile.type = 0
+			standLock = true
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y, 6)
 		then
 			if self:hasInv ("crowbar", true)
 			then
 				self:giveInv (curlevel.lockbox.item)
 				curlevel.lockbox.sprite:setFrame ("opened")
+				curlevel.tiles [math.floor (self.thing.y / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1].type = 0
+				standLock = true
 			end
-		else
+		elseif not standLock
+		then
 			self.sprite:setFrame ("crouch1")
 			self.state = "crouching"
 			self.thing.h = 6
@@ -259,6 +269,9 @@ function Player:logic ()
 
 			return
 		end
+	elseif not love.keyboard.isDown ("down")
+	then
+		standLock = false
 	end
 
 	-- reset the above, if needed

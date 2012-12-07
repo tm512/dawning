@@ -50,7 +50,7 @@ areas =
 levels =
 {
 	bridge = { "bridge", "cliff", nil, "bridge", "bridge" },
-	bedroom = { "bedroom" },
+	bedroom = { "bedroom", "secret" },
 	cliff_bridge = { "cliff_bridge", "cliff", nil, nil, "cliff_bed", nil, "cliff_lower",
 	                { "cliff_bridgefix", 96, 68, { "hammer", "nails", "planks" } } },
 	cliff_bridgefix = { "cliff_bridgefix", "cliff", nil, "bridge", "cliff_bed", nil, "cliff_lower" },
@@ -99,7 +99,7 @@ levels =
 	room_heads = { "room_heads", "secret", nil, nil, nil, nil, nil, { "cabin_cellar", 164, 52, nil, "door" } },
 	room_beds = { "room_beds", "secret", nil, nil, "cave_plats2" },
 	room_cell = { "room_cell", "secret", nil, nil, nil, nil, nil, { "infor_plats1", 298, 60, nil, "ladder" } },
-	room_cellclosed = { "room_cellclosed" }
+	room_cellclosed = { "room_cellclosed", "secret" }
 }
 
 startlevel = "cliff_bed"
@@ -120,18 +120,23 @@ function newItem (level, item, x, y, head)
 	if not Player.inv [item]
 	then
 		level.items [item] = Sprite.new ("res/objects/items/" .. (head and "item_head.png" or "item.png"), 8, 8, x * 8, y * 8)
+		level.tiles [y + 1] [x + 1].type = 5
 		level.tiles [y + 1] [x + 1].item = item
+	else
+		level.tiles [y + 1] [x + 1].type = 0
 	end
 end
 
-function newLockbox (lockbox, item, x, y)
-	lockbox.sprite = Sprite.new ("res/objects/items/lockbox.png", 8, 8, x * 8, y * 8, lanims)
-	lockbox.item = item
+function newLockbox (level, item, x, y)
+	level.lockbox.sprite = Sprite.new ("res/objects/items/lockbox.png", 8, 8, x * 8, y * 8, lanims)
+	level.lockbox.item = item
 	if not Player.inv [item]
 	then
-		lockbox.sprite:setFrame ("closed")
+		level.lockbox.sprite:setFrame ("closed")
+		level.tiles [y + 1] [x + 1].type = 6
 	else
-		lockbox.sprite:setFrame ("opened")
+		level.lockbox.sprite:setFrame ("opened")
+		level.tiles [y + 1] [x + 1].type = 0
 	end
 end
 
@@ -189,45 +194,36 @@ function Level.new (idx)
 				tmp.tiles [y + 1] [x + 1].type = 4
 			elseif r == 0 and g == 255 and b == 0 -- cabin key
 			then
-				tmp.tiles [y + 1] [x + 1].type = 5
 				newItem (tmp, "key_cabin", x, y)
 			elseif r == 0 and g == 200 and b == 0 -- shed key
 			then
-				tmp.tiles [y + 1] [x + 1].type = 5
 				newItem (tmp, "key_shed", x, y)
 			elseif r == 0 and g == 150 and b == 0 -- storeroom key
 			then
-				tmp.tiles [y + 1] [x + 1].type = 5
 				newItem (tmp, "key_store", x, y)
 			elseif r == 0 and g == 100 and b == 0 -- padlock key
 			then
-				tmp.tiles [y + 1] [x + 1].type = 6
 				tmp.lockbox = { }
-				newLockbox (tmp.lockbox, "key_padlock", x, y)
+				newLockbox (tmp, "key_padlock", x, y)
 			elseif r == 255 and g == 0 and b == 0 -- planks
 			then
-				tmp.tiles [y + 1] [x + 1].type = 5
 				newItem (tmp, "planks", x, y)
 			elseif r == 200 and g == 0 and b == 0 -- nails (locked)
 			then
-				tmp.tiles [y + 1] [x + 1].type = 6
 				tmp.lockbox = { }
-				newLockbox (tmp.lockbox, "nails", x, y)
+				newLockbox (tmp, "nails", x, y)
 			elseif r == 150 and g == 0 and b == 0 -- crowbar
 			then
-				tmp.tiles [y + 1] [x + 1].type = 5
 				newItem (tmp, "crowbar", x, y)
 			elseif r == 100 and g == 0 and b == 0 -- hammer
 			then
-				tmp.tiles [y + 1] [x + 1].type = 5
 				newItem (tmp, "hammer", x, y)
 			elseif r == 50 and g == 0 and b == 0 -- head (secret)
 			then
-				tmp.tiles [y + 1] [x + 1].type = 5
 				newItem (tmp, "head", x, y, true)
 			elseif r == 0 and g == 0 and b == 255 -- water
 			then
-				tmp.tiles [y + 1] [x + 1].type = 6
+				tmp.tiles [y + 1] [x + 1].type = 7
 			else
 				tmp.tiles [y + 1] [x + 1].type = 0
 			end

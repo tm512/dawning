@@ -185,7 +185,7 @@ function Thing:doPhysics ()
 	-- water physics
 	local waterx = 1.0
 	local watery = 1.0
-	if isBlocked (self.x, self:bottom () - 1, 6)
+	if isBlocked (self.x, self:bottom () - 1, 7)
 	then
 		waterx = 0.5
 		if self.momy > 0
