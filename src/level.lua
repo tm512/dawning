@@ -42,7 +42,7 @@ areas =
 	cabin = { "res/sound/ambient_cabin.ogg", 0x3b, 0x3b, 0x00 },
 	cave = { "res/sound/ambient_cave.ogg", 0x20, 0x16, 0x0a },
 	infor = { "res/sound/ambient_infor.ogg", 0x00, 0x00, 0x15 },
-	pond = { nil, 0x07, 0x21, 0x33 },
+	pond = { "res/sound/ambient_pond.ogg", 0x07, 0x21, 0x33 },
 	secret = { nil, 0x34, 0x09, 0x09 }
 }
 
@@ -180,9 +180,22 @@ function Level.new (idx)
 		do
 			tmp.tiles [y + 1] [x + 1] = { }
 			r, g, b, a = tiles:getPixel (x, y)
-			if r == 0 and g == 0 and b == 0 -- solid
+			if r == g and r == b and r < 255-- solid
 			then
 				tmp.tiles [y + 1] [x + 1].type = 1
+				if r == 0
+				then
+					tmp.tiles [y + 1] [x + 1].sound = "grass"
+				elseif r == 10
+				then
+					tmp.tiles [y + 1] [x + 1].sound = "dirt"
+				elseif r == 20
+				then
+					tmp.tiles [y + 1] [x + 1].sound = "stone"
+				elseif r == 30
+				then
+					tmp.tiles [y + 1] [x + 1].sound = "wood"
+				end
 			elseif r == 255 and g == 255 and b == 0 -- door 1
 			then
 				tmp.tiles [y + 1] [x + 1].type = 2

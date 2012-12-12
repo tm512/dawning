@@ -126,11 +126,26 @@ function love.load ()
 	screen:setFilter ("nearest", "nearest")
 
 	overlay = genOverlay (192 * scale, 96 * scale)
-	stepsound = love.audio.newSource ("res/sound/footstep.ogg", "static")
-	stepsound:setVolume (0.4)
 
-	landsound = love.audio.newSource ("res/sound/landing.ogg", "static")
-	landsound:setVolume (0.4)
+	stepsounds = { grass = love.audio.newSource ("res/sound/step_grass.ogg", "static"),
+	               dirt = love.audio.newSource ("res/sound/step_dirt.ogg", "static"),
+	               stone = love.audio.newSource ("res/sound/step_stone.ogg", "static"),
+	               wood = love.audio.newSource ("res/sound/step_wood.ogg", "static") }
+
+	landsounds = { grass = love.audio.newSource ("res/sound/land_grass.ogg", "static"),
+	               dirt = love.audio.newSource ("res/sound/land_dirt.ogg", "static"),
+	               stone = love.audio.newSource ("res/sound/land_stone.ogg", "static"),
+	               wood = love.audio.newSource ("res/sound/land_wood.ogg", "static") }
+
+	for _, s in pairs (stepsounds)
+	do
+		s:setVolume (0.4)
+	end
+
+	for _, s in pairs (landsounds)
+	do
+		s:setVolume (0.4)
+	end
 
 	crawlsound = love.audio.newSource ("res/sound/crawl.ogg", "static")
 	crawlsound:setVolume (0.4)

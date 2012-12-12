@@ -31,6 +31,17 @@ require 'monster'
 
 Player = { }
 
+local function footsound (snd)
+	local t = curlevel.tiles [math.floor (Player.thing:bottom () / 8) + 1] [math.floor ((Player.thing.x + Player.thing.w / 2) / 8) + 1].sound
+	       or curlevel.tiles [math.floor (Player.thing:bottom () / 8) + 1] [math.floor (Player.thing.x / 8) + 1].sound
+	       or curlevel.tiles [math.floor (Player.thing:bottom () / 8) + 1] [math.floor (Player.thing:right () / 8) + 1].sound
+
+	if snd [t]
+	then
+		snd [t]:play ()
+	end
+end
+
 panims =
 {
 	wake1 = { 5, 0, 180, "wake2" },
@@ -52,20 +63,18 @@ panims =
 	standing = { 0, 0, -1, nil },
 	walk1 = { 1, 0, 7, "walk2" },
 	walk2 = { 1, 1, 7, "walk3" },
-	walk3 = { 1, 2, 7, "walk4", function () stepsound:play () end },
+	walk3 = { 1, 2, 7, "walk4", function () footsound (stepsounds) end },
 	walk4 = { 1, 3, 7, "walk5" },
 	walk5 = { 1, 4, 7, "walk6" },
-	walk6 = { 1, 5, 7, "walk1", function () stepsound:play () end },
+	walk6 = { 1, 5, 7, "walk1", function () footsound (stepsounds) end },
 	waterwalk1 = { 1, 0, 12, "waterwalk2" },
 	waterwalk2 = { 1, 1, 12, "waterwalk3" },
 	waterwalk3 = { 1, 2, 12, "waterwalk4", function ()
-		stepsound:play ()
 		spawnPuff (Player.thing.x + Player.thing.w / 2, math.floor (Player.thing:bottom () / 8 - 1) * 8 + 1, 96)
 	end },
 	waterwalk4 = { 1, 3, 12, "waterwalk5" },
 	waterwalk5 = { 1, 4, 12, "waterwalk6" },
 	waterwalk6 = { 1, 5, 12, "waterwalk1", function ()
-		stepsound:play ()
 		spawnPuff (Player.thing.x + Player.thing.w / 2, math.floor (Player.thing:bottom () / 8 - 1) * 8 + 1, 96)
 	end },
 	jump1 = { 4, 0, 6, "jump2" },
@@ -165,7 +174,7 @@ function Player:logic ()
 	then
 		if jumpFrames < 10 and not (self.state == "crouching") and not inWater
 		then
-			landsound:play ()
+			footsound (landsounds)
 			spawnPuff (self.thing.x + self.thing.w / 2, self.thing:bottom (), 64)
 		end
 
