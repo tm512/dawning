@@ -124,7 +124,8 @@ function Monster:trySpawn (x)
 			self.thing.x = self.thing.w
 		end
 
-		while (not isBlocked (self.thing.x, self.thing:bottom (), 1)) and self.thing:bottom () < curlevel.bg [1]:getHeight ()
+		while ((not isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom (), 1))
+		or isBlocked (self.thing.x + self.thing.w / 2, self.thing.y, 1)) and self.thing:bottom () < curlevel.bg [1]:getHeight ()
 		do
 			self.thing.y = self.thing.y + 8
 		end
