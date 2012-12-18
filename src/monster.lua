@@ -107,22 +107,11 @@ end
 function Monster:trySpawn (x)
 	self.visible = false
 	
-	if (math.random (1, 6) == 6 or x) and curlevel.srate
+	if curlevel.srate
 	then
+		self.thing.x = x
 		self.thing.y = 0
 		self.thing.momy = 0
-		if x
-		then
-			self.thing.x = x
-		elseif math.random (1, 3) == 3
-		then
-			self.thing.x = math.random (self.thing.w * 3, curlevel.bg [1]:getWidth () - self.thing.w * 4)
-		elseif Player.thing.x == 0
-		then
-			self.thing.x = curlevel.bg [1]:getWidth () - self.thing.w * 2
-		else
-			self.thing.x = self.thing.w
-		end
 
 		while ((not isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom (), 1))
 		or isBlocked (self.thing.x + self.thing.w / 2, self.thing.y, 1)) and self.thing:bottom () < curlevel.bg [1]:getHeight ()
@@ -132,10 +121,9 @@ function Monster:trySpawn (x)
 
 		if not (self.thing:bottom () == curlevel.bg [1]:getHeight ())
 		and not isBlocked (self.thing.x, self.thing.y, 1) and not isBlocked (self.thing:right (), self.thing.y, 1)
-		and math.abs ((Player.thing.x + Player.thing.w / 2) - (self.thing.x + self.thing.w / 2)) >= 14
 		then
 			self.visible = true
-			self.lifetime = (type (x) == "nil") and math.random (420, 1020) or math.random (60, 300)
+			self.lifetime = math.random (60, 360)
 			if math.random (1, 3) == 3
 			then
 				self.jumping = true

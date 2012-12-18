@@ -320,6 +320,9 @@ function Level.new (idx)
 		endFade = true
 	end
 
+	Monster.visible = false
+	Monster.jumping = false
+
 	-- remove all particle systems
 	psystems = { }
 

@@ -237,7 +237,6 @@ function doFades ()
 				Player.thing.x = newx
 				Player.thing.y = newy
 				doorFrames = 40
-				Monster:trySpawn ()
 			end
 		elseif math.floor (fadeAmount) == 0
 		then
@@ -423,6 +422,8 @@ function love.draw ()
 	love.graphics.draw (static [math.floor (staticIndx / 4) + 1], 0, 0)
 	staticIndx = (staticIndx + 1) % (#static * 4)
 	monstersound:setVolume ((distance > maxstatic and maxstatic or (distance > 0 and distance or 0)) / 120)
+	local avol = 0.6 - monstersound:getVolume ()
+	ambience.source:setVolume ((avol > 0) and avol or 0)
 
 	-- start the actual ending of the game if we need to
 	if distance > 255
