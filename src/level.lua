@@ -43,6 +43,7 @@ areas =
 	cave = { "res/sound/ambient_cave.ogg", 0x20, 0x16, 0x0a },
 	infor = { "res/sound/ambient_infor.ogg", 0x00, 0x00, 0x15 },
 	pond = { "res/sound/ambient_pond.ogg", 0x07, 0x21, 0x33 },
+	void = { nil, 0x2b, 0x05, 0x45 },
 	secret = { nil, 0x34, 0x09, 0x09 }
 }
 
@@ -273,22 +274,9 @@ function Level.new (idx)
 
 	-- spawn the bridge if we need to
 	-- swap out bridge levels
-	if levels [idx] [1] == "cliff_bridge" or levels [idx] [1] == "cliff_bridgefix"
+	if levels [idx] [1] == "cliff_bridgefix"
 	then
-		tmp.bridge = Sprite.new ("res/objects/items/bridge_short.png", 102, 16, 0, 66, banims)
-		if levels [idx] [1] == "cliff_bridge"
-		then
-			tmp.bridge:setFrame ("broken")
-		else
-			tmp.bridge:setFrame ("fixed")
-			bridgebak = levels ["cliff_bridge"]
-			levels ["cliff_bridge"] = levels ["cliff_bridgefix"]
-		end
-	end
-
-	if levels [idx] [1] == "bridge"
-	then
-		tmp.bridge = Sprite.new ("res/objects/items/bridge_long.png", 192, 16, 0, 66)
+		levels ["cliff_bridge"] = levels ["cliff_bridgefix"]
 	end
 
 	local areadef = areas [info [2]]

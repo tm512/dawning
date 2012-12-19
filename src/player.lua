@@ -32,6 +32,11 @@ require 'monster'
 Player = { }
 
 local function footsound (snd)
+	if Player.thing:right () >= curlevel.bg [1]:getWidth () or Player.thing.x <= 0
+	then
+		return
+	end
+
 	local t = curlevel.tiles [math.floor (Player.thing:bottom () / 8) + 1] [math.floor ((Player.thing.x + Player.thing.w / 2) / 8) + 1].sound
 	       or curlevel.tiles [math.floor (Player.thing:bottom () / 8) + 1] [math.floor (Player.thing.x / 8) + 1].sound
 	       or curlevel.tiles [math.floor (Player.thing:bottom () / 8) + 1] [math.floor (Player.thing:right () / 8) + 1].sound
@@ -122,7 +127,7 @@ function Player:hasInv (item, playsnd)
 				nopeframes = 60
 			end
 
-			return false
+			return true
 		end
 	end
 

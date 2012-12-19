@@ -344,12 +344,6 @@ function love.draw ()
 		love.graphics.draw (s)
 	end
 
-	if curlevel.bridge
-	then
-		love.graphics.drawq (curlevel.bridge.tex, curlevel.bridge.quad,
-		                     curlevel.bridge.offsx, curlevel.bridge.offsy)
-	end
-
 	if curlevel.fg
 	then
 		love.graphics.draw (curlevel.fg, 0, 0)
