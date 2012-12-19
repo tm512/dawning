@@ -417,7 +417,10 @@ function love.draw ()
 	staticIndx = (staticIndx + 1) % (#static * 4)
 	monstersound:setVolume ((distance > maxstatic and maxstatic or (distance > 0 and distance or 0)) / 120)
 	local avol = 0.6 - monstersound:getVolume ()
-	ambience.source:setVolume ((avol > 0) and avol or 0)
+	if ambience.source
+	then
+		ambience.source:setVolume ((avol > 0) and avol or 0)
+	end
 
 	-- start the actual ending of the game if we need to
 	if distance > 255

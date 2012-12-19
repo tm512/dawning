@@ -127,7 +127,7 @@ function Player:hasInv (item, playsnd)
 				nopeframes = 60
 			end
 
-			return true
+			return false
 		end
 	end
 
@@ -137,7 +137,7 @@ end
 function Player:giveInv (item)
 	if item and not self:hasInv (item, false)
 	then
-		self.inv [item] = Sprite.new ("res/objects/items/" .. item .. ".png", 8, 8, 0, 0, nil)
+		self.inv [item] = Sprite.new ("res/objects/items/" .. (item:find ("head") and "head" or item) .. ".png", 8, 8, 0, 0, nil)
 		table.insert (self.sortedInv, self.inv [item])
 		curlevel.items [item] = nil
 		itemsound:play ()

@@ -63,7 +63,8 @@ levels =
 	outfor_plats1 = { "outfor_plats1", "outfor", 1200, "outfor_ladder", "outfor_shed" },
 	outfor_shed = { "outfor_shed", "outfor", 1200,
 	               "outfor_plats1", "outfor_plats2", nil, nil, { "cabin_shed", 84, 68, "key_shed", "door" } },
-	outfor_plats2 = { "outfor_plats2", "outfor", 1200, "outfor_shed", "outfor_cabin" },
+	outfor_plats2 = { "outfor_plats2", "outfor", 1200, "outfor_shed", "outfor_cabin", nil, nil,
+	                 { "room_cell", 153, 28, nil, "ladder" } },
 	outfor_cabin = { "outfor_cabin", "outfor", 1200,
 	                "outfor_plats2", "outfor_store", nil, nil, { "cabin_main", 68, 68, "key_cabin", "door" } },
 	outfor_store = { "outfor_store", "outfor", 1200, "outfor_cabin", nil, nil, nil, { "storeroom", 37, 68, "key_store", "door" } },
@@ -83,11 +84,12 @@ levels =
 	cave_plats2 = { "cave_plats2", "cave", 1080,
 	               "room_beds", nil, nil, nil, { "cave_plats1", 24, 36, nil, "ladder" }, { "cave_end", 160, 60, nil, "ladder" } },
 	cave_end = { "cave_end", "cave", 1080, nil, nil, nil, nil, { "cave_plats2", 352, 52, nil, "ladder" } },
-	infor_store = { "infor_store", "infor", 900, nil, "infor_plats1", nil, nil, { "storeroom", 149, 68, nil, "door" } },
-	infor_plats1 = { "infor_plats1", "infor", 900, "infor_store", "infor_plats2", nil, nil, { "room_cell", 153, 28, nil, "ladder" } },
+	infor_store = { "infor_store", "infor", 900, nil, "infor_plats1", nil, nil, { "storeroom", 149, 68, nil, "door" },
+	               { "room_tree", 89, 68, nil, "ladder" } },
+	infor_plats1 = { "infor_plats1", "infor", 900, "infor_store", "infor_plats2", nil, nil },
 	infor_plats2 = { "infor_plats2", "infor", 900, "infor_plats1", "infor_wall" },
 	infor_wall = { "infor_wall", "infor", 900, "infor_plats2", nil, nil, "mines_end" },
-	mines_store = { "mines_store", "indoor", nil, nil, "mines_carts", nil, nil, { "storeroom", 97, 68, nil, "ladder" } },
+	mines_store = { "mines_store", "indoor", nil, "room_body", "mines_carts", nil, nil, { "storeroom", 97, 68, nil, "ladder" } },
 	mines_carts = { "mines_carts", "cave", 900, "mines_store", "mines_plats1" },
 	mines_plats1 = { "mines_plats1", "cave", 900, "mines_carts", "mines_plats2" },
 	mines_plats2 = { "mines_plats2", "cave", 900, "mines_plats1", "mines_end" },
@@ -95,11 +97,14 @@ levels =
 	pond_mine = { "pond_mine", "pond", 1080, "mines_end", "pond_plats1" },
 	pond_plats1 = { "pond_plats1", "pond", 1080, "pond_mine", "pond_plats2" },
 	pond_plats2 = { "pond_plats2", "pond", 1080, "pond_plats1", "pond_hut" },
-	pond_hut = { "pond_hut", "pond", 1080, "pond_plats2", nil, nil, nil, { "pond_inside", 132, 68, nil, "door" } },
+	pond_hut = { "pond_hut", "pond", 1080, "pond_plats2", "room_mtn", nil, nil, { "pond_inside", 132, 68, nil, "door" } },
 	pond_inside = { "pond_inside", "indoor", nil, nil, nil, nil, nil, { "pond_hut", 68, 52, nil, "door" } },
 	room_heads = { "room_heads", "secret", nil, nil, nil, nil, nil, { "cabin_cellar", 164, 52, nil, "door" } },
+	room_cell = { "room_cell", "secret", nil, nil, nil, nil, nil, { "outfor_plats2", 153, 68, nil, "ladder" } },
 	room_beds = { "room_beds", "secret", nil, nil, "cave_plats2" },
-	room_cell = { "room_cell", "secret", nil, nil, nil, nil, nil, { "infor_plats1", 298, 60, nil, "ladder" } },
+	room_body = { "room_body", "secret", nil, nil, "mines_store" },
+	room_tree = { "room_tree", "secret", nil, nil, nil, nil, nil, { "infor_store", 123, 68, nil, "ladder" } },
+	room_mtn = { "room_mtn", "secret", nil, "pond_hut", nil },
 	room_cellclosed = { "room_cellclosed", "secret" }
 }
 
@@ -232,9 +237,21 @@ function Level.new (idx)
 			elseif r == 100 and g == 0 and b == 0 -- hammer
 			then
 				newItem (tmp, "hammer", x, y)
-			elseif r == 50 and g == 0 and b == 0 -- head (secret)
+			elseif r == 50 and g == 0 and b == 0 -- cell head (secret)
 			then
-				newItem (tmp, "head", x, y, true)
+				newItem (tmp, "head_cell", x, y, true)
+			elseif r == 40 and g == 0 and b == 0 -- beds head (secret)
+			then
+				newItem (tmp, "head_beds", x, y, true)
+			elseif r == 30 and g == 0 and b == 0 -- body head (secret)
+			then
+				newItem (tmp, "head_body", x, y, true)
+			elseif r == 20 and g == 0 and b == 0 -- tree head (secret)
+			then
+				newItem (tmp, "head_tree", x, y, true)
+			elseif r == 10 and g == 0 and b == 0 -- mtn head (secret)
+			then
+				newItem (tmp, "head_mtn", x, y, true)
 			elseif r == 0 and g == 0 and b == 255 -- water
 			then
 				tmp.tiles [y + 1] [x + 1].type = 7
