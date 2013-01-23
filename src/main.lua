@@ -110,6 +110,7 @@ function resetGame ()
 	title.enabled = true
 
 	levels ["cliff_bridge"] = bridgebak
+	bridgebak = { }
 end
 
 static = { }

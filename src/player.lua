@@ -420,7 +420,7 @@ function Player:logic ()
 	elseif self.thing:bottom () > curlevel.bg [1]:getHeight () and not (type (curlevel.down) == "nil") -- exit down
 	then
 		newlevel = Level.new (curlevel.down)
-		newx = self.thing.x
+		newx = self.thing.x + (curlevel.longhack and 192 or 0)
 		newy = 0
 	end
 

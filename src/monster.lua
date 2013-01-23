@@ -53,12 +53,20 @@ Monster.lifetime = 0
 Monster.bounds = { lower = 24, upper = 64 }
 
 function Monster:logic ()
-	if not curlevel.srate
+	if not curlevel.srate and not curlevel.bridge
 	then
 		return
 	end
 
-	if not self.visible
+	if curlevel.bridge and not newlevel
+	then
+		if Player.thing.x <= 150 and not self.visible
+		then
+			self:trySpawn (90)
+		end
+	end
+
+	if not self.visible and not curlevel.bridge
 	and (self.jumping or (not (Player.thing.momx == 0) and math.random (1, curlevel.srate) == curlevel.srate)) -- try to spawn randomly
 	then
 		local spot = (Player.thing.x + Player.thing.w / 2)
@@ -88,7 +96,7 @@ function Monster:logic ()
 	end
 
 	self.lifetime = self.lifetime - 1
-	if self.lifetime <= 0
+	if self.lifetime <= 0 and not curlevel.bridge
 	then
 		self.visible = false
 	end
@@ -107,7 +115,7 @@ end
 function Monster:trySpawn (x)
 	self.visible = false
 	
-	if curlevel.srate
+	if curlevel.srate or curlevel.bridge
 	then
 		self.thing.x = x
 		self.thing.y = 0

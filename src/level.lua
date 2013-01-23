@@ -31,8 +31,6 @@ require 'player'
 Level = { }
 Level.__index = Level
 
-bridgebak = { } -- use to back up broken bridge
-
 areas =
 {
 	cliff = { "res/sound/ambient_cliffs.ogg", 0x14, 0x0d, 0x00 },
@@ -43,15 +41,17 @@ areas =
 	cave = { "res/sound/ambient_cave.ogg", 0x20, 0x16, 0x0a },
 	infor = { "res/sound/ambient_infor.ogg", 0x00, 0x00, 0x15 },
 	pond = { "res/sound/ambient_pond.ogg", 0x07, 0x21, 0x33 },
-	void = { nil, 0x2b, 0x05, 0x45 },
+	fault = { nil, 0x15, 0x00, 0x22 },
 	secret = { nil, 0x34, 0x09, 0x09 }
 }
 
 -- { name, area, srate, left, right, up, down, { door1, spawnx, spawny }, { door2, spawnx, spawny }, { door2, spawnx, spawny } }
 levels =
 {
-	bridge = { "bridge", "cliff", nil, "bridge", "bridge" },
+	bridge = { "bridge", "cliff", nil, "cliff_otherside", "cliff_bridge", nil, "cliff_drop" },
 	bedroom = { "bedroom", "secret" },
+	cliff_drop = { "cliff_drop", "fault", nil, nil, nil, nil, "fault_land" },
+	cliff_otherside = { "cliff_otherside", "cliff", nil, nil, "bridge", nil, "fault_plats1" },
 	cliff_bridge = { "cliff_bridge", "cliff", nil, nil, "cliff_bed", nil, "cliff_lower",
 	                { "cliff_bridgefix", 96, 68, { "hammer", "nails", "planks" } } },
 	cliff_bridgefix = { "cliff_bridgefix", "cliff", nil, "bridge", "cliff_bed", nil, "cliff_lower" },
@@ -99,6 +99,12 @@ levels =
 	pond_plats2 = { "pond_plats2", "pond", 1080, "pond_plats1", "pond_hut" },
 	pond_hut = { "pond_hut", "pond", 1080, "pond_plats2", "room_mtn", nil, nil, { "pond_inside", 132, 68, nil, "door" } },
 	pond_inside = { "pond_inside", "indoor", nil, nil, nil, nil, nil, { "pond_hut", 68, 52, nil, "door" } },
+	fault_plats1 = { "fault_plats1", "fault", 500, nil, nil, nil, "fault_plats2" },
+	fault_plats2 = { "fault_plats2", "fault", 500, nil, "fault_ledge", nil, nil, { "fault_item", 57, 68, nil, "ladder" } },
+	fault_item = { "fault_item", "fault", nil, nil, nil, nil, nil, { "fault_plats2", 57, 28, nil, "ladder" } },
+	fault_ledge = { "fault_ledge", "fault", nil, "fault_plats2", "fault_land" },
+	fault_land = { "fault_land", "fault", nil, "fault_ledge", "fault_end" },
+	fault_end = { "fault_end", "fault", nil, "fault_land" },
 	room_heads = { "room_heads", "secret", nil, nil, nil, nil, nil, { "cabin_cellar", 164, 52, nil, "door" } },
 	room_cell = { "room_cell", "secret", nil, nil, nil, nil, nil, { "outfor_plats2", 153, 68, nil, "ladder" } },
 	room_beds = { "room_beds", "secret", nil, nil, "cave_plats2" },
@@ -107,6 +113,11 @@ levels =
 	room_mtn = { "room_mtn", "secret", nil, "pond_hut", nil },
 	room_cellclosed = { "room_cellclosed", "secret" }
 }
+
+-- ew, fuck
+-- when leaving one of these rooms vertically, add 192 to the player's X
+levels ["cliff_otherside"].longhack = true
+levels ["fault_plats1"].longhack = true
 
 startlevel = "cliff_bed"
 
@@ -164,6 +175,7 @@ function Level.new (idx)
 	tmp.door2 = info [9]
 	tmp.door3 = info [10]
 	tmp.itemspr = { }
+	tmp.longhack = info.longhack
 
 	if love.filesystem.exists ("res/bgs/" .. info [1] .. "_0.png") -- foreground layer
 	then
@@ -289,10 +301,10 @@ function Level.new (idx)
 		tmp.itemspr ["lockbox"] = { { name = "crowbar", sprite = Sprite.new ("res/objects/items/crowbar.png", 8, 8, 0, 0, nil) } }
 	end
 
-	-- spawn the bridge if we need to
 	-- swap out bridge levels
 	if levels [idx] [1] == "cliff_bridgefix"
 	then
+		bridgebak = levels ["cliff_bridge"]
 		levels ["cliff_bridge"] = levels ["cliff_bridgefix"]
 	end
 
@@ -320,13 +332,19 @@ function Level.new (idx)
 	particle = genParticle (areadef [2], areadef [3], areadef [4])
 
 	-- toggle the start of the ending
-	if idx == "bridge"
+	if levels [idx] [1] == "fault_end"
 	then
 		endFade = true
 	end
 
 	Monster.visible = false
 	Monster.jumping = false
+
+	if levels [idx] [1] == "bridge"
+	and (not Player:hasInv ( { "head_cell", "head_beds", "head_body", "head_tree", "head_mtn" } ) or Player.headless == "no")
+	then
+		tmp.bridge = true
+	end
 
 	-- remove all particle systems
 	psystems = { }
