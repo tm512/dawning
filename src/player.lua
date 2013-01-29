@@ -76,11 +76,13 @@ panims =
 	waterwalk2 = { 1, 1, 12, "waterwalk3" },
 	waterwalk3 = { 1, 2, 12, "waterwalk4", function ()
 		spawnPuff (Player.thing.x + Player.thing.w / 2, math.floor (Player.thing:bottom () / 8 - 1) * 8 + 1, 96)
+		stepsounds ["water"]:play ()
 	end },
 	waterwalk4 = { 1, 3, 12, "waterwalk5" },
 	waterwalk5 = { 1, 4, 12, "waterwalk6" },
 	waterwalk6 = { 1, 5, 12, "waterwalk1", function ()
 		spawnPuff (Player.thing.x + Player.thing.w / 2, math.floor (Player.thing:bottom () / 8 - 1) * 8 + 1, 96)
+		stepsounds ["water"]:play ()
 	end },
 	jump1 = { 4, 0, 6, "jump2" },
 	jump2 = { 4, 1, 6, "jump3" },
@@ -191,6 +193,7 @@ function Player:logic ()
 	if not (inWater == prevInWater) and jumpFrames < 10
 	then
 		spawnPuff (self.thing.x + self.thing.w / 2, math.floor (self.thing:bottom () / 8) * 8 + 1, 160)
+		landsounds ["water"]:play ()
 	end
 	prevInWater = inWater
 
@@ -427,6 +430,5 @@ function Player:logic ()
 	if newlevel and not (newlevel == curlevel)
 	then
 		fadeEnable = true
-		title.enabled = false
 	end
 end

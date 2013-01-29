@@ -33,6 +33,7 @@ Level.__index = Level
 
 areas =
 {
+	cred = { nil, 0x14, 0x0d, 0x00 },
 	cliff = { "res/sound/ambient_cliffs.ogg", 0x14, 0x0d, 0x00 },
 	cliff2 = { "res/sound/ambient_outfor.ogg", 0x14, 0x0d, 0x00 },
 	outfor = { "res/sound/ambient_outfor.ogg", 0x03, 0x0d, 0x03 },
@@ -51,7 +52,8 @@ levels =
 	bridge = { "bridge", "cliff", nil, "cliff_otherside", "cliff_bridge", nil, "cliff_drop" },
 	bedroom = { "bedroom", "secret" },
 	cliff_drop = { "cliff_drop", "fault", nil, nil, nil, nil, "fault_land" },
-	cliff_otherside = { "cliff_otherside", "cliff", nil, nil, "bridge", nil, "fault_plats1" },
+	cliff_cred = { "cliff_cred", "cred", nil, nil, "cliff_otherside" },
+	cliff_otherside = { "cliff_otherside", "cliff", nil, "cliff_cred", "bridge", nil, "fault_plats1" },
 	cliff_bridge = { "cliff_bridge", "cliff", nil, nil, "cliff_bed", nil, "cliff_lower",
 	                { "cliff_bridgefix", 96, 68, { "hammer", "nails", "planks" } } },
 	cliff_bridgefix = { "cliff_bridgefix", "cliff", nil, "bridge", "cliff_bed", nil, "cliff_lower" },

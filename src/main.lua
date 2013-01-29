@@ -31,7 +31,7 @@ require 'player'
 require 'monster'
 require 'level'
 
-local scale = 4
+local scale = 5
 
 function genOverlay (w, h)
 	if scale < 3
@@ -106,8 +106,7 @@ function resetGame ()
 	newx = 100
 	newy = 72
 	fadeEnable = true
-	title.alpha = 0
-	title.enabled = true
+	Monster.visible = false
 
 	levels ["cliff_bridge"] = bridgebak
 	bridgebak = { }
@@ -131,12 +130,14 @@ function love.load ()
 	stepsounds = { grass = love.audio.newSource ("res/sound/step_grass.ogg", "static"),
 	               dirt = love.audio.newSource ("res/sound/step_dirt.ogg", "static"),
 	               stone = love.audio.newSource ("res/sound/step_stone.ogg", "static"),
-	               wood = love.audio.newSource ("res/sound/step_wood.ogg", "static") }
+	               wood = love.audio.newSource ("res/sound/step_wood.ogg", "static"),
+	               water = love.audio.newSource ("res/sound/step_water.ogg", "static") }
 
 	landsounds = { grass = love.audio.newSource ("res/sound/land_grass.ogg", "static"),
 	               dirt = love.audio.newSource ("res/sound/land_dirt.ogg", "static"),
 	               stone = love.audio.newSource ("res/sound/land_stone.ogg", "static"),
-	               wood = love.audio.newSource ("res/sound/land_wood.ogg", "static") }
+	               wood = love.audio.newSource ("res/sound/land_wood.ogg", "static"),
+	               water = love.audio.newSource ("res/sound/land_water.ogg", "static") }
 
 	for _, s in pairs (stepsounds)
 	do
@@ -170,11 +171,6 @@ function love.load ()
 	monstersound:setLooping (true)
 	monstersound:setVolume (0.0)
 	monstersound:play ()
-
-	title = { title = love.graphics.newImage ("res/objects/title/title.png"),
-	          copyr = love.graphics.newImage ("res/objects/title/text.png"),
-	          alpha = 0,
-	          enabled = true }
 
 	ambience = { name = ":D", source = nil }
 
@@ -449,16 +445,6 @@ function love.draw ()
 	love.graphics.rectangle ("fill", 0, 0, 192, 96)
 
 	love.graphics.setBlendMode ("alpha")
-	if title.enabled and not fadeEnable
-	then
-		love.graphics.setColor (255, 255, 255, title.alpha)
-		love.graphics.draw (title.title, 67, 0)
-		love.graphics.draw (title.copyr, 99, 87)
-		if title.alpha < 255
-		then
-			title.alpha = title.alpha + 1
-		end
-	end
 	love.graphics.setColorMode ("replace")
 
 	love.graphics.setCanvas () -- reset to full resolution
