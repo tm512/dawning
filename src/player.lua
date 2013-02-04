@@ -264,6 +264,14 @@ function Player:logic ()
 				curlevel.tiles [math.floor (self.thing.y / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1].type = 0
 				standLock = true
 			end
+		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 8)
+		then
+			if self:hasInv ("box")
+			then
+				curlevel.wmonster:setFrame ("start")
+				curlevel.tiles [math.floor ((self.thing:bottom () - 3) / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1].type = 0
+				standLock = true
+			end
 		elseif not standLock
 		then
 			self.sprite:setFrame ("crouch1")

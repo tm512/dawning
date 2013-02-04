@@ -51,6 +51,7 @@ levels =
 {
 	bridge = { "bridge", "cliff", nil, "cliff_otherside", "cliff_bridge", nil, "cliff_drop" },
 	bedroom = { "bedroom", "secret" },
+	bedroom_mon = { "bedroom_mon", "secret" },
 	cliff_drop = { "cliff_drop", "fault", nil, nil, nil, nil, "fault_land" },
 	cliff_cred = { "cliff_cred", "cred", nil, nil, "cliff_otherside" },
 	cliff_otherside = { "cliff_otherside", "cliff", nil, "cliff_cred", "bridge", nil, "fault_plats1" },
@@ -129,16 +130,11 @@ lanims =
 	opened = { 1, 0, -1, nil }
 }
 
-banims =
-{
-	broken = { 0, 1, -1, nil },
-	fixed = { 0, 0, -1, nil }
-}
-
-function newItem (level, item, x, y, head)
+function newItem (level, item, x, y, head, boxhead)
 	if not Player.inv [item]
 	then
-		level.items [item] = Sprite.new ("res/objects/items/" .. (head and "item_head.png" or "item.png"), 8, 8, x * 8, y * 8)
+		local icon = head and "item_head.png" or (boxhead and "box.png" or "item.png")
+		level.items [item] = Sprite.new ("res/objects/items/" .. icon, 8, 8, x * 8, y * 8)
 		level.tiles [y + 1] [x + 1].type = 5
 		level.tiles [y + 1] [x + 1].item = item
 	else
@@ -251,6 +247,14 @@ function Level.new (idx)
 			elseif r == 100 and g == 0 and b == 0 -- hammer
 			then
 				newItem (tmp, "hammer", x, y)
+			elseif r == 60 and g == 0 and b == 0 -- white monster
+			then
+				tmp.wmonster = Sprite.new ("res/objects/npc/headless.png", 32, 32, x * 8 - 12, y * 8 - 24, wmanims)
+				tmp.wmonster:setFrame ("still")
+				tmp.tiles [y + 1] [x + 1].type = 8
+			elseif r == 48 and g == 0 and b == 0 -- white box head
+			then
+				newItem (tmp, "box", x, y, false, true)
 			elseif r == 50 and g == 0 and b == 0 -- cell head (secret)
 			then
 				newItem (tmp, "head_cell", x, y, true)
@@ -343,7 +347,7 @@ function Level.new (idx)
 	Monster.jumping = false
 
 	if levels [idx] [1] == "bridge"
-	and (not Player:hasInv ( { "head_cell", "head_beds", "head_body", "head_tree", "head_mtn" } ) or Player.headless == "no")
+	and (not Player:hasInv ( { "head_cell", "head_beds", "head_body", "head_tree", "head_mtn" } ) or Player.headless == "yes")
 	then
 		tmp.bridge = true
 	end

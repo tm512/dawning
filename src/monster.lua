@@ -44,6 +44,33 @@ manims =
 	glitch7 = { 2, 1, 6, "stand1" }
 }
 
+wmanims =
+{
+	still = { 0, 0, -1, nil },
+	start = { 0, 0, 0, "stand1" },
+	stand1 = { 1, 0, 90, "stand2", function ()
+		-- block off the exit now
+		for y = 0, #curlevel.tiles - 1
+		do
+			curlevel.tiles [y + 1] [1].type = 1
+		end
+	end },
+	stand2 = { 2, 0, 45, "stand3" },
+	stand3 = { 0, 1, 7, "stand4" },
+	stand4 = { 1, 1, 7, "stand5" },
+	stand5 = { 2, 1, 7, "stand6" },
+	stand6 = { 0, 2, 7, "stand7" },
+	stand7 = { 1, 2, 7, "stand8" },
+	stand8 = { 2, 2, 60, "ending" },
+	ending = { 2, 2, -1, nil, function ()
+		Player.state = "ending"
+		newlevel = Level.new ("bedroom")
+		newx = 43
+		newy = 64
+		fadeEnable = true -- eh, have to explicitly enable it here...
+	end }
+}
+
 Monster.thing = Thing.new (128, 16, 8, 24)
 Monster.sprite = Sprite.new ("res/objects/npc/monster.png", 32, 32, -12, -8, manims)
 Monster.sprite:setFrame ("stand1")

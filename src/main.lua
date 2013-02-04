@@ -212,8 +212,10 @@ function doFades ()
 					Player.thing.momy = 0
 				end
 	
-				if endFade and Player.state == "ending"
+				if --[[endFade and]] Player.state == "ending"
 				then
+					Player.sprite:setFlip ("left")
+					Player.sprite:setFrame ("endwake1")
 					distance = 0
 					endFade = false
 				end
@@ -270,6 +272,11 @@ function love.update (dt)
 		Player:logic ()
 		Monster:logic ()
 
+		if curlevel.wmonster
+		then
+			curlevel.wmonster:advFrame ()
+		end
+
 		for i, s in ipairs (psystems)
 		do
 			if s:isEmpty () and not s:isActive ()
@@ -323,6 +330,11 @@ function love.draw ()
 	then
 		love.graphics.drawq (curlevel.lockbox.sprite.tex, curlevel.lockbox.sprite.quad,
 		                     curlevel.lockbox.sprite.offsx, curlevel.lockbox.sprite.offsy)
+	end
+
+	if curlevel.wmonster
+	then
+		love.graphics.drawq (curlevel.wmonster.tex, curlevel.wmonster.quad, curlevel.wmonster.offsx, curlevel.wmonster.offsy)
 	end
 
 	love.graphics.drawq (Player.sprite.tex, Player.sprite.quad,
@@ -425,14 +437,12 @@ function love.draw ()
 		Player.sprite:setFlip ("left")
 		if Player.headless == "no" -- good ending
 		then
-			Player.sprite:setFrame ("endwake1")
 			Player.state = "ending"
-			newlevel = Level.new ("bedroom")
+			newlevel = Level.new ("bedroom_mon")
 			newx = 43
 			newy = 64
 		else -- bad ending
 			Player.sprite = Sprite.new ("res/objects/player/player_box.png", 16, 16, -5, -4, panims)
-			Player.sprite:setFrame ("endwake1")
 			Player.state = "ending"
 			newlevel = Level.new ("room_cellclosed")
 			newx = 159
