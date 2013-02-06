@@ -362,7 +362,7 @@ function love.draw ()
 	if drawDebug
 	then
 		love.graphics.setBlendMode ("additive")
-		love.graphics.setColor (0xff, 0x95, 0x00, 0x80)
+		love.graphics.setColor (0x00, 0x95, 0xff, 0x80)
 		love.graphics.rectangle ("fill", Player.thing.x, Player.thing.y, Player.thing.w, Player.thing.h)
 		love.graphics.rectangle ("fill", Monster.thing.x, Monster.thing.y, Monster.thing.w, Monster.thing.h)
 		love.graphics.setColor (0xff, 0xa5, 0x00, 0xff)
