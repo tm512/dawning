@@ -146,6 +146,38 @@ function Player:giveInv (item)
 	end
 end
 
+-- remove an item from the sorted inventory. This just hides it, doesn't remove it from the actual inventory.
+function Player:remInv (items)
+	for _, item in pairs (items)
+	do
+		for i, j in ipairs (self.sortedInv)
+		do
+			if j == self.inv [item] and not (item == "hammer")
+			then
+				table.remove (self.sortedInv, i)
+			end
+		end
+	end
+end
+
+function Player:doDoor (door)
+	if not curlevel [door] [4] or self:hasInv (curlevel [door] [4], true)
+	then
+		-- if we have the key in our visible inventory, remove it
+		if curlevel [door] [4] and not (curlevel [door] [4] == "hammer")
+		then
+			local items = type (curlevel [door] [4]) == "string" and { curlevel [door] [4] } or curlevel [door] [4]
+			self:remInv (items)
+		end
+
+		switchsound = curlevel [door] [5]
+		-- preserve X when going through the bridge "door" (cough, hack, cough)
+		newx = curlevel [door] [5] and curlevel [door] [2] or Player.thing.x
+		newy = curlevel [door] [3]
+		newlevel = Level.new (curlevel [door] [1])
+	end
+end
+
 jumpFrames = 0
 doorFrames = 0
 prevInWater = false
@@ -215,34 +247,16 @@ function Player:logic ()
 	and not love.keyboard.isDown ("left") and not love.keyboard.isDown ("right")
 	and self.thing.onground and doorFrames == 0 and not inWater
 	then
-		local switchsound = nil
+		switchsound = nil
 		if isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 2)
 		then
-			if not curlevel.door1 [4] or self:hasInv (curlevel.door1 [4], true)
-			then
-				switchsound = curlevel.door1 [5]
-				newx = curlevel.door1 [2]
-				newy = curlevel.door1 [3]
-				newlevel = Level.new (curlevel.door1 [1])
-			end
+			self:doDoor ("door1")
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 3)
 		then
-			if not curlevel.door2 [4] or self:hasInv (curlevel.door2 [4], true)
-			then
-				switchsound = curlevel.door2 [5]
-				newx = curlevel.door2 [2]
-				newy = curlevel.door2 [3]
-				newlevel = Level.new (curlevel.door2 [1])
-			end
+			self:doDoor ("door2")
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 4)
 		then
-			if not curlevel.door3 [4] or self:hasInv (curlevel.door3 [4], true)
-			then
-				switchsound = curlevel.door3 [5]
-				newx = curlevel.door3 [2]
-				newy = curlevel.door3 [3]
-				newlevel = Level.new (curlevel.door3 [1])
-			end
+			self:doDoor ("door3")
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 5)
 		then
 			local curtile = curlevel.tiles [math.floor ((self.thing:bottom () - 3) / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1]
@@ -270,6 +284,7 @@ function Player:logic ()
 			then
 				curlevel.wmonster:setFrame ("start")
 				curlevel.tiles [math.floor ((self.thing:bottom () - 3) / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1].type = 0
+				self:remInv ("box")
 				standLock = true
 			end
 		elseif not standLock
