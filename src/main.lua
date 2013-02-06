@@ -1,5 +1,5 @@
 --[[
-     Copyright (c) 2012, Kyle Davis
+     Copyright (c) 2012 - 2013, Kyle Davis
      All rights reserved.
      
      Redistribution and use in source and binary forms, with or without
@@ -117,6 +117,7 @@ function love.load ()
 	ret = love.graphics.setMode (192 * scale, 96 * scale, false, false, 0)
 	love.graphics.setCaption ("dawning")
 	love.graphics.setColorMode ("replace")
+	love.mouse.setVisible (false)
 	if ret == 0
 	then
 		error ("couldn't set screen mode")
@@ -464,4 +465,5 @@ function love.draw ()
 		love.graphics.draw (overlay, 0, 0)
 	end
 --	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
+--	love.graphics.print ("9d0c2f8 test", 2, 2)
 end

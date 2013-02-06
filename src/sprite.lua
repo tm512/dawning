@@ -1,5 +1,5 @@
 --[[
-     Copyright (c) 2012, Kyle Davis
+     Copyright (c) 2012 - 2013, Kyle Davis
      All rights reserved.
      
      Redistribution and use in source and binary forms, with or without
