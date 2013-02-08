@@ -66,6 +66,7 @@ panims =
 	endwake6 = { 5, 5, 270, "endwake7" },
 	endwake7 = { 5, 5, -1, nil, function () resetGame () end },
 	standing = { 0, 0, -1, nil },
+	touching = { 0, 2, -1, nil },
 	walk1 = { 1, 0, 7, "walk2" },
 	walk2 = { 1, 1, 7, "walk3" },
 	walk3 = { 1, 2, 7, "walk4", function () footsound (stepsounds) end },
@@ -94,7 +95,10 @@ panims =
 	uncrouch1 = { 2, 3, 7, "uncrouch2" },
 	uncrouch2 = { 2, 2, 7, "uncrouch3" },
 	uncrouch3 = { 2, 1, 7, "uncrouch4" },
-	uncrouch4 = { 2, 0, 7,  "standing" },
+	uncrouch4 = { 2, 0, 7, "uncrouch5" },
+	uncrouch5 = { 0, 0, -1, nil, function ()
+		Player.state = "standing"
+	end },
 	crawl0 = { 3, 0, -1, nil },
 	crawl1 = { 3, 0, 13, "crawl2", function () crawlsound:play () end },
 	crawl2 = { 3, 1, 13, "crawl3" },
@@ -203,11 +207,6 @@ function Player:logic ()
 		then
 			self.thing.momy = 1.2
 			jumpFrames = jumpFrames - 1
-		elseif not (self.state == "uncrouching") and not isBlocked (self.thing.x, self.thing.y - 6, 1)
-		and not isBlocked (self.thing:right () - 1, self.thing.y - 6, 1)
-		then
-			self.sprite:setFrame (self.state == "crouch4" and "uncrouch2" or "uncrouch1")
-			self.state = "uncrouching"
 		end
 	elseif self.thing.onground == true and not (self.state == "crawling")
 	then
@@ -262,13 +261,11 @@ function Player:logic ()
 			local curtile = curlevel.tiles [math.floor ((self.thing:bottom () - 3) / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1]
 			self:giveInv (curtile.item)
 			curtile.type = 0
-			standLock = true
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y, 5)
 		then
 			local curtile = curlevel.tiles [math.floor (self.thing.y / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1]
 			self:giveInv (curtile.item)
 			curtile.type = 0
-			standLock = true
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing.y, 6)
 		then
 			if self:hasInv ("crowbar", true)
@@ -276,7 +273,6 @@ function Player:logic ()
 				self:giveInv (curlevel.lockbox.item)
 				curlevel.lockbox.sprite:setFrame ("opened")
 				curlevel.tiles [math.floor (self.thing.y / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1].type = 0
-				standLock = true
 			end
 		elseif isBlocked (self.thing.x + self.thing.w / 2, self.thing:bottom () - 3, 8)
 		then
@@ -285,15 +281,7 @@ function Player:logic ()
 				curlevel.wmonster:setFrame ("start")
 				curlevel.tiles [math.floor ((self.thing:bottom () - 3) / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1].type = 0
 				self:remInv ("box")
-				standLock = true
 			end
-		elseif not standLock
-		then
-			self.sprite:setFrame ("crouch1")
-			self.state = "crouching"
-			self.thing.h = 6
-			self.thing.y = self.thing.y + 6
-			self.sprite.offsy = -10
 		end
 
 		if newlevel and not (newlevel == curlevel)
@@ -370,7 +358,7 @@ function Player:logic ()
 		-- on ground? Accelerate immediately and don't worry about switching directions
 		if self.thing.onground == true
 		then
-			if not (self.state == "walking") and not (self.state == "crouching") and not (self.state == "crawling")
+			if not (self.state == "walking" or self.state == "crouching" or self.state == "crawling" or self.state == "uncrouching")
 			then
 				self.sprite:setFrame (inWater and "waterwalk1" or "walk1")
 				self.state = "walking"
@@ -382,6 +370,7 @@ function Player:logic ()
 			end
 
 			if not (self.state == "crouching" and not (self.sprite.curframe == "crouch4" or self.sprite.curframe == "crawl0"))
+			and not (self.state == "uncrouching")
 			then
 				self.thing.momx = (self.state == "walking" and 0.6 or 0.3) * direction
 			end
@@ -411,6 +400,47 @@ function Player:logic ()
 
 	self.thing:doPhysics ()
 	self.sprite:advFrame ()
+
+	if not (direction == 0) and self.thing.momx == 0 and self.thing.onground
+	then
+		if self.state == "walking"
+		then
+			local side = direction == -1 and self.thing.x - 2 or self.thing:right () + 2
+			local topblock = isBlocked (side, self.thing.y, 1)
+			local botblock = isBlocked (side, self.thing:bottom () - 3, 1)
+
+			if not botblock and not inWater and not love.keyboard.isDown ("up")
+			then	
+				self.sprite:setFrame ("crouch1")
+				self.state = "crouching"
+				self.thing.h = 6
+				self.thing.y = self.thing.y + 6
+				self.sprite.offsy = -10
+				crouchlock = true
+			elseif not topblock
+			then
+				self.sprite:setFrame ("standing")
+				self.state = "standing"
+			else
+				self.sprite:setFrame ("touching")
+				self.state = "standing"
+			end
+		else
+		end
+	end
+
+	if self.state == "crawling"
+	then
+		if isBlocked (self.thing.x - 1, self.thing.y - 6, 1) or isBlocked (self.thing:right () + 1, self.thing.y - 6, 1)
+		or isBlocked (self.thing.x + self.thing.w / 2, self.thing.y - 6, 1)
+		then
+			crouchlock = false
+		elseif not crouchlock
+		then
+			self.sprite:setFrame ("uncrouch1")
+			self.state = "uncrouching"
+		end
+	end
 
 	-- check for monster collision
 	if Monster.visible

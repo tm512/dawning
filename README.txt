@@ -12,7 +12,7 @@ Controls:
 
  - Up - Jump
  - Left/Right - Walk
- - Down - Use/Crouch
+ - Down - Use
 
 Contact:
 

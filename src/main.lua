@@ -465,5 +465,5 @@ function love.draw ()
 		love.graphics.draw (overlay, 0, 0)
 	end
 --	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
---	love.graphics.print ("9d0c2f8 test", 2, 2)
+--	love.graphics.print ("dawning test build", 2, 2)
 end
