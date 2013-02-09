@@ -78,6 +78,8 @@ Monster.visible = false
 Monster.jumping = false
 Monster.lifetime = 0
 Monster.bounds = { lower = 24, upper = 64 }
+Monster.spawned = false
+Monster.spawnx = math.random (48, 128)
 
 function Monster:logic ()
 	if not curlevel.srate and not curlevel.bridge
@@ -91,6 +93,20 @@ function Monster:logic ()
 		then
 			self:trySpawn (90)
 		end
+	end
+
+	if curlevel.fmspawn and not newlevel and not self.spawned
+	then
+		if Player.thing.x >= self.spawnx
+		then
+			self:trySpawn (Player.thing.x + 32)
+			self.spawned = true
+		end
+	end
+
+	if not self.spawned
+	then
+		return
 	end
 
 	if not self.visible and not curlevel.bridge

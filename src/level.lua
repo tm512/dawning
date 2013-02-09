@@ -122,7 +122,7 @@ levels =
 levels ["cliff_otherside"].longhack = true
 levels ["fault_plats1"].longhack = true
 
-startlevel = "cliff_bed"
+startlevel = "cliff_tunnel"
 
 lanims =
 {
@@ -350,6 +350,12 @@ function Level.new (idx)
 	and (not Player:hasInv ( { "head_cell", "head_beds", "head_body", "head_tree", "head_mtn" } ) or Player.headless == "yes")
 	then
 		tmp.bridge = true
+	end
+
+	if levels [idx] [1] == "outfor_plats1"
+	and not Monster.spawned
+	then
+		tmp.fmspawn = true
 	end
 
 	-- remove all particle systems
