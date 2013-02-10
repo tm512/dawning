@@ -333,6 +333,11 @@ function love.draw ()
 		                     curlevel.lockbox.sprite.offsx, curlevel.lockbox.sprite.offsy)
 	end
 
+	if curlevel.bed
+	then
+		love.graphics.drawq (curlevel.bed.tex, curlevel.bed.quad, curlevel.bed.offsx, curlevel.bed.offsy)
+	end
+
 	if curlevel.wmonster
 	then
 		love.graphics.drawq (curlevel.wmonster.tex, curlevel.wmonster.quad, curlevel.wmonster.offsx, curlevel.wmonster.offsy)

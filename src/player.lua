@@ -452,9 +452,16 @@ function Player:logic ()
 		then
 			glitchsound:play ()
 			self.headless = "set"
-			newlevel = Level.new ("cliff_bed")
-			newx = 100
-			newy = 72
+			spawnbed = curlevel.name
+			newlevel = Level.new (curlevel.name)
+			newx = newlevel.bedx
+			newy = newlevel.bedy
+			if not (newlevel.bedx and newlevel.bedy)
+			then
+				newlevel = Level.new (startlevel)
+				newx = 100
+				newy = 72
+			end
 		end
 	end
 

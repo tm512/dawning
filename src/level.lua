@@ -74,13 +74,13 @@ levels =
 	storeroom = { "storeroom", "indoor", nil, nil, nil, nil, nil,
 	             { "outfor_store", 141, 68, nil, "door" }, { "infor_store", 44, 68, "key_padlock", "door" },
 	             { "mines_store", 97, 68, nil, "ladder" } },
-	cabin_shed = { "cabin_shed", "indoor", 600,
+	cabin_shed = { "cabin_shed", "indoor", nil,
 	              nil, nil, nil, nil, { "outfor_shed", 100, 68, nil, "door" }, { "cave_ladder", 136, 12, nil, "ladder" } },
-	cabin_main = { "cabin_main", "cabin", 600,
+	cabin_main = { "cabin_main", "cabin", nil,
 	              nil, nil, nil, nil, { "outfor_cabin", 140, 68, nil, "door" }, { "cabin_cellar", 144, 52, nil, "ladder" },
 	              { "cabin_upper", 56, 68, nil, "ladder" } },
-	cabin_upper = { "cabin_upper", "indoor", 600, nil, nil, nil, nil, { "cabin_main", 20, 68, nil, "ladder" } },
-	cabin_cellar = { "cabin_cellar", "indoor", 600,
+	cabin_upper = { "cabin_upper", "indoor", nil, nil, nil, nil, nil, { "cabin_main", 20, 68, nil, "ladder" } },
+	cabin_cellar = { "cabin_cellar", "indoor", nil,
 	                nil, nil, nil, nil, { "cabin_main", 144, 68, nil, "ladder" }, { "room_heads", 20, 52, nil, "door" } },
 	cave_ladder = { "cave_ladder", "cave", 1080, "cave_plats1", nil, nil, nil, { "cabin_shed", 48, 68, nil, "ladder" } },
 	cave_plats1 = { "cave_plats1", "cave", 1080, nil, "cave_ladder", nil, nil, { "cave_plats2", 24, 44, nil, "ladder" } },
@@ -122,13 +122,16 @@ levels =
 levels ["cliff_otherside"].longhack = true
 levels ["fault_plats1"].longhack = true
 
-startlevel = "cliff_tunnel"
+startlevel = "cliff_bed"
 
 lanims =
 {
 	closed = { 0, 0, -1, nil },
 	opened = { 1, 0, -1, nil }
 }
+
+-- moving spawn bed
+spawnbed = "no"
 
 function newItem (level, item, x, y, head, boxhead)
 	if not Player.inv [item]
@@ -164,6 +167,7 @@ function Level.new (idx)
 	tmp.bg = { }
 	tmp.tiles = { }
 	tmp.items = { }
+	tmp.name = info [1]
 	tmp.srate = info [3]
 	tmp.left = info [4]
 	tmp.right = info [5]
@@ -255,6 +259,15 @@ function Level.new (idx)
 			elseif r == 48 and g == 0 and b == 0 -- white box head
 			then
 				newItem (tmp, "box", x, y, false, true)
+			elseif r == 0 and g == 0 and b == 100
+			then
+				if tmp.name == spawnbed
+				then
+					tmp.bed = Sprite.new ("res/objects/items/bed.png", 32, 32, x * 8, y * 8 - 24)
+					tmp.bedx = x * 8 + 12
+					tmp.bedy = y * 8
+					spawnbed = nil
+				end
 			elseif r == 50 and g == 0 and b == 0 -- cell head (secret)
 			then
 				newItem (tmp, "head_cell", x, y, true)
@@ -338,7 +351,7 @@ function Level.new (idx)
 	particle = genParticle (areadef [2], areadef [3], areadef [4])
 
 	-- toggle the start of the ending
-	if levels [idx] [1] == "fault_end"
+	if tmp.name == "fault_end"
 	then
 		endFade = true
 	end
@@ -346,13 +359,13 @@ function Level.new (idx)
 	Monster.visible = false
 	Monster.jumping = false
 
-	if levels [idx] [1] == "bridge"
+	if tmp.name == "bridge"
 	and (not Player:hasInv ( { "head_cell", "head_beds", "head_body", "head_tree", "head_mtn" } ) or Player.headless == "yes")
 	then
 		tmp.bridge = true
 	end
 
-	if levels [idx] [1] == "outfor_plats1"
+	if tmp.name == "outfor_plats1"
 	and not Monster.spawned
 	then
 		tmp.fmspawn = true
