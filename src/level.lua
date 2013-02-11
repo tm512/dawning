@@ -341,7 +341,10 @@ function Level.new (idx)
 			ambience.source = love.audio.newSource (areadef [1])
 			ambience.source:setLooping (true)
 			ambience.source:setVolume (0.6)
-			ambience.source:play ()
+			if not (Player.state == "ending")
+			then
+				ambience.source:play ()
+			end
 		end
 
 		ambience.name = areadef [1]

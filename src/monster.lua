@@ -79,7 +79,6 @@ Monster.jumping = false
 Monster.lifetime = 0
 Monster.bounds = { lower = 24, upper = 64 }
 Monster.spawned = false
-Monster.spawnx = math.random (48, 128)
 
 function Monster:logic ()
 	if not curlevel.srate and not curlevel.bridge

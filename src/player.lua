@@ -280,7 +280,7 @@ function Player:logic ()
 			then
 				curlevel.wmonster:setFrame ("start")
 				curlevel.tiles [math.floor ((self.thing:bottom () - 3) / 8) + 1] [math.floor ((self.thing.x + self.thing.w / 2) / 8) + 1].type = 0
-				self:remInv ("box")
+				self:remInv ( { "box" } )
 			end
 		end
 
@@ -431,7 +431,7 @@ function Player:logic ()
 
 	if self.state == "crawling"
 	then
-		if isBlocked (self.thing.x - 1, self.thing.y - 6, 1) or isBlocked (self.thing:right () + 1, self.thing.y - 6, 1)
+		if isBlocked (self.thing.x, self.thing.y - 6, 1) or isBlocked (self.thing:right (), self.thing.y - 6, 1)
 		or isBlocked (self.thing.x + self.thing.w / 2, self.thing.y - 6, 1)
 		then
 			crouchlock = false

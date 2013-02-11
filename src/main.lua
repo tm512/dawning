@@ -107,6 +107,8 @@ function resetGame ()
 	newy = 72
 	fadeEnable = true
 	Monster.visible = false
+	Monster.spawnx = math.random (48, 128)
+	Monster.spawned = false
 
 	levels ["cliff_bridge"] = bridgebak
 	bridgebak = { }
@@ -175,12 +177,15 @@ function love.load ()
 
 	ambience = { name = ":D", source = nil }
 
+	math.randomseed (os.time ())
+
 	for i = 1, 64
 	do
 		table.insert (static, genStatic (192, 96))
 	end
 
 	curlevel = Level.new (startlevel)
+	Monster.spawnx = math.random (48, 128)
 end
 
 local frametime = 1.0 / 60
@@ -213,7 +218,7 @@ function doFades ()
 					Player.thing.momy = 0
 				end
 	
-				if --[[endFade and]] Player.state == "ending"
+				if Player.state == "ending"
 				then
 					Player.sprite:setFlip ("left")
 					Player.sprite:setFrame ("endwake1")
@@ -231,6 +236,7 @@ function doFades ()
 					Player.state = "waking"
 					Player.thing.momx = 0
 					Player.thing.momy = 0
+					ambience.source:play ()
 					newPlayer = false
 				end
 	
@@ -470,5 +476,5 @@ function love.draw ()
 		love.graphics.draw (overlay, 0, 0)
 	end
 --	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
---	love.graphics.print ("dawning test build", 2, 2)
+	love.graphics.print ("dawning test build", 2, 2)
 end
