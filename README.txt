@@ -10,9 +10,9 @@ at providing feedback.
 
 Controls:
 
- - Up - Jump
- - Left/Right - Walk
- - Down - Use
+ - Up (or W) - Jump
+ - Left/Right (or A/D) - Walk
+ - Down (or S) - Use
 
 Contact:
 

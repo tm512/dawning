@@ -179,10 +179,9 @@ function love.load ()
 
 	math.randomseed (os.time ())
 
-	for i = 1, 64
-	do
-		table.insert (static, genStatic (192, 96))
-	end
+	splash = love.graphics.newImage ("res/bgs/splash.png")
+	love.update = splashUpdate
+	love.draw = splashDraw
 
 	curlevel = Level.new (startlevel)
 	Monster.spawnx = math.random (48, 128)
@@ -191,9 +190,11 @@ end
 local frametime = 1.0 / 60
 local nextframe = 0
 local curtime = 0
+local splashtime = 4.0
+local splashdrawn = false
 
-fadeAmount = 0
-fadeEnable = false
+fadeAmount = -255
+fadeEnable = true
 distance = 0
 function doFades ()
 	if fadeEnable
@@ -237,6 +238,9 @@ function doFades ()
 					Player.thing.momx = 0
 					Player.thing.momy = 0
 					ambience.source:play ()
+					love.update = splashUpdate
+					love.draw = splashDraw
+					splashtime = 4.0
 					newPlayer = false
 				end
 	
@@ -260,7 +264,7 @@ function doFades ()
 	end
 end
 
-function love.update (dt)
+function gameUpdate (dt)
 	-- skip if we're running ahead
 	if nextframe == 0
 	then
@@ -301,7 +305,7 @@ end
 
 drawDebug = false
 staticIndx = 0
-function love.draw ()
+function gameDraw ()
 	screen:setFilter ("nearest", "nearest")
 	love.graphics.setCanvas (screen) -- draw to original resolution
 	love.graphics.push ()
@@ -477,4 +481,38 @@ function love.draw ()
 	end
 --	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
 	love.graphics.print ("dawning test build", 2, 2)
+end
+
+function splashUpdate (dt)
+	splashtime = splashtime - dt
+
+	if splashdrawn and #static == 0
+	then
+		for i = 1, 64
+		do
+			table.insert (static, genStatic (192, 96))
+		end
+	end
+
+	if splashtime <= 0
+	then
+		love.update = gameUpdate
+		love.draw = gameDraw
+	end
+end
+
+function splashDraw ()
+	splashdrawn = true
+
+	screen:setFilter ("nearest", "nearest")
+	love.graphics.setCanvas (screen) -- draw to original resolution
+
+	love.graphics.draw (splash)
+
+	love.graphics.setCanvas () -- reset to full resolution
+	love.graphics.draw (screen, 0, 0, 0, scale, scale)
+	if overlay
+	then
+		love.graphics.draw (overlay, 0, 0)
+	end
 end

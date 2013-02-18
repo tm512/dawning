@@ -201,7 +201,7 @@ function Player:logic ()
 	local inWater = isBlocked (self.thing.x, self.thing:bottom () - 1, 7)
 
 	-- accelerate upwards for 10 frames at most
-	if love.keyboard.isDown ("up") and jumpFrames > 0
+	if love.keyboard.isDown ("up", "w") and jumpFrames > 0
 	then
 		if not (self.state == "crouching") and not (self.state == "uncrouching")
 		then
@@ -242,8 +242,8 @@ function Player:logic ()
 
 	nopeframes = nopeframes > 0 and nopeframes - 1 or 0
 
-	if love.keyboard.isDown ("down") and not (self.state == "crouching") and not (self.state == "crawling")
-	and not love.keyboard.isDown ("left") and not love.keyboard.isDown ("right")
+	if love.keyboard.isDown ("down", "s") and not (self.state == "crouching") and not (self.state == "crawling")
+	and not love.keyboard.isDown ("left", "a") and not love.keyboard.isDown ("right", "d")
 	and self.thing.onground and doorFrames == 0 and not inWater
 	then
 		switchsound = nil
@@ -297,7 +297,7 @@ function Player:logic ()
 
 			return
 		end
-	elseif not love.keyboard.isDown ("down")
+	elseif not love.keyboard.isDown ("down", "s")
 	then
 		standLock = false
 	end
@@ -340,13 +340,13 @@ function Player:logic ()
 	end
 
 	local direction = 0
-	if love.keyboard.isDown ("left")
+	if love.keyboard.isDown ("left", "a")
 	then
 		direction = -1
 		self.sprite:setFlip ("left")
 	end
 
-	if love.keyboard.isDown ("right")
+	if love.keyboard.isDown ("right", "d")
 	then
 		direction = 1
 		self.sprite:setFlip ("right")
@@ -409,7 +409,7 @@ function Player:logic ()
 			local topblock = isBlocked (side, self.thing.y, 1)
 			local botblock = isBlocked (side, self.thing:bottom () - 3, 1)
 
-			if not botblock and not inWater and not love.keyboard.isDown ("up")
+			if not botblock and not inWater and not love.keyboard.isDown ("up", "w")
 			then	
 				self.sprite:setFrame ("crouch1")
 				self.state = "crouching"
