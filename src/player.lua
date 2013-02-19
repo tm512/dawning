@@ -416,7 +416,7 @@ function Player:logic ()
 				self.thing.h = 6
 				self.thing.y = self.thing.y + 6
 				self.sprite.offsy = -10
-				crouchlock = true
+				crouchlock = direction
 			elseif not topblock
 			then
 				self.sprite:setFrame ("standing")
@@ -432,10 +432,10 @@ function Player:logic ()
 	if self.state == "crawling"
 	then
 		if isBlocked (self.thing.x, self.thing.y - 6, 1) or isBlocked (self.thing:right (), self.thing.y - 6, 1)
-		or isBlocked (self.thing.x + self.thing.w / 2, self.thing.y - 6, 1)
+		or isBlocked (self.thing.x + self.thing.w / 2, self.thing.y - 6, 1) or crouchlock == -direction
 		then
-			crouchlock = false
-		elseif not crouchlock
+			crouchlock = 0
+		elseif crouchlock == 0
 		then
 			self.sprite:setFrame ("uncrouch1")
 			self.state = "uncrouching"
