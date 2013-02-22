@@ -374,6 +374,7 @@ function gameDraw ()
 		love.graphics.draw (curlevel.fg, 0, 0)
 	end
 
+--[[
 	if drawDebug
 	then
 		love.graphics.setBlendMode ("additive")
@@ -394,7 +395,7 @@ function gameDraw ()
 		end
 		love.graphics.setBlendMode ("alpha")
 	end
-
+]]--
 	love.graphics.pop ()
 
 	-- draw items in HUD
@@ -480,7 +481,7 @@ function gameDraw ()
 		love.graphics.draw (overlay, 0, 0)
 	end
 --	love.graphics.print (Player.thing.x .. ", " .. Player.thing.y, 2, 2)
-	love.graphics.print ("dawning test build", 2, 2)
+--	love.graphics.print ("dawning test build", 2, 2)
 end
 
 function splashUpdate (dt)

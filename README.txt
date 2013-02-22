@@ -1,12 +1,4 @@
-This is a prerelease build of Dawning.
-
-While it's pretty close to completion, it is not to be taken as a perfect
-representation of the final release. Things may change based on feedback, and
-I will attempt to fix all reported bugs.
-
-You are being provided this build as-is, on the condition that you buy the
-final release if you think it is worth it, and that you make your best attempt
-at providing feedback.
+Dawning is an experimental platformer about repairing a bridge.
 
 Controls:
 
@@ -16,5 +8,25 @@ Controls:
 
 Contact:
 
- - @bfgabuser on Twitter
+ - @bfgabuser on Twitter (tm512)
+ - @helltempest94 (Tempest)
+ - @entropixel
  - tm512 on IRC (Freenode/OFTC/EFNet/Undernet/Quakenet)
+
+License:
+
+ The source code of the game is licensed under the MIT license, and you can use
+ it freely (for the most part), granted that you preserve the copyright notice.
+
+ The graphics, sounds, and other resources used by the game are not free to use
+ without explicit permission.
+
+ Some of the sounds are derivatives of works either in the public domain or
+ licensed under the CC BY license. These sounds are:
+
+ - http://soundbible.com/1543-Fireplace.html - ambient_cabin
+ - http://soundbible.com/873-Door-Squeak.html - door
+ - http://soundbible.com/29-Board-Creak.html - ladder
+ - http://soundbible.com/634-Wind-Blowing.html - ambient_cliffs
+ - http://commons.wikimedia.org/wiki/File:Erithacus_rubecula_chirping.ogg - ambient_forest
+ - http://soundbible.com/2033-Frogs.html - ambient_pond

@@ -127,7 +127,7 @@ function Monster:logic ()
 
 		if self:trySpawn (spot)
 		then
-			self.bounds.lower = self.bounds.lower > 14 and self.bounds.lower - 0.25 or self.bounds.lower
+			self.bounds.lower = self.bounds.lower > 16 and self.bounds.lower - 0.25 or self.bounds.lower
 			self.bounds.upper = self.bounds.upper > 24 and self.bounds.upper - 1 or self.bounds.upper
 		end
 	end
