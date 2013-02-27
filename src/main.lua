@@ -495,7 +495,7 @@ function splashUpdate (dt)
 		end
 	end
 
-	if splashtime <= 0
+	if splashtime <= 0 and #static > 0
 	then
 		love.update = gameUpdate
 		love.draw = gameDraw
