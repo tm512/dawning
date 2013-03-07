@@ -107,8 +107,6 @@ panims =
 }
 
 Player.thing = Thing.new (100, 72, 6, 12)
-Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -5, -4, panims)
-Player.sprite:setFrame ("wake1")
 Player.state = "waking"
 Player.headless = "no"
 Player.inv = { }

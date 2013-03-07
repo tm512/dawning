@@ -72,8 +72,6 @@ wmanims =
 }
 
 Monster.thing = Thing.new (128, 16, 8, 24)
-Monster.sprite = Sprite.new ("res/objects/npc/monster.png", 32, 32, -12, -8, manims)
-Monster.sprite:setFrame ("stand1")
 Monster.visible = false
 Monster.jumping = false
 Monster.lifetime = 0

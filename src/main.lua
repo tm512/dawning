@@ -125,8 +125,13 @@ function love.load ()
 		error ("couldn't set screen mode")
 	end
 
-	screen = love.graphics.newCanvas (256, 128)
-	screen:setFilter ("nearest", "nearest")
+	if love.graphics.isSupported ("canvas")
+	then
+		screen = love.graphics.newCanvas (256, 128)
+		screen:setFilter ("nearest", "nearest")
+	else
+		love.graphics.setDefaultImageFilter ("nearest", "nearest")
+	end
 
 	overlay = genOverlay (192 * scale, 96 * scale)
 
@@ -182,6 +187,11 @@ function love.load ()
 	splash = love.graphics.newImage ("res/bgs/splash.png")
 	love.update = splashUpdate
 	love.draw = splashDraw
+
+	Player.sprite = Sprite.new ("res/objects/player/player.png", 16, 16, -5, -4, panims)
+	Player.sprite:setFrame ("wake1")
+	Monster.sprite = Sprite.new ("res/objects/npc/monster.png", 32, 32, -12, -8, manims)
+	Monster.sprite:setFrame ("stand1")
 
 	curlevel = Level.new (startlevel)
 	Monster.spawnx = math.random (48, 128)
@@ -306,8 +316,15 @@ end
 drawDebug = false
 staticIndx = 0
 function gameDraw ()
-	screen:setFilter ("nearest", "nearest")
-	love.graphics.setCanvas (screen) -- draw to original resolution
+	if screen
+	then
+		screen:setFilter ("nearest", "nearest")
+		love.graphics.setCanvas (screen) -- draw to original resolution
+	else
+		love.graphics.push ()
+		love.graphics.scale (scale)
+	end
+
 	love.graphics.push ()
 
 	-- camera
@@ -468,14 +485,21 @@ function gameDraw ()
 		fadeEnable = true
 	end
 		
-	love.graphics.setColor (0, 0, 0, math.abs (fadeAmount))
-	love.graphics.rectangle ("fill", 0, 0, 192, 96)
-
 	love.graphics.setBlendMode ("alpha")
 	love.graphics.setColorMode ("replace")
 
-	love.graphics.setCanvas () -- reset to full resolution
-	love.graphics.draw (screen, 0, 0, 0, scale, scale)
+	love.graphics.setColor (0, 0, 0, math.abs (fadeAmount))
+
+	if screen
+	then
+		love.graphics.rectangle ("fill", 0, 0, 192, 96)
+		love.graphics.setCanvas () -- reset to full resolution
+		love.graphics.draw (screen, 0, 0, 0, scale, scale)
+	else
+		love.graphics.pop ()
+		love.graphics.rectangle ("fill", 0, 0, 192 * scale, 96 * scale)
+	end
+
 	if overlay
 	then
 		love.graphics.draw (overlay, 0, 0)
@@ -505,13 +529,25 @@ end
 function splashDraw ()
 	splashdrawn = true
 
-	screen:setFilter ("nearest", "nearest")
-	love.graphics.setCanvas (screen) -- draw to original resolution
+	if screen
+	then
+		screen:setFilter ("nearest", "nearest")
+		love.graphics.setCanvas (screen) -- draw to original resolution
+	else
+		love.graphics.push ()
+		love.graphics.scale (scale)
+	end
 
 	love.graphics.draw (splash)
 
-	love.graphics.setCanvas () -- reset to full resolution
-	love.graphics.draw (screen, 0, 0, 0, scale, scale)
+	if screen
+	then
+		love.graphics.setCanvas () -- reset to full resolution
+		love.graphics.draw (screen, 0, 0, 0, scale, scale)
+	else
+		love.graphics.pop ()
+	end
+
 	if overlay
 	then
 		love.graphics.draw (overlay, 0, 0)
