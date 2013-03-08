@@ -133,6 +133,8 @@ function love.load ()
 		love.graphics.setDefaultImageFilter ("nearest", "nearest")
 	end
 
+	subsupp = love.graphics.isSupported ("subtractive")
+
 	overlay = genOverlay (192 * scale, 96 * scale)
 
 	stepsounds = { grass = love.audio.newSource ("res/sound/step_grass.ogg", "static"),
@@ -448,7 +450,10 @@ function gameDraw ()
 	local tdist = 160 - (math.abs (Player.thing.x - Monster.thing.x) * 1.5)
 	local maxstatic = endFade and 255 or 160
 
-	love.graphics.setBlendMode ("subtractive")
+	if subsupp
+	then
+		love.graphics.setBlendMode ("subtractive")
+	end
 
 	if Monster.visible
 	then
