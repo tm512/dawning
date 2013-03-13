@@ -77,6 +77,8 @@ Monster.jumping = false
 Monster.lifetime = 0
 Monster.bounds = { lower = 24, upper = 64 }
 Monster.spawned = false
+Monster.attack = false
+Monster.chase = false
 
 function Monster:logic ()
 	if not curlevel.srate and not curlevel.bridge
@@ -106,8 +108,13 @@ function Monster:logic ()
 		return
 	end
 
+	if false and not self.visible and not curlevel.bridge and self.chase
+	then
+		self:trySpawn (self.thing.x + (Player.thing.x - self.thing.x) / 3)
+	end
+
 	if not self.visible and not curlevel.bridge
-	and (self.jumping or (not (Player.thing.momx == 0) and math.random (1, curlevel.srate) == curlevel.srate)) -- try to spawn randomly
+	and (self.jumping or (not (Player.thing.momx == 0) and math.random (1, curlevel.srate * 2) == curlevel.srate)) -- try to spawn randomly
 	then
 		local spot = (Player.thing.x + Player.thing.w / 2)
 		local offset = math.random (math.floor (self.bounds.lower), math.floor (self.bounds.upper))
@@ -125,8 +132,8 @@ function Monster:logic ()
 
 		if self:trySpawn (spot)
 		then
-			self.bounds.lower = self.bounds.lower > 16 and self.bounds.lower - 0.25 or self.bounds.lower
-			self.bounds.upper = self.bounds.upper > 24 and self.bounds.upper - 1 or self.bounds.upper
+			self.bounds.lower = self.bounds.lower > 18 and self.bounds.lower - 0.5 or self.bounds.lower
+			self.bounds.upper = self.bounds.upper > 24 and self.bounds.upper - 2 or self.bounds.upper
 		end
 	end
 
@@ -139,6 +146,12 @@ function Monster:logic ()
 	if self.lifetime <= 0 and not curlevel.bridge
 	then
 		self.visible = false
+
+		if self.attack and math.abs ((Player.thing.x + Player.thing.w / 2) - (self.thing.x + self.thing.w / 2)) < 24
+		then
+			self.attack = false
+			self.chase = true
+		end
 	end
 
 	if Player.thing.x < self.thing.x
@@ -154,6 +167,7 @@ end
 
 function Monster:trySpawn (x)
 	self.visible = false
+	self.attack = false
 	
 	if curlevel.srate or curlevel.bridge
 	then
@@ -171,11 +185,16 @@ function Monster:trySpawn (x)
 		and not isBlocked (self.thing.x, self.thing.y, 1) and not isBlocked (self.thing:right (), self.thing.y, 1)
 		then
 			self.visible = true
-			self.lifetime = math.random (60, 360)
-			if math.random (1, 3) == 3
+			self.lifetime = self.chase and 30 or math.random (60, 300)
+			if math.random (1, 5) == 5 and not self.chase
 			then
 				self.jumping = true
 				self.lifetime = self.lifetime / 2
+			end
+
+			if self.lifetime > 180
+			then
+				self.attack = true
 			end
 			return true
 		end

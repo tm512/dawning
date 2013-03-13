@@ -269,7 +269,7 @@ function doFades ()
 
 	if endFade
 	then
-		distance = distance + 0.085
+		distance = distance + 0.1
 	elseif not Monster.visible
 	then
 		distance = distance < 0 and 0 or distance - 1
@@ -464,7 +464,7 @@ function gameDraw ()
 	love.graphics.draw (static [math.floor (staticIndx / 4) + 1], 0, 0)
 	staticIndx = (staticIndx + 1) % (#static * 4)
 	monstersound:setVolume ((distance > maxstatic and maxstatic or (distance > 0 and distance or 0)) / 120)
-	local avol = 0.6 - monstersound:getVolume ()
+	local avol = 0.5 - monstersound:getVolume ()
 	if ambience.source
 	then
 		ambience.source:setVolume ((avol > 0) and avol or 0)

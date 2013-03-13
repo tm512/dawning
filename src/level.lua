@@ -361,6 +361,7 @@ function Level.new (idx)
 
 	Monster.visible = false
 	Monster.jumping = false
+	Monster.chase = false
 
 	if tmp.name == "bridge"
 	and (not Player:hasInv ( { "head_cell", "head_beds", "head_body", "head_tree", "head_mtn" } ) or Player.headless == "yes")

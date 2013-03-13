@@ -154,7 +154,7 @@ function Player:remInv (items)
 	do
 		for i, j in ipairs (self.sortedInv)
 		do
-			if j == self.inv [item] and not (item == "hammer")
+			if j == self.inv [item]
 			then
 				table.remove (self.sortedInv, i)
 			end
@@ -240,7 +240,7 @@ function Player:logic ()
 
 	nopeframes = nopeframes > 0 and nopeframes - 1 or 0
 
-	if love.keyboard.isDown ("down", "s") and not (self.state == "crouching") and not (self.state == "crawling")
+	if love.keyboard.isDown ("down", "s", " ") and not (self.state == "crouching") and not (self.state == "crawling")
 	and not love.keyboard.isDown ("left", "a") and not love.keyboard.isDown ("right", "d")
 	and self.thing.onground and doorFrames == 0 and not inWater
 	then

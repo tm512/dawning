@@ -4,7 +4,7 @@ Controls:
 
  - Up (or W) - Jump
  - Left/Right (or A/D) - Walk
- - Down (or S) - Use
+ - Down (or S, or Space) - Use
 
 Contact:
 
